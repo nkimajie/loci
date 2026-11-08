@@ -1,0 +1,48 @@
+- !<AssetImportMetadata/c9efaf01-afbb-4685-b54d-e14102ee7e76>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 7e8b5c3a-5cce-41eb-9c50-4cc1a45f7579
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 7e8b5c3a-5cce-41eb-9c50-4cc1a45f7579
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 743428dc-6193-43f3-ac6b-b83ad7424918
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/743428dc-6193-43f3-ac6b-b83ad7424918>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: 1dc8e0d7-4b50-46be-8d4e-338d323d4348
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    {}
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    -
+      {}
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">LociVoice – speech-to-text for \"Say my list\" (ASR module)</span>"}'
+    - '// @ui {"widget":"separator"}'
