@@ -1,16 +1,31 @@
 /**
- * Done criterion 3 — "Quiz me" turns all 5 into "?" markers, and pinching a marker
- * reveals the correct item plus ✓ / ✗.
+ * Done criterion 3 (v2, Find-it) — "Quiz me" makes all 5 objects vanish behind identical
+ * neutral glowing markers (nothing pulses, no arrow), and a prompt card asks
+ * "Where's the <item>?" with a small 3D icon of that item, in the seeded shuffled order.
+ * Pinching the right spot brings its object back with a green ring and moves to the
+ * next prompt; the found spot is no longer a candidate.
  * Setup (all pinch): SampleListButton, Spot1_Item … Spot5_Item.
- * Steps under test (pinch): QuizMeButton, Spot1_MarkerButton.
- * Leaves the Lens showing ✓ / ✗ at spot 1 (for the review screenshot).
+ * Steps under test (pinch): QuizMeButton, Spot{answer}_MarkerButton.
  */
 
-import {findInteractableByName, isEnabled} from "Leaf.lspkg/Interactors/InteractableUtils"
+import {findInteractableByName} from "Leaf.lspkg/Interactors/InteractableUtils"
 import {Scenario} from "Leaf.lspkg/Scenarios/scenario/Scenario"
 import {expect} from "Leaf.lspkg/Utils/common/Expect"
-import {findSceneObjectByName, sleep} from "Leaf.lspkg/Utils/common/Utils"
-import {j, log, pinch, pinchSampleListAndWaitForStudy, pinchStudyWalkToSwitch, setupAtStart, waitFor} from "./LociLeafHelpers"
+import {sleep} from "Leaf.lspkg/Utils/common/Utils"
+import {quizRoundSeed, seededShuffle} from "../Scripts/LociState"
+import {
+  SAMPLE_MODELS,
+  SAMPLE_QUESTIONS,
+  j,
+  log,
+  pinch,
+  pinchGuess,
+  pinchSampleListAndWaitForStudy,
+  pinchStudyWalkToSwitch,
+  setupAtStart,
+  waitFor,
+  waitForPrompt,
+} from "./LociLeafHelpers"
 
 @component
 export class LociC3QuizRevealScenario extends Scenario {
@@ -21,45 +36,53 @@ export class LociC3QuizRevealScenario extends Scenario {
 
     // Step under test 1: Quiz me.
     await pinch("QuizMeButton", main)
-    await waitFor(() => main.phase === "quiz", 5000, "quiz phase after Quiz me", main)
-    await waitFor(() => j(main.markerVisibleSpots) === j([0, 1, 2, 3, 4]), 3000, "all 5 markers visible", main)
+    await waitFor(() => main.phase === "quiz" && main.awaitingGuess, 6000, "Find-it prompt after Quiz me", main)
     await sleep(500)
-    expect(j(main.markerVisibleSpots), "all 5 spots show a ? marker").toBe(j([0, 1, 2, 3, 4]))
-    expect(j(main.revealedObjectSpots), "objects hidden behind markers").toBe(j([]))
-    expect(j(main.pulsingSpots), "only marker 1 pulses").toBe(j([0]))
-    expect(main.cardView, "card hidden during quiz").toBe("none")
-    const markerScales: string[] = []
+    const order = main.quizOrder
+    const expectedOrder = seededShuffle(5, quizRoundSeed(main.quizSeed, 0))
+    const glowModes = [0, 1, 2, 3, 4].map((i) => main.spot(i).currentGlowMode)
+    log(`C3 after Quiz me: order=${j(order.map((i) => i + 1))} markers=${j(main.markerVisibleSpots)} revealed=${j(main.revealedObjectSpots)} glow=${j(glowModes)} pulsing=${j(main.pulsingSpots)} arrow=${main.guide.isVisible} card=${main.cardView} prompt="${main.promptText}" icon=${main.promptIconModelId} progress="${main.promptProgress}"`)
+    expect(j(main.markerVisibleSpots), "all 5 spots show a marker").toBe(j([0, 1, 2, 3, 4]))
+    expect(j(main.revealedObjectSpots), "all 5 objects vanished").toBe(j([]))
+    expect(j(glowModes), "every spot glows the same neutral colour").toBe(j(["neutral", "neutral", "neutral", "neutral", "neutral"]))
+    expect(j(main.pulsingSpots), "no spot pulses (nothing gives the answer away)").toBe(j([]))
+    expect(main.guide.isVisible, "no route arrow during Find-it").toBe(false)
+    expect(main.cardView, "prompt card showing").toBe("prompt")
+    expect(j(order.slice().sort()), "prompt order covers every item once").toBe(j([0, 1, 2, 3, 4]))
+    expect(j(order), "prompt order is the seeded shuffle").toBe(j(expectedOrder))
+    expect(j(order) !== j([0, 1, 2, 3, 4]), "prompt order is not plain route order").toBe(true)
     for (let n = 1; n <= 5; n++) {
-      const m = findInteractableByName(`Spot${n}_MarkerButton`, undefined, true)
-      expect(!!m, `Spot${n}_MarkerButton enabled`).toBe(true)
-      markerScales.push(m!.getSceneObject().getTransform().getLocalScale().x.toFixed(2))
+      expect(!!findInteractableByName(`Spot${n}_MarkerButton`, undefined, true), `Spot${n}_MarkerButton enabled`).toBe(true)
     }
-    log(`C3 after Quiz me: markers=${j(main.markerVisibleSpots)} markerScales=${j(markerScales)} pulsing=${j(main.pulsingSpots)}`)
 
-    // Step under test 2: pinch marker 1.
-    await pinch("Spot1_MarkerButton", main)
-    await waitFor(() => main.revealedSpot === 0 && main.answerButtonsVisible, 3000, "spot 1 revealed with ✓/✗", main)
-    await sleep(700)
+    const t0 = order[0]
+    expect(main.quizTargetSpot, "prompt 1 asks for the first item in the order").toBe(t0)
+    expect(main.promptText, "prompt 1 question").toBe(SAMPLE_QUESTIONS[t0])
+    expect(main.promptIconModelId, "prompt 1 icon is the item's model").toBe(SAMPLE_MODELS[t0])
+    expect(main.promptProgress, "prompt 1 progress").toBe("1 of 5")
 
-    const gotIt = findInteractableByName("GotItButton", undefined, true)
-    const missed = findInteractableByName("MissedButton", undefined, true)
-    const targets = findSceneObjectByName("LociAnswerTargets")
-    const anchor = findSceneObjectByName("Spot1_AnswerAnchor")
-    const host = findSceneObjectByName("AnswerTargets")
-    const anchorErr = targets && anchor ? targets.getTransform().getWorldPosition().distance(anchor.getTransform().getWorldPosition()) : -1
-    const hostScale = host ? host.getTransform().getLocalScale().x : -1
-    log(`C3 after marker 1: revealedSpot=${main.revealedSpot} revealedObjects=${j(main.revealedObjectSpots)} model=${main.placedModelIds[0]} nameTag="${main.nameTagText}" answers=${main.answerButtonsVisible} gotIt=${isEnabled(gotIt)} missed=${isEnabled(missed)} answerHostScale=${hostScale.toFixed(2)} anchorErr=${anchorErr.toFixed(2)}cm markers=${j(main.markerVisibleSpots)}`)
+    // Step under test 2: pinch the right spot.
+    const g = await pinchGuess(main, t0)
+    await sleep(300)
+    log(`C3 after right pinch: guess=${j(g)} revealed=${j(main.revealedObjectSpots)} rings=${j(main.ringKinds)} nameTag="${main.nameTagText}" score=${main.quizScore} markers=${j(main.markerVisibleSpots)} glow=${main.spot(t0).currentGlowMode}`)
+    expect(g.correct, "guess recorded as correct").toBe(true)
+    expect(j(main.revealedObjectSpots), "only the found object popped back").toBe(j([t0]))
+    expect(main.placedModelIds[t0], "the found spot shows its model").toBe(SAMPLE_MODELS[t0])
+    expect(main.ringKinds[t0], "green ring on the found spot").toBe("green")
+    expect(main.quizScore, "score counts the correct first try").toBe(1)
+    expect(main.answersGiven[t0], "answer stored for that spot").toBe(true)
+    expect(main.markerVisibleSpots.indexOf(t0) < 0, "found spot's marker is gone").toBe(true)
+    expect(main.markerVisibleSpots.length, "the other 4 markers remain").toBe(4)
 
-    expect(main.revealedSpot, "spot 1 revealed").toBe(0)
-    expect(j(main.revealedObjectSpots), "only spot 1's object is back").toBe(j([0]))
-    expect(main.placedModelIds[0], "spot 1 reveals the umbrella").toBe("umbrella")
-    expect(main.nameTagText, "name tag").toBe("Umbrella")
-    expect(main.answerButtonsVisible, "✓/✗ shown").toBe(true)
-    expect(isEnabled(gotIt), "GotItButton (✓) enabled").toBe(true)
-    expect(isEnabled(missed), "MissedButton (✗) enabled").toBe(true)
-    expect(hostScale > 0.9, `✓/✗ popped in (scale ${hostScale.toFixed(2)})`).toBe(true)
-    expect(anchorErr >= 0 && anchorErr < 1, `✓/✗ placed at Spot1_AnswerAnchor (err ${anchorErr.toFixed(2)} cm)`).toBe(true)
-    expect(j(main.markerVisibleSpots), "marker 1 gone, 2–5 remain").toBe(j([1, 2, 3, 4]))
+    // Next prompt: a new item; the found spot is no longer a candidate.
+    const t1 = await waitForPrompt(main, 1)
+    log(`C3 prompt 2: target=spot${t1 + 1} prompt="${main.promptText}" icon=${main.promptIconModelId} pinchable=${j(main.pinchableSpots)} revealed=${j(main.revealedObjectSpots)}`)
+    expect(t1, "prompt 2 asks for the second item in the order").toBe(order[1])
+    expect(main.promptText, "prompt 2 question").toBe(SAMPLE_QUESTIONS[t1])
+    expect(main.promptIconModelId, "prompt 2 icon").toBe(SAMPLE_MODELS[t1])
+    expect(main.promptProgress, "prompt 2 progress").toBe("2 of 5")
+    expect(main.pinchableSpots.indexOf(t0) < 0, "found spot is not a guess target any more").toBe(true)
+    expect(j(main.revealedObjectSpots), "found object stays in place").toBe(j([t0]))
     log(`C3 PASS state=${main.getStateJson()}`)
   }
 }

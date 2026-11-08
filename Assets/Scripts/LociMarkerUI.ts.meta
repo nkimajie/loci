@@ -29,8 +29,10 @@
   PackagePolicy: CanBeUnpacked
   ScriptInputsHidden:
     markerSizeCm: false
+    neutralColor: false
     pulseAmount: false
     pulseRate: false
+    wrongColor: false
   ScriptTypesHidden:
     {}
   ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
@@ -43,6 +45,8 @@
     - markerSizeCm: !<float> 8.000000
       pulseAmount: 0.180000
       pulseRate: 1.200000
+      neutralColor: !<Vec4> {x: 0.600000, y: 0.700000, z: 0.980000, w: 1.000000}
+      wrongColor: !<Vec4> {x: 0.960000, y: 0.220000, z: 0.260000, w: 1.000000}
   ScriptTypes:
     -
       {}
@@ -54,4 +58,6 @@
     - '// @input float markerSizeCm = 8 {"hint":"Diameter of the ? disc in cm (brief: about 8 cm)", "widget":"slider", "min":4, "max":14, "step":0.5}'
     - '// @input float pulseAmount = 0.18 {"hint":"How much the current marker grows while pulsing (fraction of its size)", "widget":"slider", "min":0, "max":0.4, "step":0.01}'
     - '// @input float pulseRate = 1.2 {"hint":"Pulses per second for the current marker", "widget":"slider", "min":0.3, "max":3, "step":0.1}'
+    - '// @input vec4 neutralColor = "{0.60, 0.70, 0.98, 1}" {"hint":"Marker fill: bright and neutral (every spot looks the same, so it gives nothing away)", "widget":"color"}'
+    - '// @input vec4 wrongColor = "{0.96, 0.22, 0.26, 1}" {"hint":"Marker fill while it shakes after a wrong pinch", "widget":"color"}'
     - '// @ui {"widget":"group_end"}'

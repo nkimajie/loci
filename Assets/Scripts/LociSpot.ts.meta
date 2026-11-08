@@ -28,7 +28,6 @@
   ExportUid: 00000000-0000-0000-0000-000000000000
   PackagePolicy: CanBeUnpacked
   ScriptInputsHidden:
-    answerAnchor: false
     marker: false
     objectSizeCm: false
     spotName: false
@@ -43,7 +42,6 @@
     []
   DefaultScriptInputs:
     - marker: !<MappingBased.AssignableType_1> 00000000-0000-0000-0000-000000000000
-      answerAnchor: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
       spotNumber: !<float> 1.000000
       spotName: Chair
       objectSizeCm: !<float> 20.000000
@@ -56,7 +54,6 @@
     - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">References</span>"}'
     - '// @ui {"widget":"group_start", "label":"References"}'
     - "// @input AssignableType_1 marker {\"hint\":\"This spot's '?' marker (LociMarkerUI on SpotN_Marker)\"}"
-    - '// @input SceneObject answerAnchor {"hint":"Where the ✓ / ✗ targets appear when this spot is revealed (just below the object)"}'
     - '// @ui {"widget":"group_end"}'
     - '// @ui {"widget":"separator"}'
     - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Settings</span>"}'

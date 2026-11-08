@@ -12,6 +12,7 @@ import {findInteractableByName} from "Leaf.lspkg/Interactors/InteractableUtils"
 import {LeafHandInteractor} from "Leaf.lspkg/Interactors/interactor/LeafTwoHandInteractor"
 import {findSceneObjectByName, sleep, withTimeout} from "Leaf.lspkg/Utils/common/Utils"
 import {LociMain} from "../Scripts/LociMain"
+import {Guess} from "../Scripts/LociState"
 
 export const SPOT_PARENTS = ["Spot1_Chair", "Spot2_TableLeft", "Spot3_TableCentre", "Spot4_TableRight", "Spot5_Shelf"]
 export const SAMPLE_MODELS = ["umbrella", "key", "milk", "phone", "gift"]
@@ -150,9 +151,79 @@ export async function pinchStudyWalkToSwitch(main: LociMain): Promise<void> {
   await sleep(400)
 }
 
-/** Pinch-driven: Quiz me → all markers up, quiz phase at marker 1. */
-export async function pinchQuizMeAndWaitForMarkers(main: LociMain): Promise<void> {
+/** Find-it prompt text for each sample-list spot (route order). */
+export const SAMPLE_QUESTIONS = ["Where's the umbrella?", "Where are the keys?", "Where's the milk?", "Where's the phone?", "Where's the gift?"]
+
+/** Pinch-driven: Quiz me → objects vanish into 5 markers and Find-it prompt 1 waits for a pinch. */
+export async function pinchQuizMeAndWaitForPrompt(main: LociMain): Promise<void> {
   await pinch("QuizMeButton", main)
-  await waitFor(() => main.phase === "quiz" && j(main.markerVisibleSpots) === j([0, 1, 2, 3, 4]), 5000, "quiz phase with 5 markers", main)
-  await sleep(500)
+  await waitFor(
+    () => main.phase === "quiz" && main.awaitingGuess && main.quizStep === 0 && j(main.markerVisibleSpots) === j([0, 1, 2, 3, 4]),
+    6000,
+    "Find-it prompt 1 with 5 markers",
+    main,
+  )
+  await sleep(400)
+}
+
+/** Waits until Find-it prompt `step` (0-based) is up and waiting; returns its answer spot. */
+export async function waitForPrompt(main: LociMain, step: number): Promise<number> {
+  await waitFor(() => main.phase === "quiz" && main.awaitingGuess && main.quizStep === step, 6000, `Find-it prompt ${step + 1} waiting`, main)
+  await sleep(350)
+  return main.quizTargetSpot
+}
+
+/** One real SIK pinch on spot `i`'s marker as the guess; waits until the guess registers. */
+export async function pinchGuess(main: LociMain, i: number): Promise<Guess> {
+  const before = main.guesses.length
+  await pinch(`Spot${i + 1}_MarkerButton`, main)
+  await waitFor(() => main.guesses.length === before + 1, 3000, `guess on spot ${i + 1} registered`, main)
+  return main.lastGuess!
+}
+
+/** A still-hidden spot that is not `target` (for a deliberately wrong guess). */
+export function wrongSpotFor(main: LociMain, target: number): number {
+  const hidden = main.markerVisibleSpots
+  for (const i of hidden) if (i !== target) return i
+  throw new Error(`no hidden spot other than ${target + 1} | state=${main.getStateJson()}`)
+}
+
+export interface PromptRecord {
+  step: number
+  target: number
+  question: string
+  icon: string
+  progress: string
+  pinched: number
+  correct: boolean
+}
+
+/**
+ * Plays a whole Find-it round by pinching markers: the right spot first time for every
+ * prompt except those whose answer spot is in `missSpots` (those get a wrong hidden spot).
+ * Returns what each prompt showed. Ends when the results card is up.
+ */
+export async function playFindIt(main: LociMain, missSpots: number[]): Promise<PromptRecord[]> {
+  const out: PromptRecord[] = []
+  for (let step = 0; step < 5; step++) {
+    const target = await waitForPrompt(main, step)
+    const rec: PromptRecord = {
+      step,
+      target,
+      question: main.promptText,
+      icon: main.promptIconModelId,
+      progress: main.promptProgress,
+      pinched: -1,
+      correct: false,
+    }
+    const pick = missSpots.indexOf(target) >= 0 ? wrongSpotFor(main, target) : target
+    const g = await pinchGuess(main, pick)
+    rec.pinched = g.pinched
+    rec.correct = g.correct
+    out.push(rec)
+    log(`find-it ${step + 1}/5: "${rec.question}" icon=${rec.icon} answer=spot${target + 1} pinched=spot${pick + 1} → ${g.correct ? "correct" : "wrong"}`)
+  }
+  await waitFor(() => main.phase === "results" && main.cardView === "results", 6000, "results card after 5 prompts", main)
+  await sleep(400)
+  return out
 }

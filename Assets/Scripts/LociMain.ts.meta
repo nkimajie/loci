@@ -29,7 +29,6 @@
   PackagePolicy: CanBeUnpacked
   ScriptInputsHidden:
     alignToUserOnStart: false
-    answers: false
     audio: false
     cameraObject: false
     card: false
@@ -43,6 +42,7 @@
     nameTag: false
     palaceRoot: false
     previewStandBackCm: false
+    quizSeed: false
     runSelfTest: false
     sampleListText: false
     shapeKit: false
@@ -68,18 +68,18 @@
       voice: !<MappingBased.AssignableType_3> 00000000-0000-0000-0000-000000000000
       guide: !<MappingBased.AssignableType_4> 00000000-0000-0000-0000-000000000000
       card: !<MappingBased.AssignableType_5> 00000000-0000-0000-0000-000000000000
-      answers: !<MappingBased.AssignableType_6> 00000000-0000-0000-0000-000000000000
-      nameTag: !<MappingBased.AssignableType_7> 00000000-0000-0000-0000-000000000000
-      spot1: !<MappingBased.AssignableType_8> 00000000-0000-0000-0000-000000000000
-      spot2: !<MappingBased.AssignableType_9> 00000000-0000-0000-0000-000000000000
-      spot3: !<MappingBased.AssignableType_10> 00000000-0000-0000-0000-000000000000
-      spot4: !<MappingBased.AssignableType_11> 00000000-0000-0000-0000-000000000000
-      spot5: !<MappingBased.AssignableType_12> 00000000-0000-0000-0000-000000000000
+      nameTag: !<MappingBased.AssignableType_6> 00000000-0000-0000-0000-000000000000
+      spot1: !<MappingBased.AssignableType_7> 00000000-0000-0000-0000-000000000000
+      spot2: !<MappingBased.AssignableType_8> 00000000-0000-0000-0000-000000000000
+      spot3: !<MappingBased.AssignableType_9> 00000000-0000-0000-0000-000000000000
+      spot4: !<MappingBased.AssignableType_10> 00000000-0000-0000-0000-000000000000
+      spot5: !<MappingBased.AssignableType_11> 00000000-0000-0000-0000-000000000000
       sampleListText: "umbrella, keys, milk, call mom, gift"
       mixedListText: "umbrella, keys, volcano, mobile, gift"
       eyeHeightCm: !<float> 160.000000
       nameShowSec: !<float> 2.000000
       gazeDwellSec: !<float> 2.000000
+      quizSeed: !<float> 7.000000
       previewStandBackCm: !<float> 100.000000
       alignToUserOnStart: true
       debugColliders: false
@@ -99,14 +99,13 @@
     - '// @input AssignableType_2 audio {"hint":"Sound cues"}'
     - "// @input AssignableType_3 voice {\"hint\":\"Speech-to-text for 'Say my list'\"}"
     - '// @input AssignableType_4 guide {"hint":"Route arrow + edge arrow"}'
-    - '// @input AssignableType_5 card {"hint":"Start / switch / results card"}'
-    - '// @input AssignableType_6 answers {"hint":"✓ Got it / ✗ Missed targets"}'
-    - '// @input AssignableType_7 nameTag {"hint":"Item name label"}'
-    - '// @input AssignableType_8 spot1 {"hint":"Spot 1 — chair seat"}'
-    - '// @input AssignableType_9 spot2 {"hint":"Spot 2 — table left"}'
-    - '// @input AssignableType_10 spot3 {"hint":"Spot 3 — table back-centre (hero spot)"}'
-    - '// @input AssignableType_11 spot4 {"hint":"Spot 4 — table right"}'
-    - '// @input AssignableType_12 spot5 {"hint":"Spot 5 — shelf top"}'
+    - '// @input AssignableType_5 card {"hint":"Start / switch / prompt / results card"}'
+    - '// @input AssignableType_6 nameTag {"hint":"Item name label"}'
+    - '// @input AssignableType_7 spot1 {"hint":"Spot 1 — chair seat"}'
+    - '// @input AssignableType_8 spot2 {"hint":"Spot 2 — table left"}'
+    - '// @input AssignableType_9 spot3 {"hint":"Spot 3 — table back-centre (hero spot)"}'
+    - '// @input AssignableType_10 spot4 {"hint":"Spot 4 — table right"}'
+    - '// @input AssignableType_11 spot5 {"hint":"Spot 5 — shelf top"}'
     - '// @ui {"widget":"group_end"}'
     - '// @ui {"widget":"separator"}'
     - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Settings</span>"}'
@@ -116,11 +115,12 @@
     - '// @input float eyeHeightCm = 160 {"hint":"User eye height in cm — places the virtual floor under the user at start", "widget":"slider", "min":120, "max":200, "step":1}'
     - "// @input float nameShowSec = 2 {\"hint\":\"Seconds an item's name shows after pinching it in study mode\", \"widget\":\"slider\", \"min\":0.5, \"max\":5, \"step\":0.1}"
     - '// @input float gazeDwellSec = 2 {"hint":"Seconds of looking at the current object that count as a pinch (0 = off)", "widget":"slider", "min":0, "max":5, "step":0.1}'
+    - '// @input float quizSeed = 7 {"hint":"Seed for the Find-it prompt order (same seed → same order every run; each new quiz round reshuffles deterministically)"}'
     - '// @ui {"widget":"group_end"}'
     - '// @ui {"widget":"separator"}'
     - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Lens Studio preview only (ignored on Specs)</span>"}'
     - '// @ui {"widget":"group_start", "label":"Preview"}'
-    - "// @input float previewStandBackCm = 360 {\"hint\":\"Preview camera starts this far behind the user's spot (the user's spot is 0.5 m from the table front). The Specs view is only ~32° wide, so from the user's spot the chair and shelf are out of frame; 360 puts the start card, all 5 spots and their ✓/✗ targets in one frame for recording. 0 = start at the user's spot. While > 0, gaze dwell is off in the preview (the camera is a recording view, not the user's eyes).\", \"widget\":\"slider\", \"min\":0, \"max\":400, \"step\":10}"
+    - "// @input float previewStandBackCm = 320 {\"hint\":\"Preview camera starts this far behind the user's spot (the user's spot is 0.5 m from the table front). The Specs view is only ~32° wide, so from the user's spot the chair and shelf are out of frame; 320 fits the whole route with a margin. The card then floats 0.9 m in front of the camera so its text stays readable. 0 = start at the user's spot. While > 0, gaze dwell is off in the preview (the camera is a recording view, not the user's eyes).\", \"widget\":\"slider\", \"min\":0, \"max\":400, \"step\":10}"
     - '// @ui {"widget":"group_end"}'
     - '// @ui {"widget":"separator"}'
     - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Debug</span>"}'

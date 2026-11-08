@@ -1,15 +1,19 @@
 /**
- * LociCardUI — the small light "Loci" card ~20 cm above the table's front edge.
- * One authored spot, four views:
+ * LociCardUI — the small light "Loci" card ~20 cm above the table's front edge
+ * (in the Lens Studio preview LociMain moves it to ~0.9 m in front of the viewer).
+ * One spot, five views:
  *   start     — "Loci", Say my list / Sample list / Mixed list, status line
  *   switch    — Walk again / Quiz me
+ *   prompt    — Find-it quiz: small 3D icon of the item, "Where's the <item>?", "2 of 5"
  *   results   — "4 / 5" score + Review missed / Quiz again / New list (fades after ~10 s)
  *   collapsed — small "4 / 5 · Options" pill left after the results card fades
  *
  * Owns: every card button + label (UIKit BackPlate / FlexLayout / Button), view
- *       switching and the results fade timer (ephemeral view state only).
- * API (Channel A): showStart(), showSwitch(), showResults(score, hint), hideAll(),
- *       setStatus(msg); getters visibleView / scoreText / statusText.
+ *       switching, the prompt icon slot and the results fade timer (view state only).
+ * API (Channel A): showStart(), showSwitch(), showPrompt(question, hint, progress),
+ *       showResults(score, hint), hideAll(), setStatus(msg), clearPromptIcon();
+ *       getters visibleView / scoreText / statusText / promptText / promptProgress /
+ *       promptIconHost.
  *       Emits onSayList, onSampleList, onMixedList, onWalkAgain, onQuizMe,
  *       onReviewMissed, onQuizAgain, onNewList.
  * Must not: parse lists, score, or decide the flow — LociMain does.
@@ -54,9 +58,14 @@ function applyTextRole(t: Text, role: TextRole, distanceCm: number = 110): void 
   ;(t as Text & {weight?: number}).weight = TYPE_SCALE[role].weight
 }
 
-// The card sits ~20 cm above the table's front edge, 0.5 m ahead and ~65 cm below the eyes.
-const VIEW_DISTANCE_CM = 82
+// On Specs the card sits ~20 cm above the table's front edge (~0.85 m from the eyes);
+// in the preview it floats 0.9 m in front of the camera. Text is sized for 0.9 m.
+const VIEW_DISTANCE_CM = 90
 const PAD = 1.4
+// Captions (subtitle, status, hints) are scaled up so they read in a 1080p screen recording.
+const CAPTION_SCALE = 1.35
+// Find-it prompt: square slot for the item's small 3D icon.
+const ICON_SLOT_CM = 6.5
 
 // Card buttons: solid bright fills (LociButtonSkin), white bold labels 1.5x the
 // type-scale Button size, on a taller capsule so the bigger label has room.
@@ -67,7 +76,7 @@ const BUTTON_ICON = 2.1
 
 type ButtonTone = "primary" | "secondary"
 
-export type CardView = "none" | "start" | "switch" | "results" | "collapsed"
+export type CardView = "none" | "start" | "switch" | "prompt" | "results" | "collapsed"
 
 interface ViewRec {
   root: SceneObject
@@ -82,8 +91,8 @@ export class LociCardUI extends BaseScriptComponent {
   @ui.group_start("Settings")
   @input
   @hint("Card width in cm")
-  @widget(new SliderWidget(12, 24, 0.5))
-  panelWidthCm: number = 16
+  @widget(new SliderWidget(12, 26, 0.5))
+  panelWidthCm: number = 19
 
   @input("vec4", "{0.97, 0.96, 0.92, 0.96}")
   @hint("Card background: light and bright (the Specs display is additive, so dark colours vanish)")
@@ -132,8 +141,15 @@ export class LociCardUI extends BaseScriptComponent {
   private scoreLabel!: Text
   private resultsHint!: Text
   private optionsLabel!: ElementContent
+  private promptLabel!: Text
+  private promptHintLabel!: Text
+  private promptProgressLabel!: Text
+  private iconHost!: SceneObject
+  private iconSpin = 0
   private _score = ""
   private _status = ""
+  private _prompt = ""
+  private _progress = ""
 
   private _onSayList = new Event<void>()
   private _onSampleList = new Event<void>()
@@ -166,10 +182,29 @@ export class LociCardUI extends BaseScriptComponent {
     return this._status
   }
 
+  /** Find-it question while the prompt card shows ("" otherwise). */
+  get promptText(): string {
+    return this.current === "prompt" ? this._prompt : ""
+  }
+
+  get promptProgress(): string {
+    return this.current === "prompt" ? this._progress : ""
+  }
+
+  /** Parent for the prompt's small 3D item icon (built by LociMain, centred and spun here). */
+  get promptIconHost(): SceneObject {
+    return this.iconHost
+  }
+
+  get promptIconSizeCm(): number {
+    return ICON_SLOT_CM
+  }
+
   onAwake(): void {
     this.sceneObject.createComponent("Component.Canvas")
     this.buildStart()
     this.buildSwitch()
+    this.buildPrompt()
     this.buildResults()
     this.buildCollapsed()
     for (const k of Object.keys(this.views)) {
@@ -186,6 +221,24 @@ export class LociCardUI extends BaseScriptComponent {
 
   showSwitch(): void {
     this.show("switch")
+  }
+
+  /** Shows (or refreshes) the Find-it prompt. A refresh replays a quick pop so the change reads. */
+  showPrompt(question: string, hint: string, progress: string): void {
+    this._prompt = question
+    this._progress = progress
+    this.promptLabel.text = question
+    this.promptHintLabel.text = hint
+    this.promptProgressLabel.text = progress
+    const rec = this.views["prompt"]
+    if (this.current === "prompt" && rec) rec.appear = Math.min(rec.appear, 0.75)
+    this.show("prompt")
+  }
+
+  /** Removes the previous prompt's icon model. */
+  clearPromptIcon(): void {
+    for (let i = this.iconHost.getChildrenCount() - 1; i >= 0; i--) this.iconHost.getChild(i).destroy()
+    this.iconSpin = 0
   }
 
   showResults(score: string, hint: string): void {
@@ -211,28 +264,43 @@ export class LociCardUI extends BaseScriptComponent {
   private buildStart(): void {
     const {content} = this.panel("start", "StartCard")
     const inner = this.panelWidthCm - PAD * 2
-    this.addText(content, "Title", this.titleText, "Title2", inner, 4.2)
-    this.addText(content, "Subtitle", this.subtitleText, "Caption", inner, 1.8)
+    this.addText(content, "Title", this.titleText, "Title2", inner, 3.6)
+    this.addText(content, "Subtitle", this.subtitleText, "Caption", inner, 2.4)
     this.addButton(content, "SayMyListButton", "Say my list", ICON_MIC, "secondary", inner, () => this._onSayList.invoke())
     this.addButton(content, "SampleListButton", "Sample list", ICON_SAMPLE, "primary", inner, () => this._onSampleList.invoke())
     this.addButton(content, "MixedListButton", "Mixed list", ICON_MIXED, "secondary", inner, () => this._onMixedList.invoke())
-    this.statusLabel = this.addText(content, "StatusText", "", "Caption", inner, 2.4, true)
+    this.statusLabel = this.addText(content, "StatusText", "", "Caption", inner, 3.0, true)
   }
 
   private buildSwitch(): void {
     const {content} = this.panel("switch", "SwitchCard")
     const inner = this.panelWidthCm - PAD * 2
     this.addText(content, "SwitchTitle", "Route ready", "Headline1", inner, 3.0)
-    this.addText(content, "SwitchHint", "Walk it again, or test yourself", "Caption", inner, 1.8)
+    this.addText(content, "SwitchHint", "Walk it again, or test yourself", "Caption", inner, 2.4)
     this.addButton(content, "WalkAgainButton", "Walk again", ICON_WALK, "secondary", inner, () => this._onWalkAgain.invoke())
     this.addButton(content, "QuizMeButton", "Quiz me", ICON_QUIZ, "primary", inner, () => this._onQuizMe.invoke())
+  }
+
+  private buildPrompt(): void {
+    const {content} = this.panel("prompt", "PromptCard")
+    const inner = this.panelWidthCm - PAD * 2
+    // Empty Text as the flex slot: Flex sizes Text via its layout rect (never by scale),
+    // so the 3D icon parented under it keeps real-world centimetres.
+    const slot = this.addText(content, "PromptIconSlot", "", "Caption", inner, ICON_SLOT_CM)
+    this.iconHost = global.scene.createSceneObject("PromptIcon")
+    this.iconHost.setParent(slot.getSceneObject())
+    this.iconHost.getTransform().setLocalPosition(new vec3(0, 0, ICON_SLOT_CM * 0.45))
+    this.promptLabel = this.addText(content, "PromptText", "Where's the …?", "Headline1", inner, 4.0)
+    this.promptLabel.size *= 1.45 // the question is the one line that must read at a glance
+    this.promptHintLabel = this.addText(content, "PromptHint", "Pinch the spot where it was", "Caption", inner, 2.4, true)
+    this.promptProgressLabel = this.addText(content, "PromptProgress", "1 of 5", "Caption", inner, 2.2, true)
   }
 
   private buildResults(): void {
     const {content} = this.panel("results", "ResultsCard")
     const inner = this.panelWidthCm - PAD * 2
     this.scoreLabel = this.addText(content, "ScoreText", "5 / 5", "Title1", inner, 4.6)
-    this.resultsHint = this.addText(content, "ResultsHint", "Missed spots are glowing", "Caption", inner, 2.4, true)
+    this.resultsHint = this.addText(content, "ResultsHint", "Missed spots are glowing", "Caption", inner, 2.8, true)
     this.addButton(content, "ReviewMissedButton", "Review missed", ICON_REVIEW, "primary", inner, () => this._onReviewMissed.invoke())
     this.addButton(content, "QuizAgainButton", "Quiz again", ICON_REPLAY, "secondary", inner, () => this._onQuizAgain.invoke())
     this.addButton(content, "NewListButton", "New list", ICON_NEW, "secondary", inner, () => this._onNewList.invoke())
@@ -273,7 +341,7 @@ export class LociCardUI extends BaseScriptComponent {
     flex.direction = FlexDirection.Column
     flex.justifyContent = FlexJustify.Start
     flex.alignItems = FlexAlign.Stretch
-    flex.rowGap = 0.8
+    flex.rowGap = 0.6
     flex.paddingTop = PAD
     flex.paddingBottom = PAD
     flex.paddingLeft = PAD
@@ -294,6 +362,7 @@ export class LociCardUI extends BaseScriptComponent {
     t.text = text
     t.depthTest = true
     applyTextRole(t, role, VIEW_DISTANCE_CM)
+    if (role === "Caption") t.size *= CAPTION_SCALE
     t.textFill.color = subtle ? this.cardSubtleTextColor : this.cardTextColor
     t.horizontalAlignment = HorizontalAlignment.Center
     t.verticalAlignment = VerticalAlignment.Center
@@ -358,6 +427,12 @@ export class LociCardUI extends BaseScriptComponent {
     if (this.current === "results" && this.fadeLeft > 0) {
       this.fadeLeft -= dt
       if (this.fadeLeft <= 0) this.show("collapsed")
+    }
+    if (this.current === "prompt" && this.iconHost) {
+      // Gentle sway so the little 3D icon reads as an object, not a flat picture.
+      this.iconSpin += dt
+      const yaw = Math.sin(this.iconSpin * 1.3) * 0.45
+      this.iconHost.getTransform().setLocalRotation(quat.angleAxis(yaw, vec3.up()))
     }
     for (const k of Object.keys(this.views)) {
       const rec = this.views[k]

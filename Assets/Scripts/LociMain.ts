@@ -2,7 +2,9 @@
  * LociMain — orchestrates the Loci memory-palace session:
  *   start card → list (Sample / Mixed / voice) → objects drop onto 5 spots in route
  *   order → study walk (one spot pulses) → group glow → Walk again / Quiz me →
- *   "?" markers → reveal + ✓/✗ → results ("4 / 5", missed glow) → Review missed /
+ *   Find-it quiz (objects vanish into neutral markers; "Where's the <item>?" in a seeded
+ *   shuffled order; pinch the spot: green ring if right, red shake + orange-ring reveal of
+ *   the right spot if wrong) → results ("4 / 5", missed glow) → Review missed /
  *   Quiz again / New list.
  *
  * Owns: the flow and timing (LociState holds the data), wiring UI events to actions,
@@ -14,20 +16,23 @@
  *
  * Test / LEAF surface: phase, currentSpotIndex, pulsingSpots, placedModelIds,
  * totemTexts, placementOrder, scoreText, missedSpots, glowingSpots, walkQueue,
- * visitedSpots, markerVisibleSpots, revealedSpot, answerButtonsVisible,
- * cardView, getStateJson(); actions press*() / pinchItem(i) / pinchMarker(i).
+ * visitedSpots, markerVisibleSpots, revealedObjectSpots, revealedSpot, quizOrder,
+ * quizStep, quizTargetSpot, askedSpots, promptText, promptIconModelId, lastGuess,
+ * ringKinds, shakingSpots, quizScore, cardView, getStateJson();
+ * actions press*() / pinchItem(i) / guessSpot(i).
  */
 
-import {LociAnswerUI} from "./LociAnswerUI"
 import {LociAudio} from "./LociAudio"
 import {LociCardUI} from "./LociCardUI"
 import {LociGuide} from "./LociGuide"
+import {buildModel, buildTotem} from "./LociModelBuilder"
+import {findModel} from "./LociModelLibrary"
 import {LociNameTagUI} from "./LociNameTagUI"
 import {ListItem, parseAndMatch} from "./LociParser"
 import {runLociSelfTest} from "./LociSelfTest"
 import {LociShapeKit} from "./LociShapeKit"
 import {LociSpot} from "./LociSpot"
-import {LociState, Phase, SPOT_COUNT} from "./LociState"
+import {Guess, LociState, Phase, SPOT_COUNT} from "./LociState"
 import {LociVoice} from "./LociVoice"
 import {Tweener} from "./LociTween"
 
@@ -36,6 +41,22 @@ const GROUP_GLOW_SEC = 2.0
 const DROP_INTERVAL_SEC = 0.55
 const SHRINK_INTERVAL_SEC = 0.3
 const GAZE_CONE_DEG = 6
+// Find-it feedback pacing.
+const FOUND_HOLD_SEC = 1.3 // green ring + name before the next prompt
+const SHAKE_SEC = 0.6 // wrong spot shakes red
+const WRONG_REVEAL_HOLD_SEC = 1.6 // right spot shows its object with an orange ring
+// Preview framing: the card floats this far in front of the camera, in the free band
+// above or below the route (whichever the start view has room for).
+const PREVIEW_CARD_DISTANCE_CM = 90
+const PREVIEW_CARD_HEIGHT_CM = 28 // tallest view (start card) incl. padding
+const PREVIEW_CARD_WIDTH_CM = 19
+const DEG = Math.PI / 180
+// Preview stand-back only: room x of the route's visual midpoint (chair's left edge
+// −100 cm, shelf's right edge +112 cm), so the start view is centred on the route.
+const PREVIEW_ROUTE_CENTER_X_CM = 5
+// Preview stand-back only: the start view looks down at the route at this pitch
+// (route in the upper half, card below the table spots).
+const PREVIEW_VIEW_PITCH_DEG = -16
 
 @component
 export class LociMain extends BaseScriptComponent {
@@ -68,12 +89,8 @@ export class LociMain extends BaseScriptComponent {
   guide!: LociGuide
 
   @input
-  @hint("Start / switch / results card")
+  @hint("Start / switch / prompt / results card")
   card!: LociCardUI
-
-  @input
-  @hint("✓ Got it / ✗ Missed targets")
-  answers!: LociAnswerUI
 
   @input
   @hint("Item name label")
@@ -125,15 +142,19 @@ export class LociMain extends BaseScriptComponent {
   @hint("Seconds of looking at the current object that count as a pinch (0 = off)")
   @widget(new SliderWidget(0, 5, 0.1))
   gazeDwellSec: number = 2
+
+  @input
+  @hint("Seed for the Find-it prompt order (same seed → same order every run; each new quiz round reshuffles deterministically)")
+  quizSeed: number = 7
   @ui.group_end
 
   @ui.separator
   @ui.label('<span style="color: #60A5FA;">Lens Studio preview only (ignored on Specs)</span>')
   @ui.group_start("Preview")
   @input
-  @hint("Preview camera starts this far behind the user's spot (the user's spot is 0.5 m from the table front). The Specs view is only ~32° wide, so from the user's spot the chair and shelf are out of frame; 360 puts the start card, all 5 spots and their ✓/✗ targets in one frame for recording. 0 = start at the user's spot. While > 0, gaze dwell is off in the preview (the camera is a recording view, not the user's eyes).")
+  @hint("Preview camera starts this far behind the user's spot (the user's spot is 0.5 m from the table front). The Specs view is only ~32° wide, so from the user's spot the chair and shelf are out of frame; 320 fits the whole route with a margin. The card then floats 0.9 m in front of the camera so its text stays readable. 0 = start at the user's spot. While > 0, gaze dwell is off in the preview (the camera is a recording view, not the user's eyes).")
   @widget(new SliderWidget(0, 400, 10))
-  previewStandBackCm: number = 360
+  previewStandBackCm: number = 320
   @ui.group_end
 
   @ui.separator
@@ -167,6 +188,7 @@ export class LociMain extends BaseScriptComponent {
   private _lastListSource = ""
   private started = false
   private standBackCm = 0
+  private _promptIconId = ""
 
   onAwake(): void {
     this.tween = new Tweener(this)
@@ -174,7 +196,7 @@ export class LociMain extends BaseScriptComponent {
     const missing: string[] = []
     const refs: {[k: string]: any} = {
       cameraObject: this.cameraObject, palaceRoot: this.palaceRoot, shapeKit: this.shapeKit, audio: this.audio,
-      voice: this.voice, guide: this.guide, card: this.card, answers: this.answers, nameTag: this.nameTag,
+      voice: this.voice, guide: this.guide, card: this.card, nameTag: this.nameTag,
       spot1: this.spot1, spot2: this.spot2, spot3: this.spot3, spot4: this.spot4, spot5: this.spot5,
     }
     for (const k of Object.keys(refs)) if (!refs[k]) missing.push(k)
@@ -196,8 +218,15 @@ export class LociMain extends BaseScriptComponent {
     this.guide.setup(this.shapeKit, this.cameraObject)
     for (const s of this.spots) {
       s.setup(this.shapeKit, this.audio, this.eyeWorld)
-      s.onItemPinched.add((i) => this.pinchItem(i))
-      s.onMarkerPinched.add((i) => this.pinchMarker(i))
+      // In the Find-it quiz the hidden spot itself and its marker are both guess targets.
+      s.onItemPinched.add((i) => (this.state.phase === "quiz" ? this.guessSpot(i) : this.pinchItem(i)))
+      s.onMarkerPinched.add((i) => this.guessSpot(i))
+    }
+    this.placeCardForPreview()
+    if (this.standBackCm > 0) {
+      // Name tags are sized for ~1.1 m; scale them with the preview camera's distance to the route.
+      const d = this.spots[2].surfaceWorldPos.sub(this.eyeWorld).length
+      this.nameTag.setViewScale(Math.min(2.5, Math.max(1, (d / 110) * 0.65)))
     }
     this.card.onSayList.add(() => this.pressSayList())
     this.card.onSampleList.add(() => this.pressSampleList())
@@ -207,8 +236,6 @@ export class LociMain extends BaseScriptComponent {
     this.card.onReviewMissed.add(() => this.pressReviewMissed())
     this.card.onQuizAgain.add(() => this.pressQuizAgain())
     this.card.onNewList.add(() => this.pressNewList())
-    this.answers.onGotIt.add(() => this.pressGotIt())
-    this.answers.onMissed.add(() => this.pressMissed())
     this.voice.onPartial.add((t) => this.onVoicePartial(t))
     this.voice.onFinal.add((t) => this.onVoiceFinal(t))
     this.voice.onError.add((m) => this.onVoiceError(m))
@@ -225,17 +252,95 @@ export class LociMain extends BaseScriptComponent {
   /**
    * Puts the authored room's floor under the user's start pose, facing where they look.
    * In the Lens Studio preview the room also moves `standBackCm` ahead along the look
-   * direction, so the camera starts that far behind the user's spot.
+   * direction (centred on the route sideways), so the camera starts that far behind the
+   * user's spot.
    */
   private alignPalace(): void {
     const cam = this.cameraObject.getTransform()
     const p = cam.getWorldPosition()
     const look = cam.back
     const yaw = Math.atan2(-look.x, -look.z)
-    const ahead = new vec3(-Math.sin(yaw), 0, -Math.cos(yaw)).uniformScale(this.standBackCm)
+    const sy = Math.sin(yaw)
+    const cy = Math.cos(yaw)
+    let shift = vec3.zero()
+    if (this.standBackCm > 0) {
+      const ahead = new vec3(-sy, 0, -cy).uniformScale(this.standBackCm)
+      const roomRight = new vec3(cy, 0, -sy)
+      shift = ahead.sub(roomRight.uniformScale(PREVIEW_ROUTE_CENTER_X_CM))
+    }
     const pt = this.palaceRoot.getTransform()
-    pt.setWorldPosition(new vec3(p.x, p.y - this.eyeHeightCm, p.z).add(ahead))
+    pt.setWorldPosition(new vec3(p.x, p.y - this.eyeHeightCm, p.z).add(shift))
     pt.setWorldRotation(quat.angleAxis(yaw, vec3.up()))
+    if (this.standBackCm > 0) {
+      // The preview camera's start pitch is editor workspace state and can come back level
+      // after a restart. Tilt the room about the eye instead, so the start view always
+      // looks down at the route at PREVIEW_VIEW_PITCH_DEG whatever the camera pitch is.
+      const pitch = Math.asin(Math.max(-1, Math.min(1, look.y)))
+      const tilt = pitch - PREVIEW_VIEW_PITCH_DEG * DEG
+      if (Math.abs(tilt) > 0.5 * DEG) {
+        const r = quat.angleAxis(tilt, new vec3(cy, 0, -sy))
+        pt.setWorldPosition(p.add(r.multiplyVec3(pt.getWorldPosition().sub(p))))
+        pt.setWorldRotation(r.multiply(pt.getWorldRotation()))
+        this.log(`preview camera pitch ${(pitch / DEG).toFixed(1)}° → room tilted ${(tilt / DEG).toFixed(1)}° so the route reads as from a ${PREVIEW_VIEW_PITCH_DEG}° look-down`)
+      }
+    }
+  }
+
+  /**
+   * Preview only: the card floats PREVIEW_CARD_DISTANCE_CM in front of the camera, facing
+   * it, in whichever free band of the start view is bigger — below the table spots when the
+   * camera looks down at the route, above the route when it starts level — so the card text
+   * stays readable without covering any spot.
+   */
+  private placeCardForPreview(): void {
+    if (this.standBackCm <= 0) return
+    const camT = this.cameraObject.getTransform()
+    const eye = camT.getWorldPosition()
+    const look = camT.back
+    const yaw = Math.atan2(-look.x, -look.z)
+    const fwd = new vec3(-Math.sin(yaw), 0, -Math.cos(yaw))
+    const right = new vec3(Math.cos(yaw), 0, -Math.sin(yaw))
+    const pitch = Math.asin(Math.max(-1, Math.min(1, look.y)))
+    const cam = this.cameraObject.getComponent("Component.Camera") as Camera
+    const halfV = cam && cam.fov > 0 ? cam.fov / 2 : 18 * DEG
+    const elev = (p: vec3) => {
+      const d = p.sub(eye)
+      return Math.atan2(d.y, Math.sqrt(d.x * d.x + d.z * d.z))
+    }
+    const halfW = Math.atan(PREVIEW_CARD_WIDTH_CM / 2 / PREVIEW_CARD_DISTANCE_CM)
+    let top = -Math.PI / 2
+    let lowInBand = Math.PI / 2
+    for (const sp of this.spots) {
+      top = Math.max(top, elev(sp.nameTagWorldPos.add(new vec3(0, 8, 0))))
+      const d = sp.surfaceWorldPos.sub(eye)
+      const az = Math.atan2(d.dot(right), d.dot(fwd))
+      if (Math.abs(az) < halfW + 4 * DEG) {
+        // Lowest point that matters in the card's column: the spot's surface, pulled toward the camera.
+        const near = sp.surfaceWorldPos.add(fwd.uniformScale(-sp.objectSizeCm * 0.8))
+        lowInBand = Math.min(lowInBand, elev(near))
+      }
+    }
+    if (lowInBand > Math.PI / 4) lowInBand = top - 10 * DEG
+    const halfH = Math.atan(PREVIEW_CARD_HEIGHT_CM / 2 / PREVIEW_CARD_DISTANCE_CM)
+    const gap = 1.5 * DEG
+    const frameTop = pitch + halfV
+    const frameBottom = pitch - halfV
+    const roomBelow = lowInBand - gap - (frameBottom + gap)
+    const roomAbove = frameTop - gap - (top + gap)
+    let e: number
+    if (roomBelow >= roomAbove) {
+      e = Math.max(lowInBand - gap - halfH, frameBottom + gap + halfH) // hug the route, stay in frame
+    } else {
+      e = Math.min(top + gap + halfH, frameTop - gap - halfH)
+    }
+    const dir = fwd.uniformScale(Math.cos(e)).add(vec3.up().uniformScale(Math.sin(e)))
+    const pos = eye.add(dir.uniformScale(PREVIEW_CARD_DISTANCE_CM))
+    const ct = this.card.getSceneObject().getTransform()
+    ct.setWorldPosition(pos)
+    ct.setWorldRotation(quat.lookAt(eye.sub(pos).normalize(), vec3.up()))
+    this.log(`preview card ${PREVIEW_CARD_DISTANCE_CM} cm in front of the camera, ${(e / DEG).toFixed(1)}° elevation ` +
+      `(camera pitch ${(pitch / DEG).toFixed(1)}°, vfov ${((2 * halfV) / DEG).toFixed(1)}°, route ${(top / DEG).toFixed(1)}°…${(lowInBand / DEG).toFixed(1)}°, ` +
+      `room ${roomBelow >= roomAbove ? "below" : "above"} ${((Math.max(roomBelow, roomAbove) - 2 * halfH) / DEG).toFixed(1)}° spare)`)
   }
 
   // ── Actions (UI events and tests both call these) ─────────────────────────
@@ -293,14 +398,6 @@ export class LociMain extends BaseScriptComponent {
     return true
   }
 
-  pressGotIt(): boolean {
-    return this.answer(true)
-  }
-
-  pressMissed(): boolean {
-    return this.answer(false)
-  }
-
   /** Study: pinching the current (pulsing) object. Returns false if ignored. */
   pinchItem(i: number): boolean {
     const st = this.state
@@ -322,19 +419,48 @@ export class LociMain extends BaseScriptComponent {
     return true
   }
 
-  /** Quiz: pinching the current "?" marker reveals the item. Returns false if ignored. */
-  pinchMarker(i: number): boolean {
+  /**
+   * Find-it: the user pinched spot `i` (its marker or the hidden spot) as the answer to
+   * the current prompt. First pinch only; returns false if ignored.
+   */
+  guessSpot(i: number): boolean {
     const st = this.state
-    if (st.phase !== "quiz" || st.awaitingAnswer || i !== st.quizPos) return false
-    st.awaitingAnswer = true
-    st.revealedSpot = i
-    const spot = this.spots[i]
-    spot.reveal()
-    this.guide.hide()
-    const item = spot.listItem
-    const tagPos = spot.nameTagWorldPos
-    this.nameTag.showName(item ? item.display : spot.spotName, tagPos, spot.facingRotation(tagPos), 0)
-    this.answers.showAt(spot.answerAnchor)
+    if (st.phase !== "quiz" || !st.awaitingGuess || i < 0 || i >= SPOT_COUNT) return false
+    if (this.spots[i].isRevealed) return false // already found — not a candidate any more
+    const g = st.recordGuess(i)
+    for (const s of this.spots) s.setPinchable(false)
+    const target = this.spots[g.target]
+    const item = target.listItem
+    const tagPos = target.nameTagWorldPos
+    this.log(`find-it: asked spot ${g.target + 1} (${item ? item.word : "?"}), pinched spot ${i + 1} → ${g.correct ? "correct" : "wrong"}`)
+    if (g.correct) {
+      st.revealedSpot = g.target
+      target.reveal(false)
+      target.setGlow("off")
+      target.showRing("green", FOUND_HOLD_SEC)
+      this.audio.correct(target.surfaceWorldPos)
+      this.nameTag.showName(item ? item.display : target.spotName, tagPos, target.facingRotation(tagPos), 0)
+      this.later(FOUND_HOLD_SEC + 0.3, () => this.finishPrompt())
+    } else {
+      const wrong = this.spots[i]
+      wrong.shakeWrong(SHAKE_SEC)
+      this.audio.missed(wrong.surfaceWorldPos)
+      this.later(SHAKE_SEC, () => {
+        st.revealedSpot = g.target
+        target.reveal(true)
+        target.setGlow("off")
+        target.showRing("orange", WRONG_REVEAL_HOLD_SEC)
+        this.nameTag.showName(item ? item.display : target.spotName, tagPos, target.facingRotation(tagPos), 0)
+      })
+      this.later(SHAKE_SEC + WRONG_REVEAL_HOLD_SEC, () => {
+        // Brief reveal only: the missed object goes back under a neutral marker.
+        st.revealedSpot = -1
+        this.nameTag.hide()
+        target.shrinkToMarker()
+        target.setGlow("neutral")
+      })
+      this.later(SHAKE_SEC + WRONG_REVEAL_HOLD_SEC + 0.5, () => this.finishPrompt())
+    }
     return true
   }
 
@@ -344,7 +470,8 @@ export class LociMain extends BaseScriptComponent {
     this.tween.cancelAll()
     this.voice.stopListening()
     for (const s of this.spots) s.clearItem()
-    this.answers.hide()
+    this.card.clearPromptIcon()
+    this._promptIconId = ""
     this.nameTag.hide()
     this.guide.hide()
     this.state = new LociState()
@@ -428,55 +555,105 @@ export class LociMain extends BaseScriptComponent {
     })
   }
 
+  /** Find-it: objects vanish into neutral markers, then the first prompt appears. */
   private startQuiz(): void {
     this.flow += 1
-    this.state.resetQuiz()
+    this.state.beginQuiz(this.quizSeed)
     this.setPhase("quizIntro")
     this.guide.hide()
     this.nameTag.hide()
     for (const s of this.spots) {
       s.setPulse(false)
       s.setPinchable(false)
+      s.setMarkerPulse(false)
+      s.clearRing()
     }
     for (let i = 0; i < SPOT_COUNT; i++) {
-      this.later(i * SHRINK_INTERVAL_SEC, () => this.spots[i].shrinkToMarker())
+      this.later(i * SHRINK_INTERVAL_SEC, () => {
+        this.spots[i].shrinkToMarker()
+        this.spots[i].setGlow("neutral")
+      })
     }
+    this.log(`find-it order (seed ${this.quizSeed}, round ${this.state.quizRound}): ${JSON.stringify(this.state.quizOrder.map((k) => k + 1))}`)
     this.later(SPOT_COUNT * SHRINK_INTERVAL_SEC + 0.5, () => {
       this.setPhase("quiz")
-      this.focusMarker()
+      this.askPrompt()
     })
   }
 
-  private focusMarker(): void {
-    const cur = this.state.quizPos
-    this.spots.forEach((s, i) => s.setMarkerPulse(i === cur))
-    if (cur < 0 || cur >= SPOT_COUNT) return
-    const spot = this.spots[cur]
-    this.guide.pointAt(spot.markerArrowWorldPos)
-    this.audio.spotChime(cur, spot.surfaceWorldPos)
-    this.log(`quiz → marker ${cur + 1} (${spot.spotName}) pulses`)
+  /** Puts up "Where's the <item>?" for the current prompt; every hidden spot becomes a guess target. */
+  private askPrompt(): void {
+    const st = this.state
+    const target = st.quizTarget
+    if (target < 0) {
+      this.showResults()
+      return
+    }
+    const item = st.items[target] || this.spots[target].listItem
+    const name = item ? item.display : this.spots[target].spotName
+    st.asked.push(target)
+    st.awaitingGuess = true
+    st.revealedSpot = -1
+    this.spots.forEach((s) => s.setPinchable(!s.isRevealed))
+    this.buildPromptIcon(target)
+    this.card.showPrompt(this.promptQuestion(target), "Pinch the spot where it was", `${st.quizStep + 1} of ${SPOT_COUNT}`)
+    this.log(`find-it prompt ${st.quizStep + 1}/${SPOT_COUNT}: ${name} (answer: spot ${target + 1})`)
   }
 
-  private answer(correct: boolean): boolean {
-    const st = this.state
-    if (st.phase !== "quiz" || !st.awaitingAnswer) return false
-    const i = st.quizPos
-    const pos = this.spots[i].surfaceWorldPos
-    this.answers.hide()
+  /** "Where's the umbrella?", "Where are the keys?"; phrases like "call mom" use the object's name. */
+  private promptQuestion(spotIndex: number): string {
+    const item = this.state.items[spotIndex] || this.spots[spotIndex].listItem
+    if (!item) return "Where was it?"
+    let noun = item.word.toLowerCase()
+    const def = item.modelId ? findModel(item.modelId) : null
+    if (def && noun.indexOf(" ") >= 0) noun = def.displayName.toLowerCase()
+    const plural = noun.indexOf(" ") < 0 && noun.length > 3 && /[^su]s$/.test(noun)
+    return plural ? `Where are the ${noun}?` : `Where's the ${noun}?`
+  }
+
+  private finishPrompt(): void {
     this.nameTag.hide()
-    if (correct) this.audio.correct(pos)
-    else this.audio.missed(pos)
-    const more = st.answer(correct)
-    st.revealedSpot = -1
-    this.log(`answer spot ${i + 1}: ${correct ? "✓" : "✗"}`)
-    if (more) this.later(0.45, () => this.focusMarker())
-    else this.later(0.6, () => this.showResults())
-    return true
+    this.state.revealedSpot = -1
+    if (this.state.nextPrompt()) this.askPrompt()
+    else this.later(0.3, () => this.showResults())
+  }
+
+  /** Small 3D copy of the asked item's model (or word totem) for the prompt card. */
+  private buildPromptIcon(spotIndex: number): void {
+    this.card.clearPromptIcon()
+    const item = this.state.items[spotIndex] || this.spots[spotIndex].listItem
+    if (!item) {
+      this._promptIconId = ""
+      return
+    }
+    const host = this.card.promptIconHost
+    const slot = this.card.promptIconSizeCm
+    const holder = global.scene.createSceneObject("PromptIconModel")
+    holder.setParent(host)
+    const def = item.modelId ? findModel(item.modelId) : null
+    if (def) {
+      const unit = slot * 0.8
+      holder.getTransform().setLocalPosition(new vec3(0, -unit * 0.45, 0))
+      buildModel(this.shapeKit, holder, def, unit)
+      this._promptIconId = def.id
+    } else {
+      const unit = slot * 0.45
+      holder.getTransform().setLocalPosition(new vec3(0, -unit * 0.6, 0))
+      buildTotem(this.shapeKit, holder, item.word, spotIndex, unit)
+      this._promptIconId = "totem"
+    }
   }
 
   private showResults(): void {
     const st = this.state
     this.setPhase("results")
+    st.awaitingGuess = false
+    // Bring every object back so the whole route is there to review.
+    for (const s of this.spots) {
+      s.setPinchable(false)
+      s.clearRing()
+      if (!s.isRevealed) s.reveal(false)
+    }
     const missed = st.missed
     this.spots.forEach((s, i) => s.setGlow(missed.indexOf(i) >= 0 ? "missed" : "off"))
     const hint = missed.length > 0 ? "Missed spots are glowing" : "All five remembered!"
@@ -581,7 +758,7 @@ export class LociMain extends BaseScriptComponent {
     return this.state.phase
   }
 
-  /** 0-based index of the spot to act on now (study object or quiz marker); -1 if none. */
+  /** 0-based index of the spot to act on in the study walk; -1 otherwise (Find-it never points). */
   get currentSpotIndex(): number {
     return this.state.currentSpot
   }
@@ -667,8 +844,80 @@ export class LociMain extends BaseScriptComponent {
     return this.state.revealedSpot
   }
 
-  get answerButtonsVisible(): boolean {
-    return this.answers.isVisible
+  /** Find-it: spot indices in the order their items are asked (seeded shuffle). */
+  get quizOrder(): number[] {
+    return this.state.quizOrder.slice()
+  }
+
+  /** Find-it: 0-based index of the current prompt (5 when all are done). */
+  get quizStep(): number {
+    return this.state.quizStep
+  }
+
+  /** Find-it: spot whose item the current prompt asks for (-1 outside the quiz). */
+  get quizTargetSpot(): number {
+    return this.state.phase === "quiz" ? this.state.quizTarget : -1
+  }
+
+  /** Find-it: true while the prompt is waiting for its (first) pinch. */
+  get awaitingGuess(): boolean {
+    return this.state.phase === "quiz" && this.state.awaitingGuess
+  }
+
+  get askedSpots(): number[] {
+    return this.state.asked.slice()
+  }
+
+  get guesses(): Guess[] {
+    return this.state.guesses.slice()
+  }
+
+  get lastGuess(): Guess | null {
+    const g = this.state.guesses
+    return g.length > 0 ? g[g.length - 1] : null
+  }
+
+  /** Correct first tries so far in the current quiz round. */
+  get quizScore(): number {
+    return this.state.score
+  }
+
+  get quizRound(): number {
+    return this.state.quizRound
+  }
+
+  get promptText(): string {
+    return this.card.promptText
+  }
+
+  get promptProgress(): string {
+    return this.card.promptProgress
+  }
+
+  /** Model id of the prompt card's 3D icon ("totem" for word totems, "" when none). */
+  get promptIconModelId(): string {
+    return this.card.visibleView === "prompt" ? this._promptIconId : ""
+  }
+
+  /** Per spot: feedback ring showing ("", "green" or "orange"). */
+  get ringKinds(): string[] {
+    return this.spots.map((s) => s.ringKind)
+  }
+
+  get shakingSpots(): number[] {
+    const out: number[] = []
+    this.spots.forEach((s, i) => {
+      if (s.isShaking) out.push(i)
+    })
+    return out
+  }
+
+  get pinchableSpots(): number[] {
+    const out: number[] = []
+    this.spots.forEach((s, i) => {
+      if (s.isPinchable) out.push(i)
+    })
+    return out
   }
 
   get cardView(): string {
@@ -706,8 +955,15 @@ export class LociMain extends BaseScriptComponent {
       visitedSpots: this.visitedSpots,
       markerVisibleSpots: this.markerVisibleSpots,
       revealedSpot: this.revealedSpot,
-      answerButtonsVisible: this.answerButtonsVisible,
+      revealedObjectSpots: this.revealedObjectSpots,
+      quizOrder: this.quizOrder,
+      quizStep: this.quizStep,
+      quizTargetSpot: this.quizTargetSpot,
+      askedSpots: this.askedSpots,
+      answers: this.answersGiven,
+      ringKinds: this.ringKinds,
       cardView: this.cardView,
+      promptText: this.promptText,
       nameTagText: this.nameTagText,
     })
   }

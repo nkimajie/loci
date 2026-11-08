@@ -2,7 +2,7 @@
  * LociSelfTest — scripted check of the brief's 5 done criteria (debug only).
  *
  * Runs when LociMain.runSelfTest is ticked. Drives the same action methods the
- * pinch targets call (pressSampleList, pinchItem, pinchMarker, pressGotIt, …),
+ * pinch targets call (pressSampleList, pinchItem, guessSpot, pressReviewMissed, …),
  * reads LociMain's test-facing state, and prints "[LociSelfTest] PASS/FAIL C<n>".
  * This verifies flow logic; the SIK pinch path itself is covered by LEAF tests.
  * Must not: ship enabled — LociMain.runSelfTest defaults to false.
@@ -27,17 +27,17 @@ interface LociTestTarget {
   markerVisibleSpots: number[]
   revealedObjectSpots: number[]
   revealedSpot: number
-  answerButtonsVisible: boolean
+  quizOrder: number[]
+  quizTargetSpot: number
+  awaitingGuess: boolean
   cardView: string
   nameShowSec: number
   pressSampleList(): boolean
   pressMixedList(): boolean
   pressQuizMe(): boolean
   pressReviewMissed(): boolean
-  pressGotIt(): boolean
-  pressMissed(): boolean
   pinchItem(i: number): boolean
-  pinchMarker(i: number): boolean
+  guessSpot(i: number): boolean
   resetToStart(): void
   debugSimulateLook(pitchDownDeg: number, yawLeftDeg: number): void
   getStateJson(): string
@@ -72,7 +72,13 @@ export function runLociSelfTest(main: LociTestTarget, tween: Tweener): void {
     if (monitoring) maxPulsing = Math.max(maxPulsing, main.pulsingSpots.length)
   })
 
-  const pattern = [true, true, false, true, true]
+  // Find-it: every item found on the first try except the milk (spot 3), which gets a wrong spot.
+  const MISSED_SPOT = 2
+  const guessFor = (target: number): number => {
+    if (target !== MISSED_SPOT) return target
+    for (let i = 0; i < 5; i++) if (i !== target && main.revealedObjectSpots.indexOf(i) < 0) return i
+    return target
+  }
   const steps: Step[] = []
   if (SHOWCASE_ONLY) {
     steps.push({wait: 0.8, run: () => void (SHOWCASE_LIST === "sample" ? main.pressSampleList() : main.pressMixedList())})
@@ -134,36 +140,24 @@ export function runLociSelfTest(main: LociTestTarget, tween: Tweener): void {
       check("C3", main.pressQuizMe(), "Quiz me press ignored")
     },
   })
-  steps.push({
-    wait: 2.8,
-    run: () => {
-      check("C3", main.phase === "quiz", "quiz phase not reached")
-      check("C3", same(main.markerVisibleSpots, [0, 1, 2, 3, 4]), "all 5 should be '?' markers: " + JSON.stringify(main.markerVisibleSpots))
-      check("C3", main.revealedObjectSpots.length === 0, "objects should be hidden behind markers")
-      check("C3", main.pinchMarker(0), "pinch on marker 1 ignored")
-    },
-  })
-  const expected = ["umbrella", "key", "milk", "phone", "gift"]
   for (let k = 0; k < 5; k++) {
     steps.push({
-      wait: 0.6,
+      wait: k === 0 ? 2.8 : 3.0,
       run: () => {
-        if (k > 0) check("C3", main.pinchMarker(k), `pinch on marker ${k + 1} ignored`)
-      },
-    })
-    steps.push({
-      wait: 0.5,
-      run: () => {
-        check("C3", main.revealedSpot === k && main.revealedObjectSpots.indexOf(k) >= 0, `marker ${k + 1} should reveal its object`)
-        check("C3", main.placedModelIds[k] === expected[k], `spot ${k + 1} should reveal ${expected[k]}`)
-        check("C3", main.answerButtonsVisible, `✓/✗ should show for spot ${k + 1}`)
-        const ok = pattern[k] ? main.pressGotIt() : main.pressMissed()
-        check("C4", ok, `answer ${k + 1} ignored`)
+        if (k === 0) {
+          check("C3", main.phase === "quiz", "quiz phase not reached")
+          check("C3", same(main.markerVisibleSpots, [0, 1, 2, 3, 4]), "all 5 spots should show markers: " + JSON.stringify(main.markerVisibleSpots))
+          check("C3", main.revealedObjectSpots.length === 0, "objects should vanish behind markers")
+          check("C3", same(main.quizOrder.slice().sort(), [0, 1, 2, 3, 4]), "prompt order should cover every item: " + JSON.stringify(main.quizOrder))
+        }
+        const target = main.quizTargetSpot
+        check("C3", main.awaitingGuess && target >= 0, `prompt ${k + 1} should be waiting for a pinch`)
+        check("C3", main.guessSpot(guessFor(target)), `guess for prompt ${k + 1} ignored`)
       },
     })
   }
   steps.push({
-    wait: 1.0,
+    wait: 3.3,
     run: () => {
       check("C4", main.phase === "results", "results not shown")
       check("C4", main.scoreText === "4 / 5", "score text '" + main.scoreText + "'")
@@ -221,12 +215,11 @@ export function runLociSelfTest(main: LociTestTarget, tween: Tweener): void {
       steps.push({wait: N + 0.45, run: () => {}})
     }
     steps.push({wait: 2.3, run: () => void main.pressQuizMe()})
-    steps.push({wait: 2.8, run: () => void main.pinchMarker(0)})
     if (SHOWCASE_END === "results") {
       for (let k = 0; k < 5; k++) {
-        steps.push({wait: 0.6, run: () => void (k > 0 && main.pinchMarker(k))})
-        steps.push({wait: 0.5, run: () => void (pattern[k] ? main.pressGotIt() : main.pressMissed())})
+        steps.push({wait: k === 0 ? 2.8 : 3.0, run: () => void main.guessSpot(guessFor(main.quizTargetSpot))})
       }
+      steps.push({wait: 3.3, run: () => {}})
     }
   }
   steps.push({

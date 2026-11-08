@@ -5,11 +5,12 @@
  *
  * Owns: the runtime pinch target "SpotN_Item" (unit-scale collider wrapper +
  *       SIK Interactable), the object visual under it (model or word totem), the
- *       glow discs, and this spot's drop / pulse / hover / shrink / reveal visuals.
- * Expects @inputs: its LociMarkerUI ("SpotN_Marker") and an authored answer anchor.
+ *       glow discs, the Find-it feedback ring, and this spot's drop / pulse / hover /
+ *       shrink / reveal / wrong-shake visuals.
+ * Expects @inputs: its LociMarkerUI ("SpotN_Marker").
  * API: setup(), setItem(), dropIn(), clearItem(), setPinchable(), setPulse(),
- *      setGlow(), playStudyAnimation(), shrinkToMarker(), reveal(), setMarkerPulse();
- *      emits onItemPinched(index) / onMarkerPinched(index).
+ *      setGlow(), playStudyAnimation(), shrinkToMarker(), reveal(), setMarkerPulse(),
+ *      showRing(), clearRing(), shakeWrong(); emits onItemPinched(index) / onMarkerPinched(index).
  * Must not: decide flow or order — LociMain owns the session.
  */
 
@@ -23,12 +24,18 @@ import {ListItem} from "./LociParser"
 import {LociShapeKit} from "./LociShapeKit"
 import {Ease, TweenHandle, Tweener} from "./LociTween"
 
-export type GlowMode = "off" | "steady" | "missed"
+export type GlowMode = "off" | "steady" | "missed" | "neutral"
+export type RingKind = "" | "green" | "orange"
 
 const GLOW_COLOR: Rgb = [1.0, 0.82, 0.38]
 const MISSED_COLOR: Rgb = [1.0, 0.48, 0.32]
+const NEUTRAL_COLOR: Rgb = [0.7, 0.82, 1.0] // Find-it: every hidden spot glows the same
+const WRONG_COLOR: Rgb = [1.0, 0.16, 0.18]
+const RING_COLORS: {[k: string]: Rgb} = {green: [0.2, 1.0, 0.42], orange: [1.0, 0.55, 0.1]}
 const STUDY_ANIM_SEC = 1.4
 const DROP_HEIGHT_CM = 28
+const RING_POP_SEC = 0.3
+const RING_FADE_SEC = 0.4
 
 @component
 export class LociSpot extends BaseScriptComponent {
@@ -39,10 +46,6 @@ export class LociSpot extends BaseScriptComponent {
   @input
   @hint("This spot's '?' marker (LociMarkerUI on SpotN_Marker)")
   marker!: LociMarkerUI
-
-  @input
-  @hint("Where the ✓ / ✗ targets appear when this spot is revealed (just below the object)")
-  answerAnchor!: SceneObject
   @ui.group_end
 
   @ui.separator
@@ -92,6 +95,13 @@ export class LociSpot extends BaseScriptComponent {
   private appearTween: TweenHandle | null = null
   private animTween: TweenHandle | null = null
   private _placedAt = -1
+
+  private ringRoot!: SceneObject
+  private ringMat: Material | null = null
+  private ring: RingKind = ""
+  private ringAge = 0
+  private ringHold = 0
+  private wrongLeft = 0
 
   private _onItemPinched = new Event<number>()
   private _onMarkerPinched = new Event<number>()
@@ -159,6 +169,16 @@ export class LociSpot extends BaseScriptComponent {
     return this._pinchable
   }
 
+  /** Feedback ring currently showing ("" when none). */
+  get ringKind(): RingKind {
+    return this.ring
+  }
+
+  /** True while the red wrong-spot shake / flash is playing. */
+  get isShaking(): boolean {
+    return this.wrongLeft > 0 || (this.marker ? this.marker.isShaking : false)
+  }
+
   onAwake(): void {
     const n = Math.round(this.spotNumber)
     const size = this.objectSizeCm
@@ -185,6 +205,11 @@ export class LociSpot extends BaseScriptComponent {
     this.glowRoot.getTransform().setLocalPosition(new vec3(0, 0.4, 0))
     this.glowRoot.enabled = false
 
+    this.ringRoot = global.scene.createSceneObject(`Spot${n}_Ring`)
+    this.ringRoot.setParent(this.sceneObject)
+    this.ringRoot.getTransform().setLocalPosition(new vec3(0, size / 2, 0))
+    this.ringRoot.enabled = false
+
     this.tween = new Tweener(this)
     this.createEvent("OnStartEvent").bind(() => {
       this.interactable.onTriggerEnd.add(() => {
@@ -203,10 +228,10 @@ export class LociSpot extends BaseScriptComponent {
     this.audio = audio
     this.eyeWorld = eyeWorld
 
-    // Objects face the user (yaw only); marker, answer targets face the eyes.
+    // Objects face the user (yaw only); marker and feedback ring face the eyes.
     this.visual.getTransform().setWorldRotation(this.yawToEye(this.itemRoot.getTransform().getWorldPosition()))
     if (this.marker) this.faceEye(this.marker.getSceneObject())
-    if (this.answerAnchor) this.faceEye(this.answerAnchor)
+    this.faceEye(this.ringRoot)
 
     if (this.glowMats.length === 0) {
       const size = this.objectSizeCm
@@ -217,6 +242,14 @@ export class LociSpot extends BaseScriptComponent {
       kit.part(this.glowRoot, `Spot${this.spotNumber}_GlowInner`, "disc", vec3.zero(), new vec3(di, 0, di), null, inner)
       kit.part(this.glowRoot, `Spot${this.spotNumber}_GlowOuter`, "disc", new vec3(0, -0.1, 0), new vec3(dout, 0, dout), null, outer)
       this.glowMats = [inner, outer]
+    }
+    if (!this.ringMat) {
+      // Upright ring around the object, facing the eyes, so it reads from any distance.
+      const size = this.objectSizeCm
+      const d = Math.max(20, Math.min(size * 1.55, 48))
+      const thick = Math.max(2, size * 0.09)
+      this.ringMat = kit.glowMaterialFor(RING_COLORS.green, 0)
+      kit.part(this.ringRoot, `Spot${this.spotNumber}_RingTorus`, "torus", vec3.zero(), new vec3(d, thick, d), new vec3(90, 0, 0), this.ringMat)
     }
   }
 
@@ -283,6 +316,8 @@ export class LociSpot extends BaseScriptComponent {
     this.pulsing = false
     this.setPinchable(false)
     this.setGlow("off")
+    this.clearRing()
+    this.wrongLeft = 0
     if (this.marker) {
       this.marker.setPulsing(false)
       this.marker.popOut()
@@ -366,17 +401,38 @@ export class LociSpot extends BaseScriptComponent {
   }
 
   /** Marker pops away and the object pops back into its place. */
-  reveal(): void {
+  reveal(playPop: boolean = true): void {
     if (this.marker) {
       this.marker.setPulsing(false)
       this.marker.popOut()
     }
     this._revealed = true
-    if (this.audio) this.audio.pop(this.surfaceWorldPos)
+    if (playPop && this.audio) this.audio.pop(this.surfaceWorldPos)
     if (this.appearTween) this.appearTween.cancel()
     this.appearTween = this.tween.tween(0.45, (t) => {
       this.appear = Ease.outBack(t)
     }, () => (this.appear = 1))
+  }
+
+  /** Find-it feedback ring around the object: pops in, holds `holdSec`, then fades. */
+  showRing(kind: "green" | "orange", holdSec: number): void {
+    this.ring = kind
+    this.ringAge = 0
+    this.ringHold = Math.max(0, holdSec)
+    if (this.ringMat) LociShapeKit.setGlow(this.ringMat, RING_COLORS[kind], 0)
+    this.ringRoot.getTransform().setLocalScale(vec3.one().uniformScale(0.001))
+    this.ringRoot.enabled = true
+  }
+
+  clearRing(): void {
+    this.ring = ""
+    if (this.ringRoot) this.ringRoot.enabled = false
+  }
+
+  /** Find-it: this spot was pinched for the wrong item — marker shakes red, spot flashes red. */
+  shakeWrong(sec: number): void {
+    this.wrongLeft = sec
+    if (this.marker) this.marker.shakeWrong(sec)
   }
 
   // ── Per-frame visuals ─────────────────────────────────────────────────────
@@ -397,14 +453,23 @@ export class LociSpot extends BaseScriptComponent {
     vt.setLocalScale(new vec3(s * (1 + q * 0.5), s * (1 - q), s * (1 + q * 0.5)))
     vt.setLocalPosition(new vec3(0, -this.objectSizeCm / 2 + this.dropY, 0))
 
-    // Glow: pulse (current), steady (group glow) or missed (results).
+    // Glow: pulse (current), steady (group glow), missed (results), neutral (Find-it),
+    // with a red flash over all of them while a wrong pinch shakes this spot.
     let target = 0
     let color = GLOW_COLOR
     if (this.glowMode === "steady") target = 1
     else if (this.glowMode === "missed") {
       target = 1
       color = MISSED_COLOR
+    } else if (this.glowMode === "neutral") {
+      target = 0.75
+      color = NEUTRAL_COLOR
     } else if (anyPulse) target = 0.4 + 0.35 * Math.sin(this.pulsePhase)
+    if (this.wrongLeft > 0) {
+      this.wrongLeft = Math.max(0, this.wrongLeft - dt)
+      target = 1.3
+      color = WRONG_COLOR
+    }
     target = Math.min(1.3, target + 0.4 * this.hoverMix)
     this.glowLevel += (target - this.glowLevel) * Math.min(1, dt * 8)
     const on = this.glowLevel > 0.01
@@ -413,6 +478,21 @@ export class LociSpot extends BaseScriptComponent {
       LociShapeKit.setGlow(this.glowMats[0], color, 0.55 * this.glowLevel)
       LociShapeKit.setGlow(this.glowMats[1], color, 0.22 * this.glowLevel)
     }
+    this.updateRing(dt)
+  }
+
+  private updateRing(dt: number): void {
+    if (this.ring === "" || !this.ringMat) return
+    this.ringAge += dt
+    const a = this.ringAge
+    let scale = 1
+    let level = 1
+    if (a < RING_POP_SEC) scale = 0.55 + 0.45 * Ease.outBack(a / RING_POP_SEC)
+    const fadeStart = RING_POP_SEC + this.ringHold
+    if (a > fadeStart) level = Math.max(0, 1 - (a - fadeStart) / RING_FADE_SEC)
+    this.ringRoot.getTransform().setLocalScale(vec3.one().uniformScale(Math.max(0.001, scale)))
+    LociShapeKit.setGlow(this.ringMat, RING_COLORS[this.ring], 1.15 * level)
+    if (level <= 0) this.clearRing()
   }
 
   private yawToEye(from: vec3): quat {

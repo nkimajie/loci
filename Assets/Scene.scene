@@ -6,7 +6,7 @@
     - !<own> f5d74682-203a-4970-81ea-9fa7b88c96bb
     - !<own> 8bfcd6d4-b897-4891-9095-2c319c245018
     - !<own> a3e303ed-d2c3-4266-81a1-046f8d64b9c5
-    - !<own> 1cd699d3-d995-49dc-8a47-6d2bc56c09ae
+    - !<own> ab39b4d0-b588-4d25-911c-d7f0ce8c1efb
   layers: !<Layers/267ee9a7-aff2-4f9d-9a49-f71214747d03>
     userLayers:
       - id: 1
@@ -205,7 +205,6 @@
     HasSegmentScaleCompensation: false
   Children:
     - !<own> af73ccde-5013-4603-8d29-0b60860eb0ee
-    - !<own> 5c033f55-4bdd-4bb8-bbf3-f85a91b55280
   Components:
     - !<own> 3c418202-36b5-4d1d-972e-de0e81380516
 - !<SceneObject/0321a423-b61c-47a1-84dd-02c16ad68dda>
@@ -287,7 +286,6 @@
   ScriptInputs:
     "":
       marker: !<MappingBased.AssignableType_1> e3b96d35-4f80-4f55-8c49-c3ab768d34f9
-      answerAnchor: !<reference.SceneObject> 07e8bb35-3eac-4e4e-8a2c-ff5c4480204c
       spotNumber: !<float> 2.000000
       spotName: Table left
       objectSizeCm: !<float> 15.000000
@@ -324,21 +322,6 @@
     []
   Components:
     - !<own> 28da7dae-2db8-4267-a9f9-fe6d6e1c28f1
-- !<SceneObject/07e8bb35-3eac-4e4e-8a2c-ff5c4480204c>
-  PrefabRemaps:
-    []
-  Name: Spot2_AnswerAnchor
-  Enabled: true
-  Layers: 1
-  LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: 9.000000, z: 16.000000}
-    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
-    HasSegmentScaleCompensation: false
-  Children:
-    []
-  Components:
-    []
 - !<ScriptComponent/0847d2bb-a13f-4c4a-a404-169f67308f6f>
   PrefabRemaps:
     []
@@ -725,34 +708,6 @@
   BlendNormals: false
   BlendShapes:
     {}
-- !<ScriptComponent/1760205e-ee33-4585-9f8b-02e20e7641e7>
-  PrefabRemaps:
-    []
-  Name: LociAnswerUI
-  Enabled: true
-  ScriptAsset: !<reference> c83e00a0-a0b9-43bc-b3a8-76931867b0b7
-  ScriptInputsDefault:
-    buttonSizeCm: true
-    spacingCm: true
-    gotItLabel: true
-    missedLabel: true
-    labelTextColor: true
-    gotItColor: true
-    missedColor: true
-  ScriptTypesDefault:
-    {}
-  ScriptInputs:
-    "":
-      buttonSizeCm: !<float> 10.000000
-      spacingCm: !<float> 14.000000
-      gotItLabel: Got it
-      missedLabel: Missed
-      labelTextColor: !<Vec4> {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
-      gotItColor: !<Vec4> {x: 0.130000, y: 0.770000, z: 0.370000, w: 1.000000}
-      missedColor: !<Vec4> {x: 0.950000, y: 0.300000, z: 0.330000, w: 1.000000}
-  ScriptTypes:
-    "":
-      {}
 - !<SceneObject/181c239f-175e-4912-94fc-d37a2599b2d6>
   PrefabRemaps:
     []
@@ -793,6 +748,8 @@
     markerSizeCm: true
     pulseAmount: true
     pulseRate: true
+    neutralColor: true
+    wrongColor: true
   ScriptTypesDefault:
     {}
   ScriptInputs:
@@ -800,24 +757,11 @@
       markerSizeCm: !<float> 8.000000
       pulseAmount: 0.180000
       pulseRate: 1.200000
+      neutralColor: !<Vec4> {x: 0.600000, y: 0.700000, z: 0.980000, w: 1.000000}
+      wrongColor: !<Vec4> {x: 0.960000, y: 0.220000, z: 0.260000, w: 1.000000}
   ScriptTypes:
     "":
       {}
-- !<SceneObject/1cd699d3-d995-49dc-8a47-6d2bc56c09ae>
-  PrefabRemaps:
-    []
-  Name: LEAF Plugin Bridge
-  Enabled: true
-  Layers: 1
-  LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
-    HasSegmentScaleCompensation: false
-  Children:
-    []
-  Components:
-    - !<own> fdc77a00-034b-4983-a2ab-acdfc058868c
 - !<RenderMeshVisual/1f969daa-5809-4500-b314-98d91ccba131>
   PrefabRemaps:
     []
@@ -911,7 +855,6 @@
     HasSegmentScaleCompensation: false
   Children:
     - !<own> 728b56fe-5af5-42c6-87ed-881093a8aa79
-    - !<own> 4e8baee8-2129-46a9-b92f-c04705533c96
   Components:
     - !<own> 8d6fed01-b06e-47de-85e4-20af4ff83f1a
 - !<SceneObject/264571d0-f879-411b-8deb-ff6d9921317f>
@@ -1159,7 +1102,6 @@
     HasSegmentScaleCompensation: false
   Children:
     - !<own> fcfdecbf-19ba-4e54-89c9-bdfb15d6f3ef
-    - !<own> 07e8bb35-3eac-4e4e-8a2c-ff5c4480204c
   Components:
     - !<own> 05360c1e-69f2-4c07-a7e1-5696ed3e0836
 - !<SceneObject/3661a02d-e367-4cf5-af47-407a191f4ce2>
@@ -1251,7 +1193,6 @@
   ScriptInputs:
     "":
       marker: !<MappingBased.AssignableType_1> 1c28c61c-1252-46ce-b452-3fd3f5a4792f
-      answerAnchor: !<reference.SceneObject> 5c033f55-4bdd-4bb8-bbf3-f85a91b55280
       spotNumber: !<float> 5.000000
       spotName: Shelf
       objectSizeCm: !<float> 20.000000
@@ -1311,21 +1252,6 @@
   Layers: 1
   LocalTransform: !<TransformEntity>
     Position: {x: 0.000000, y: 2.218170, z: 0.000000}
-    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
-    HasSegmentScaleCompensation: false
-  Children:
-    []
-  Components:
-    []
-- !<SceneObject/4474c4c2-3877-4611-9b47-3cf0e7ca9fd6>
-  PrefabRemaps:
-    []
-  Name: Spot3_AnswerAnchor
-  Enabled: true
-  Layers: 1
-  LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: 9.000000, z: 16.000000}
     Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
     Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
     HasSegmentScaleCompensation: false
@@ -1410,6 +1336,7 @@
     eyeHeightCm: true
     nameShowSec: true
     gazeDwellSec: true
+    quizSeed: true
     alignToUserOnStart: true
     debugColliders: true
     runSelfTest: true
@@ -1425,19 +1352,19 @@
       voice: !<MappingBased.AssignableType_3> 7c1d2453-6cba-457a-809b-3928d69f183b
       guide: !<MappingBased.AssignableType_4> f50567e8-e6e2-46b2-ba57-5a84aa18182b
       card: !<MappingBased.AssignableType_5> c8b06006-5907-4693-9d8b-9a7e13c427d4
-      answers: !<MappingBased.AssignableType_6> 1760205e-ee33-4585-9f8b-02e20e7641e7
-      nameTag: !<MappingBased.AssignableType_7> b7269723-27bb-46d3-a1ca-504bfcf14c44
-      spot1: !<MappingBased.AssignableType_8> 8d6fed01-b06e-47de-85e4-20af4ff83f1a
-      spot2: !<MappingBased.AssignableType_9> 05360c1e-69f2-4c07-a7e1-5696ed3e0836
-      spot3: !<MappingBased.AssignableType_10> 82773fbd-c121-41fe-bb6a-17473f72c2a4
-      spot4: !<MappingBased.AssignableType_11> 83a44e37-50f4-4857-a9b8-86df50e40db5
-      spot5: !<MappingBased.AssignableType_12> 3c418202-36b5-4d1d-972e-de0e81380516
+      nameTag: !<MappingBased.AssignableType_6> b7269723-27bb-46d3-a1ca-504bfcf14c44
+      spot1: !<MappingBased.AssignableType_7> 8d6fed01-b06e-47de-85e4-20af4ff83f1a
+      spot2: !<MappingBased.AssignableType_8> 05360c1e-69f2-4c07-a7e1-5696ed3e0836
+      spot3: !<MappingBased.AssignableType_9> 82773fbd-c121-41fe-bb6a-17473f72c2a4
+      spot4: !<MappingBased.AssignableType_10> 83a44e37-50f4-4857-a9b8-86df50e40db5
+      spot5: !<MappingBased.AssignableType_11> 3c418202-36b5-4d1d-972e-de0e81380516
       sampleListText: "umbrella, keys, milk, call mom, gift"
       mixedListText: "umbrella, keys, volcano, mobile, gift"
       eyeHeightCm: !<float> 160.000000
       nameShowSec: !<float> 2.000000
       gazeDwellSec: !<float> 2.000000
-      previewStandBackCm: !<float> 360.000000
+      quizSeed: !<float> 7.000000
+      previewStandBackCm: !<float> 320.000000
       alignToUserOnStart: true
       debugColliders: false
       runSelfTest: false
@@ -1495,21 +1422,6 @@
     []
   Components:
     - !<own> 5f153ad7-2baa-4fd9-a298-0dcfad86da3b
-- !<SceneObject/4e8baee8-2129-46a9-b92f-c04705533c96>
-  PrefabRemaps:
-    []
-  Name: Spot1_AnswerAnchor
-  Enabled: true
-  Layers: 1
-  LocalTransform: !<TransformEntity>
-    Position: {x: -16.000000, y: 8.000000, z: 26.000000}
-    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
-    HasSegmentScaleCompensation: false
-  Children:
-    []
-  Components:
-    []
 - !<SceneObject/4eef850e-ef91-4765-8c40-7b4e0f684a77>
   PrefabRemaps:
     []
@@ -1585,36 +1497,6 @@
     - !<own> bf2095b6-c6f8-48c8-b840-e0a6cec0dc99
   Components:
     []
-- !<SceneObject/590f26fc-3b11-41a9-849e-9a1da79f3a9d>
-  PrefabRemaps:
-    []
-  Name: LociAnswerTargets
-  Enabled: true
-  Layers: 1
-  LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: 84.000000, z: -94.000000}
-    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
-    HasSegmentScaleCompensation: false
-  Children:
-    []
-  Components:
-    - !<own> 1760205e-ee33-4585-9f8b-02e20e7641e7
-- !<SceneObject/5c033f55-4bdd-4bb8-bbf3-f85a91b55280>
-  PrefabRemaps:
-    []
-  Name: Spot5_AnswerAnchor
-  Enabled: true
-  Layers: 1
-  LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: -6.000000, z: 20.000000}
-    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
-    HasSegmentScaleCompensation: false
-  Children:
-    []
-  Components:
-    []
 - !<ScriptComponent/5f153ad7-2baa-4fd9-a298-0dcfad86da3b>
   PrefabRemaps:
     []
@@ -1639,21 +1521,6 @@
   ScriptTypes:
     "":
       {}
-- !<SceneObject/60ce2ced-bc4d-4434-924b-87b698df9535>
-  PrefabRemaps:
-    []
-  Name: Spot4_AnswerAnchor
-  Enabled: true
-  Layers: 1
-  LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: 9.000000, z: 16.000000}
-    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
-    HasSegmentScaleCompensation: false
-  Children:
-    []
-  Components:
-    []
 - !<ScriptComponent/62967490-d66e-4479-8829-e5c9da5b5b57>
   PrefabRemaps:
     []
@@ -2311,7 +2178,6 @@
   ScriptInputs:
     "":
       marker: !<MappingBased.AssignableType_1> a05f3b3f-4e37-4b3a-9737-3aa4184f9e22
-      answerAnchor: !<reference.SceneObject> 4474c4c2-3877-4611-9b47-3cf0e7ca9fd6
       spotNumber: !<float> 3.000000
       spotName: Table centre
       objectSizeCm: !<float> 20.000000
@@ -2361,7 +2227,6 @@
   ScriptInputs:
     "":
       marker: !<MappingBased.AssignableType_1> b2cb98b9-409c-4d31-9db7-c46ab28a9a23
-      answerAnchor: !<reference.SceneObject> 60ce2ced-bc4d-4434-924b-87b698df9535
       spotNumber: !<float> 4.000000
       spotName: Table right
       objectSizeCm: !<float> 15.000000
@@ -2514,7 +2379,6 @@
   ScriptInputs:
     "":
       marker: !<MappingBased.AssignableType_1> c6868eea-848c-4779-9ef8-68391afb9392
-      answerAnchor: !<reference.SceneObject> 4e8baee8-2129-46a9-b92f-c04705533c96
       spotNumber: !<float> 1.000000
       spotName: Chair
       objectSizeCm: !<float> 30.000000
@@ -2703,6 +2567,8 @@
     markerSizeCm: true
     pulseAmount: true
     pulseRate: true
+    neutralColor: true
+    wrongColor: true
   ScriptTypesDefault:
     {}
   ScriptInputs:
@@ -2710,6 +2576,8 @@
       markerSizeCm: !<float> 8.000000
       pulseAmount: 0.180000
       pulseRate: 1.200000
+      neutralColor: !<Vec4> {x: 0.600000, y: 0.700000, z: 0.980000, w: 1.000000}
+      wrongColor: !<Vec4> {x: 0.960000, y: 0.220000, z: 0.260000, w: 1.000000}
   ScriptTypes:
     "":
       {}
@@ -2879,7 +2747,6 @@
     HasSegmentScaleCompensation: false
   Children:
     - !<own> b5961867-c3f7-400d-9fbb-94f6ff02f854
-    - !<own> 60ce2ced-bc4d-4434-924b-87b698df9535
   Components:
     - !<own> 83a44e37-50f4-4857-a9b8-86df50e40db5
 - !<SceneObject/a98a7d22-28b9-4357-97cd-1486e721ac5d>
@@ -2897,6 +2764,21 @@
     []
   Components:
     - !<own> 11c4bb09-7c38-4023-9802-74f9f28709a9
+- !<SceneObject/ab39b4d0-b588-4d25-911c-d7f0ce8c1efb>
+  PrefabRemaps:
+    []
+  Name: LEAF Plugin Bridge
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> c3df62f2-240b-4919-8787-71f7e14017cf
 - !<SceneObject/abfa4c71-3560-46f0-9471-90e212f21185>
   PrefabRemaps:
     []
@@ -2952,6 +2834,8 @@
     markerSizeCm: true
     pulseAmount: true
     pulseRate: true
+    neutralColor: true
+    wrongColor: true
   ScriptTypesDefault:
     {}
   ScriptInputs:
@@ -2959,6 +2843,8 @@
       markerSizeCm: !<float> 8.000000
       pulseAmount: 0.180000
       pulseRate: 1.200000
+      neutralColor: !<Vec4> {x: 0.600000, y: 0.700000, z: 0.980000, w: 1.000000}
+      wrongColor: !<Vec4> {x: 0.960000, y: 0.220000, z: 0.260000, w: 1.000000}
   ScriptTypes:
     "":
       {}
@@ -3236,7 +3122,6 @@
     HasSegmentScaleCompensation: false
   Children:
     - !<own> 8ddbc52e-fd9f-49d4-ba8e-5fe7a9950a27
-    - !<own> 590f26fc-3b11-41a9-849e-9a1da79f3a9d
     - !<own> e897e0ac-1c6e-4de3-aff0-290f246358f8
   Components:
     []
@@ -3270,6 +3155,22 @@
     []
   Components:
     - !<own> b9a8cc17-00eb-4b82-82b5-d147301ee0ea
+- !<ScriptComponent/c3df62f2-240b-4919-8787-71f7e14017cf>
+  PrefabRemaps:
+    []
+  Name: MessagingBridge
+  Enabled: true
+  ScriptAsset: !<reference> 9aa407db-2872-4afc-a162-cf7faf2a0f29
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      {}
+  ScriptTypes:
+    "":
+      {}
 - !<RenderMeshVisual/c5636fa1-fee2-45a5-ace2-d27d1d84abf7>
   PrefabRemaps:
     []
@@ -3300,6 +3201,8 @@
     markerSizeCm: true
     pulseAmount: true
     pulseRate: true
+    neutralColor: true
+    wrongColor: true
   ScriptTypesDefault:
     {}
   ScriptInputs:
@@ -3307,6 +3210,8 @@
       markerSizeCm: !<float> 8.000000
       pulseAmount: 0.180000
       pulseRate: 1.200000
+      neutralColor: !<Vec4> {x: 0.600000, y: 0.700000, z: 0.980000, w: 1.000000}
+      wrongColor: !<Vec4> {x: 0.960000, y: 0.220000, z: 0.260000, w: 1.000000}
   ScriptTypes:
     "":
       {}
@@ -3337,7 +3242,6 @@
   Enabled: true
   ScriptAsset: !<reference> 1e022827-ca2a-4a9b-a8b4-3fb1c8732ca9
   ScriptInputsDefault:
-    panelWidthCm: true
     cardTextColor: true
     cardSubtleTextColor: true
     primaryButtonColor: true
@@ -3349,7 +3253,7 @@
     {}
   ScriptInputs:
     "":
-      panelWidthCm: !<float> 16.000000
+      panelWidthCm: !<float> 19.000000
       cardTint: !<Vec4> {x: 0.970000, y: 0.960000, z: 0.920000, w: 0.960000}
       cardTextColor: !<Vec4> {x: 0.110000, y: 0.150000, z: 0.420000, w: 1.000000}
       cardSubtleTextColor: !<Vec4> {x: 0.270000, y: 0.310000, z: 0.520000, w: 1.000000}
@@ -3793,7 +3697,6 @@
     HasSegmentScaleCompensation: false
   Children:
     - !<own> 1122fba2-a8a8-4d2f-870e-23b027fc4b67
-    - !<own> 4474c4c2-3877-4611-9b47-3cf0e7ca9fd6
   Components:
     - !<own> 82773fbd-c121-41fe-bb6a-17473f72c2a4
 - !<SceneObject/e2ba526d-75d1-466b-86a5-9cd7c42dca84>
@@ -3821,6 +3724,8 @@
     markerSizeCm: true
     pulseAmount: true
     pulseRate: true
+    neutralColor: true
+    wrongColor: true
   ScriptTypesDefault:
     {}
   ScriptInputs:
@@ -3828,6 +3733,8 @@
       markerSizeCm: !<float> 8.000000
       pulseAmount: 0.180000
       pulseRate: 1.200000
+      neutralColor: !<Vec4> {x: 0.600000, y: 0.700000, z: 0.980000, w: 1.000000}
+      wrongColor: !<Vec4> {x: 0.960000, y: 0.220000, z: 0.260000, w: 1.000000}
   ScriptTypes:
     "":
       {}
@@ -4229,22 +4136,6 @@
     []
   Components:
     - !<own> e3b96d35-4f80-4f55-8c49-c3ab768d34f9
-- !<ScriptComponent/fdc77a00-034b-4983-a2ab-acdfc058868c>
-  PrefabRemaps:
-    []
-  Name: MessagingBridge
-  Enabled: true
-  ScriptAsset: !<reference> 9aa407db-2872-4afc-a162-cf7faf2a0f29
-  ScriptInputsDefault:
-    {}
-  ScriptTypesDefault:
-    {}
-  ScriptInputs:
-    "":
-      {}
-  ScriptTypes:
-    "":
-      {}
 - !<SceneObject/fe93d992-1114-4f1f-8bef-0a0bbd75747d>
   PrefabRemaps:
     []

@@ -3,7 +3,7 @@
  * additive Specs display: a solid saturated fill per state (no dim grey theme
  * gradients), a white rim, and white glyphs / labels in every state.
  *
- * Shared by LociCardUI (card buttons) and LociAnswerUI (✓ / ✗ discs).
+ * Shared by LociCardUI (card buttons) and LociMarkerUI (quiz markers).
  * Pure helpers: no SceneObjects of its own.
  */
 
@@ -34,6 +34,24 @@ export function lighten(c: vec4, t: number): vec4 {
 }
 
 /**
+ * Sets the solid per-state fill and white rim right now. Returns false until the
+ * Button's visual exists (UIKit builds it during its own initialisation).
+ */
+export function applyFill(btn: Button, fill: vec4): boolean {
+  const v = btn.visual
+  if (!(v instanceof RoundedRectangleVisual)) return false
+  v.defaultGradient = solidGradient(fill)
+  v.hoveredGradient = solidGradient(lighten(fill, HOVER_LIGHTEN))
+  v.triggeredGradient = solidGradient(lighten(fill, PRESS_LIGHTEN))
+  v.inactiveGradient = solidGradient(new vec4(fill.r, fill.g, fill.b, fill.a * 0.5))
+  v.borderDefaultGradient = solidGradient(RIM)
+  v.borderHoveredGradient = solidGradient(RIM)
+  v.borderTriggeredGradient = solidGradient(RIM)
+  v.borderInactiveGradient = solidGradient(RIM)
+  return true
+}
+
+/**
  * Paints `btn` with a solid `fill` (lighter on hover / press) and a white rim, and
  * optionally makes its ElementContent label bold. The Button's onInitialized fires
  * before its visual applies the theme, so the paint lands one frame later.
@@ -42,17 +60,7 @@ export function paintButton(host: BaseScriptComponent, btn: Button, fill: vec4, 
   const schedule = () => {
     const later = host.createEvent("DelayedCallbackEvent") as DelayedCallbackEvent
     later.bind(() => {
-      const v = btn.visual
-      if (v instanceof RoundedRectangleVisual) {
-        v.defaultGradient = solidGradient(fill)
-        v.hoveredGradient = solidGradient(lighten(fill, HOVER_LIGHTEN))
-        v.triggeredGradient = solidGradient(lighten(fill, PRESS_LIGHTEN))
-        v.inactiveGradient = solidGradient(new vec4(fill.r, fill.g, fill.b, fill.a * 0.5))
-        v.borderDefaultGradient = solidGradient(RIM)
-        v.borderHoveredGradient = solidGradient(RIM)
-        v.borderTriggeredGradient = solidGradient(RIM)
-        v.borderInactiveGradient = solidGradient(RIM)
-      }
+      applyFill(btn, fill)
       if (ec && labelWeight !== undefined) {
         // ElementContent has no weight input; its label is a plain Text component.
         const label = (ec as unknown as {textComponent: Text | null}).textComponent

@@ -65,6 +65,21 @@ export class LociNameTagUI extends BaseScriptComponent {
   private appear = 0
   private holdLeft = -1
   private _text = ""
+  private _viewScale = 1
+
+  /**
+   * Scales the tag up for a viewer farther away than the 1.1 m it is designed for (the
+   * Lens Studio preview's stand-back camera); it rises by the extra height so it still
+   * sits above the object. 1 = design size (always on Specs).
+   */
+  setViewScale(scale: number): void {
+    this._viewScale = Math.max(1, scale)
+    if (this.tag) this.tag.getTransform().setLocalPosition(new vec3(0, (TEXT_H / 2 + PAD_Y) * (this._viewScale - 1), 0))
+  }
+
+  get viewScale(): number {
+    return this._viewScale
+  }
 
   get isVisible(): boolean {
     return this.wantVisible
@@ -163,6 +178,6 @@ export class LociNameTagUI extends BaseScriptComponent {
       return
     }
     if (!this.tag.enabled) this.tag.enabled = true
-    this.tag.getTransform().setLocalScale(vec3.one().uniformScale(Math.max(0.001, this.appear)))
+    this.tag.getTransform().setLocalScale(vec3.one().uniformScale(Math.max(0.001, this.appear * this._viewScale)))
   }
 }

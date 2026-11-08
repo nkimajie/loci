@@ -80,6 +80,33 @@ Each one can be checked in Lens Studio's preview, via pinch, and each is a LEAF 
 4. Answering ✓ ✓ ✗ ✓ ✓ shows "4 / 5", only spot 3 glows, and "Review missed" walks only spot 3.
 5. "Mixed list" shows the key model for "keys" (plural matched), the phone model for "mobile", and a word totem reading exactly "volcano" at table centre, never a near-miss model.
 
+## v2 changes
+
+### Find-it quiz (replaces the ✓ / ✗ self-check)
+- **What changed.** After "Quiz me", all 5 objects vanish and every spot shows the same neutral glowing "?" marker. Nothing pulses and no arrow points, so nothing gives the answer away. A prompt card asks "Where's the umbrella?" with the item's name and a small 3D copy of its model. I pinch the spot where I think it was: its marker, or the empty spot itself.
+  - Right: the object pops back with a green ring and a bright chime, and stays.
+  - Wrong: the pinched spot shakes red. Then the right spot briefly shows its object with an orange ring and its name, hides again, and the next prompt comes up.
+- **Order.** The 5 items are asked once each, in a shuffled order that is never plain route order. The shuffle is seeded (`quizSeed`, default 7) so tests and demos repeat exactly. Each "Quiz again" round uses the next seeded order.
+- **Score.** Correct first tries out of 5. On the results card the missed items glow at their spots as before, every object is back in place, and "Review missed" walks only the missed spots.
+- **Why.** The v1 score was an honest self-report: I tapped ✓ if I thought I'd remembered. Find-it is objective, because the Lens knows where each item lives. It also tests the right thing. The method of loci trains recall by place: you walk the route in your head and find each item where you put it. Pointing at the place is that recall, done with the body in the real room. That is something only glasses can ask for. A phone quiz would ask for the word.
+- **Removed.** The ✓ / ✗ targets and their per-spot anchors.
+
+### Done criteria 3 and 4 (v2 wording; replaces 3 and 4 above)
+3. "Quiz me" makes all 5 objects vanish behind identical neutral markers, and a prompt asks "Where's the <item>?" with that item's icon, in the seeded shuffled order. Pinching the right spot brings the object back with a green ring.
+4. Pinching the right spot for 4 items and a wrong spot for the milk shows "4 / 5", only the milk's spot glows, and "Review missed" walks only that spot.
+
+Extra LEAF checks: a wrong pinch reveals the right spot (red shake, then a brief orange-ring reveal); each item is asked exactly once; "Quiz again" resets the score; "New list" clears every spot.
+
+### Framing fix for recording (Lens Studio preview only)
+- **Problem.** The Specs view is only about 32° wide. From where the user stands (0.5 m from the table front), the chair and the shelf are about 87° apart, so the whole route can never be in one preview frame from there. Standing far enough back to fit it made the start card's text too small to read in a screen recording.
+- **Fix.** The preview camera starts 3.2 m behind the user's spot, at standing eye height, looking about 16° down. The route is centred in the top half of the frame with a margin on both sides.
+  - The preview camera's own pitch is editor state that can come back level after a Lens Studio restart. So the Lens doesn't rely on it: at start it tilts the room about the camera by whatever it takes to give the same 16° look-down view.
+  - The card no longer sits at the far table edge in the preview. It floats about 0.9 m in front of the camera, in the free band below the table spots (or above the route if the camera starts level), so it never covers a spot.
+  - Card captions and the quiz question are larger, and nothing was shrunk.
+  - Item name tags scale with distance (up to 2.5×) so they stay readable from the camera.
+  - Gaze dwell is off while the preview camera stands back, because it is a recording view, not the user's eyes.
+- **On Specs nothing changes.** The card stays about 20 cm above the table's front edge, about 0.85 m from the eyes, which is already about the 0.9 m the preview copies. The stand-back is the "Preview Stand Back" setting on the Loci object; 0 starts the preview at the user's spot.
+
 ## Out of scope
 - On-the-fly 3D generation of models from spoken words (future work).
 - Recognizing the user's real table, chair and shelf; the preview uses fixed virtual stand-ins.
