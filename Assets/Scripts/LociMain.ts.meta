@@ -42,6 +42,7 @@
     nameShowSec: false
     nameTag: false
     palaceRoot: false
+    previewStandBackCm: false
     runSelfTest: false
     sampleListText: false
     shapeKit: false
@@ -79,6 +80,7 @@
       eyeHeightCm: !<float> 160.000000
       nameShowSec: !<float> 2.000000
       gazeDwellSec: !<float> 2.000000
+      previewStandBackCm: !<float> 100.000000
       alignToUserOnStart: true
       debugColliders: false
       runSelfTest: false
@@ -114,6 +116,11 @@
     - '// @input float eyeHeightCm = 160 {"hint":"User eye height in cm — places the virtual floor under the user at start", "widget":"slider", "min":120, "max":200, "step":1}'
     - "// @input float nameShowSec = 2 {\"hint\":\"Seconds an item's name shows after pinching it in study mode\", \"widget\":\"slider\", \"min\":0.5, \"max\":5, \"step\":0.1}"
     - '// @input float gazeDwellSec = 2 {"hint":"Seconds of looking at the current object that count as a pinch (0 = off)", "widget":"slider", "min":0, "max":5, "step":0.1}'
+    - '// @ui {"widget":"group_end"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Lens Studio preview only (ignored on Specs)</span>"}'
+    - '// @ui {"widget":"group_start", "label":"Preview"}'
+    - "// @input float previewStandBackCm = 360 {\"hint\":\"Preview camera starts this far behind the user's spot (the user's spot is 0.5 m from the table front). The Specs view is only ~32° wide, so from the user's spot the chair and shelf are out of frame; 360 puts the start card, all 5 spots and their ✓/✗ targets in one frame for recording. 0 = start at the user's spot. While > 0, gaze dwell is off in the preview (the camera is a recording view, not the user's eyes).\", \"widget\":\"slider\", \"min\":0, \"max\":400, \"step\":10}"
     - '// @ui {"widget":"group_end"}'
     - '// @ui {"widget":"separator"}'
     - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Debug</span>"}'

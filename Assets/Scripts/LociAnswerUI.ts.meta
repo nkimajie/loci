@@ -64,6 +64,6 @@
     - '// @input string gotItLabel = "Got it" {"hint":"Label under the check target"}'
     - '// @input string missedLabel = "Missed" {"hint":"Label under the cross target"}'
     - '// @input vec4 labelTextColor = "{1, 1, 1, 1}" {"hint":"Label text colour (keep it light: the Specs display is additive)", "widget":"color"}'
-    - "// @input vec4 gotItBackingColor = \"{0.10, 0.68, 0.34, 0.96}\" {\"hint\":\"Backing pill behind the 'Got it' label: bright and saturated so white text reads on any surface\", \"widget\":\"color\"}"
-    - "// @input vec4 missedBackingColor = \"{0.92, 0.24, 0.30, 0.96}\" {\"hint\":\"Backing pill behind the 'Missed' label: bright and saturated so white text reads on any surface\", \"widget\":\"color\"}"
+    - "// @input vec4 gotItColor = \"{0.13, 0.77, 0.37, 1}\" {\"hint\":\"Bright green: fill of the ✓ disc and of the pill behind 'Got it' (white glyph / text on top)\", \"widget\":\"color\"}"
+    - "// @input vec4 missedColor = \"{0.95, 0.30, 0.33, 1}\" {\"hint\":\"Coral red: fill of the ✗ disc and of the pill behind 'Missed' (white glyph / text on top)\", \"widget\":\"color\"}"
     - '// @ui {"widget":"group_end"}'

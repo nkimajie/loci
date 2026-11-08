@@ -15,6 +15,7 @@ import {FlexAlign, FlexDirection, FlexJustify} from "SpectaclesUIKit.lspkg/Scrip
 import {Button} from "SpectaclesUIKit.lspkg/Scripts/Components/Button/Button"
 import {ElementContent} from "SpectaclesUIKit.lspkg/Scripts/Components/Content/ElementContent"
 import Event, {PublicApi} from "SpectaclesInteractionKit.lspkg/Utils/Event"
+import {paintButton, whiteContent} from "./LociButtonSkin"
 
 const ICON_CHECK: Texture = requireAsset("../Icons/check.png") as Texture
 const ICON_CLOSE: Texture = requireAsset("../Icons/close.png") as Texture
@@ -75,15 +76,15 @@ export class LociAnswerUI extends BaseScriptComponent {
   @widget(new ColorWidget())
   labelTextColor: vec4 = new vec4(1, 1, 1, 1)
 
-  @input("vec4", "{0.10, 0.68, 0.34, 0.96}")
-  @hint("Backing pill behind the 'Got it' label: bright and saturated so white text reads on any surface")
+  @input("vec4", "{0.13, 0.77, 0.37, 1}")
+  @hint("Bright green: fill of the ✓ disc and of the pill behind 'Got it' (white glyph / text on top)")
   @widget(new ColorWidget())
-  gotItBackingColor: vec4 = new vec4(0.1, 0.68, 0.34, 0.96)
+  gotItColor: vec4 = new vec4(0.13, 0.77, 0.37, 1)
 
-  @input("vec4", "{0.92, 0.24, 0.30, 0.96}")
-  @hint("Backing pill behind the 'Missed' label: bright and saturated so white text reads on any surface")
+  @input("vec4", "{0.95, 0.30, 0.33, 1}")
+  @hint("Coral red: fill of the ✗ disc and of the pill behind 'Missed' (white glyph / text on top)")
   @widget(new ColorWidget())
-  missedBackingColor: vec4 = new vec4(0.92, 0.24, 0.3, 0.96)
+  missedColor: vec4 = new vec4(0.95, 0.3, 0.33, 1)
   @ui.group_end
 
   private host!: SceneObject
@@ -115,12 +116,12 @@ export class LociAnswerUI extends BaseScriptComponent {
     const row = this.flexRow(this.host, colW * 2 + gap, colH, {gap, justify: FlexJustify.Center, align: FlexAlign.Start})
 
     this.flexChild(row, {w: colW, h: colH}, (cell) => {
-      this.addTarget(cell, "GotItButton", ICON_CHECK, "Primary", this.gotItLabel, this.gotItBackingColor, colW, colH, () => {
+      this.addTarget(cell, "GotItButton", ICON_CHECK, this.gotItLabel, this.gotItColor, colW, colH, () => {
         if (this.wantVisible) this._onGotIt.invoke()
       })
     })
     this.flexChild(row, {w: colW, h: colH}, (cell) => {
-      this.addTarget(cell, "MissedButton", ICON_CLOSE, "PrimaryNeutral", this.missedLabel, this.missedBackingColor, colW, colH, () => {
+      this.addTarget(cell, "MissedButton", ICON_CLOSE, this.missedLabel, this.missedColor, colW, colH, () => {
         if (this.wantVisible) this._onMissed.invoke()
       })
     })
@@ -147,9 +148,8 @@ export class LociAnswerUI extends BaseScriptComponent {
     cell: SceneObject,
     name: string,
     icon: Texture,
-    style: string,
     label: string,
-    backing: vec4,
+    color: vec4,
     w: number,
     h: number,
     onPress: () => void,
@@ -158,11 +158,14 @@ export class LociAnswerUI extends BaseScriptComponent {
     this.flexChild(col, {w: this.buttonSizeCm, h: this.buttonSizeCm}, (slot) => {
       const so = this.obj(slot, name)
       const btn = so.createComponent(Button.getTypeName()) as Button
-      btn.setVariant({theme: "SnapOS2", shape: "Round", style})
+      btn.setVariant({theme: "SnapOS2", shape: "Round", style: "Primary"})
       btn.size = new vec3(this.buttonSizeCm, this.buttonSizeCm, 1)
       const ec = so.createComponent(ElementContent.getTypeName()) as ElementContent
       ec.leadingIcon = icon
       ec.leadingIconSize = this.buttonSizeCm * 0.55
+      // Solid bright disc + white rim and a white glyph in every state.
+      whiteContent(ec)
+      paintButton(this, btn, color)
       btn.onTriggerUp.add(onPress)
     })
     this.flexChild(col, {w: w + 2, h: LABEL_H}, (slot) => {
@@ -174,7 +177,7 @@ export class LociAnswerUI extends BaseScriptComponent {
       // Solid pill behind the label so it reads against the chair / table / shelf.
       const bg = t.backgroundSettings
       bg.enabled = true
-      bg.fill.color = backing
+      bg.fill.color = color
       bg.margins = Rect.create(LABEL_PAD_X, LABEL_PAD_X, LABEL_PAD_Y, LABEL_PAD_Y)
       bg.cornerRadius = LABEL_CORNER
       t.horizontalAlignment = HorizontalAlignment.Center

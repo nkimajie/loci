@@ -1,5 +1,5 @@
 /**
- * LociCardUI — the small pale "Loci" card ~20 cm above the table's front edge.
+ * LociCardUI — the small light "Loci" card ~20 cm above the table's front edge.
  * One authored spot, four views:
  *   start     — "Loci", Say my list / Sample list / Mixed list, status line
  *   switch    — Walk again / Quiz me
@@ -21,9 +21,9 @@ import {FlexAlign, FlexAlignSelf, FlexDirection, FlexJustify} from "SpectaclesUI
 import {BackPlate} from "SpectaclesUIKit.lspkg/Scripts/BackPlate"
 import {Button} from "SpectaclesUIKit.lspkg/Scripts/Components/Button/Button"
 import {ElementContent} from "SpectaclesUIKit.lspkg/Scripts/Components/Content/ElementContent"
-import {GradientParameters, RoundedRectangle} from "SpectaclesUIKit.lspkg/Scripts/Visuals/RoundedRectangle/RoundedRectangle"
-import {RoundedRectangleVisual} from "SpectaclesUIKit.lspkg/Scripts/Visuals/RoundedRectangle/RoundedRectangleVisual"
+import {RoundedRectangle} from "SpectaclesUIKit.lspkg/Scripts/Visuals/RoundedRectangle/RoundedRectangle"
 import Event, {PublicApi} from "SpectaclesInteractionKit.lspkg/Utils/Event"
+import {paintButton, whiteContent} from "./LociButtonSkin"
 
 const ICON_MIC: Texture = requireAsset("../Icons/mic.png") as Texture
 const ICON_SAMPLE: Texture = requireAsset("../Icons/format_list_numbered.png") as Texture
@@ -57,30 +57,15 @@ function applyTextRole(t: Text, role: TextRole, distanceCm: number = 110): void 
 // The card sits ~20 cm above the table's front edge, 0.5 m ahead and ~65 cm below the eyes.
 const VIEW_DISTANCE_CM = 82
 const PAD = 1.4
-const BUTTON_H = 3.4
 
-// Bright button skin for the additive Specs display: solid saturated fills (no dim
-// grey gradients), a white rim, and lighter fills on hover / press.
-const BUTTON_BORDER = new vec4(1, 1, 1, 0.95)
-const HOVER_LIGHTEN = 0.22
-const PRESS_LIGHTEN = 0.4
+// Card buttons: solid bright fills (LociButtonSkin), white bold labels 1.5x the
+// type-scale Button size, on a taller capsule so the bigger label has room.
+const BUTTON_H = 4.2
+const BUTTON_TEXT_SCALE = 1.5
+const BUTTON_TEXT_WEIGHT = 700
+const BUTTON_ICON = 2.1
 
 type ButtonTone = "primary" | "secondary"
-
-function solidGradient(c: vec4): GradientParameters {
-  return {
-    enabled: true,
-    start: new vec2(-1, 0),
-    end: new vec2(1, 0),
-    stop0: {enabled: true, percent: 0, color: c},
-    stop1: {enabled: true, percent: 0.5, color: c},
-    stop2: {enabled: true, percent: 1, color: c},
-  }
-}
-
-function lighten(c: vec4, t: number): vec4 {
-  return new vec4(c.r + (1 - c.r) * t, c.g + (1 - c.g) * t, c.b + (1 - c.b) * t, c.a)
-}
 
 export type CardView = "none" | "start" | "switch" | "results" | "collapsed"
 
@@ -100,10 +85,20 @@ export class LociCardUI extends BaseScriptComponent {
   @widget(new SliderWidget(12, 24, 0.5))
   panelWidthCm: number = 16
 
-  @input("vec4", "{0.46, 0.39, 0.31, 0.92}")
-  @hint("Card tint — keep it pale/light: the Specs display is additive, so dark colours vanish")
+  @input("vec4", "{0.97, 0.96, 0.92, 0.96}")
+  @hint("Card background: light and bright (the Specs display is additive, so dark colours vanish)")
   @widget(new ColorWidget())
-  cardTint: vec4 = new vec4(0.46, 0.39, 0.31, 0.92)
+  cardTint: vec4 = new vec4(0.97, 0.96, 0.92, 0.96)
+
+  @input("vec4", "{0.11, 0.15, 0.42, 1}")
+  @hint("Title / score text on the light card: deep ink so it stands out from the bright card")
+  @widget(new ColorWidget())
+  cardTextColor: vec4 = new vec4(0.11, 0.15, 0.42, 1)
+
+  @input("vec4", "{0.27, 0.31, 0.52, 1}")
+  @hint("Subtitle / status / hint text on the light card")
+  @widget(new ColorWidget())
+  cardSubtleTextColor: vec4 = new vec4(0.27, 0.31, 0.52, 1)
 
   @input("vec4", "{0.05, 0.50, 1.0, 1}")
   @hint("Fill for each card's main button (Sample list, Quiz me, Review missed): bright and saturated")
@@ -254,7 +249,7 @@ export class LociCardUI extends BaseScriptComponent {
 
   // ── Building blocks ───────────────────────────────────────────────────────
 
-  /** A view: BackPlate (pale tint) + Content child at +0.6 z with a column FlexLayout. */
+  /** A view: BackPlate (light tint) + Content child at +0.6 z with a column FlexLayout. */
   private panel(key: CardView, name: string): {root: SceneObject; content: SceneObject} {
     const root = global.scene.createSceneObject(name)
     root.setParent(this.sceneObject)
@@ -299,7 +294,7 @@ export class LociCardUI extends BaseScriptComponent {
     t.text = text
     t.depthTest = true
     applyTextRole(t, role, VIEW_DISTANCE_CM)
-    t.textFill.color = subtle ? new vec4(1, 0.97, 0.9, 0.8) : new vec4(1, 1, 1, 1)
+    t.textFill.color = subtle ? this.cardSubtleTextColor : this.cardTextColor
     t.horizontalAlignment = HorizontalAlignment.Center
     t.verticalAlignment = VerticalAlignment.Center
     t.horizontalOverflow = HorizontalOverflow.Wrap
@@ -320,19 +315,14 @@ export class LociCardUI extends BaseScriptComponent {
     const btn = so.createComponent(Button.getTypeName()) as Button
     btn.setVariant({theme: "SnapOS2", shape: "Capsule", style: "Primary"})
     btn.size = new vec3(width, BUTTON_H, 1)
-    this.paintButton(btn, tone === "primary" ? this.primaryButtonColor : this.secondaryButtonColor)
     const ec = so.createComponent(ElementContent.getTypeName()) as ElementContent
     ec.text = label
-    ec.textSize = roleSize("Button", VIEW_DISTANCE_CM)
+    ec.textSize = roleSize("Button", VIEW_DISTANCE_CM) * BUTTON_TEXT_SCALE
     ec.leadingIcon = icon
-    ec.leadingIconSize = 1.7
-    ec.spacing = 0.6
-    // Pure white label on the bright fill (theme default is 0.85 grey). These are the
-    // ElementContent Inspector inputs "Use Text Color Override" / "Text Color Override".
-    const textOverride = ec as unknown as {_useTextColorOverride: boolean; _textColorOverride: vec4}
-    textOverride._useTextColorOverride = true
-    textOverride._textColorOverride = new vec4(1, 1, 1, 1)
-    ec.markColorsDirty()
+    ec.leadingIconSize = BUTTON_ICON
+    ec.spacing = 0.7
+    whiteContent(ec)
+    paintButton(this, btn, tone === "primary" ? this.primaryButtonColor : this.secondaryButtonColor, ec, BUTTON_TEXT_WEIGHT)
     btn.onTriggerUp.add(() => {
       if (this.isActiveButton(so)) onPress()
     })
@@ -342,33 +332,6 @@ export class LociCardUI extends BaseScriptComponent {
     const flex = parent.getComponent(FlexLayout.getTypeName()) as FlexLayout | null
     if (flex) flex.addItems([item])
     return ec
-  }
-
-  /**
-   * Replace the theme's dim gradient with a solid bright fill per state. The Button's
-   * onInitialized fires before its visual applies the theme, so paint one frame later.
-   */
-  private paintButton(btn: Button, fill: vec4): void {
-    const schedule = () => {
-      const later = this.createEvent("DelayedCallbackEvent") as DelayedCallbackEvent
-      later.bind(() => {
-        const v = btn.visual
-        if (!(v instanceof RoundedRectangleVisual)) return
-        const hover = lighten(fill, HOVER_LIGHTEN)
-        const press = lighten(fill, PRESS_LIGHTEN)
-        v.defaultGradient = solidGradient(fill)
-        v.hoveredGradient = solidGradient(hover)
-        v.triggeredGradient = solidGradient(press)
-        v.inactiveGradient = solidGradient(new vec4(fill.r, fill.g, fill.b, fill.a * 0.5))
-        v.borderDefaultGradient = solidGradient(BUTTON_BORDER)
-        v.borderHoveredGradient = solidGradient(BUTTON_BORDER)
-        v.borderTriggeredGradient = solidGradient(BUTTON_BORDER)
-        v.borderInactiveGradient = solidGradient(BUTTON_BORDER)
-      })
-      later.reset(0)
-    }
-    if (btn.initialized) schedule()
-    else btn.onInitialized.add(schedule)
   }
 
   /** Ignore presses that land while a view is popping out. */

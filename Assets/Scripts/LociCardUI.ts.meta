@@ -60,7 +60,9 @@
     - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Settings</span>"}'
     - '// @ui {"widget":"group_start", "label":"Settings"}'
     - '// @input float panelWidthCm = 16 {"hint":"Card width in cm", "widget":"slider", "min":12, "max":24, "step":0.5}'
-    - '// @input vec4 cardTint = "{0.46, 0.39, 0.31, 0.92}" {"hint":"Card tint — keep it pale/light: the Specs display is additive, so dark colours vanish", "widget":"color"}'
+    - '// @input vec4 cardTint = "{0.97, 0.96, 0.92, 0.96}" {"hint":"Card background: light and bright (the Specs display is additive, so dark colours vanish)", "widget":"color"}'
+    - '// @input vec4 cardTextColor = "{0.11, 0.15, 0.42, 1}" {"hint":"Title / score text on the light card: deep ink so it stands out from the bright card", "widget":"color"}'
+    - '// @input vec4 cardSubtleTextColor = "{0.27, 0.31, 0.52, 1}" {"hint":"Subtitle / status / hint text on the light card", "widget":"color"}'
     - "// @input vec4 primaryButtonColor = \"{0.05, 0.50, 1.0, 1}\" {\"hint\":\"Fill for each card's main button (Sample list, Quiz me, Review missed): bright and saturated\", \"widget\":\"color\"}"
     - '// @input vec4 secondaryButtonColor = "{0.58, 0.28, 0.98, 1}" {"hint":"Fill for the other card buttons: bright and saturated", "widget":"color"}'
     - '// @input string titleText = "Loci" {"hint":"Title on the start card"}'

@@ -6,7 +6,7 @@
     - !<own> f5d74682-203a-4970-81ea-9fa7b88c96bb
     - !<own> 8bfcd6d4-b897-4891-9095-2c319c245018
     - !<own> a3e303ed-d2c3-4266-81a1-046f8d64b9c5
-    - !<own> 13117440-c846-4af0-b99a-7f6c765d2587
+    - !<own> 1cd699d3-d995-49dc-8a47-6d2bc56c09ae
   layers: !<Layers/267ee9a7-aff2-4f9d-9a49-f71214747d03>
     userLayers:
       - id: 1
@@ -675,21 +675,6 @@
     - !<own> a6af4948-9adc-4052-ae22-db902dd2764e
   Components:
     []
-- !<SceneObject/13117440-c846-4af0-b99a-7f6c765d2587>
-  PrefabRemaps:
-    []
-  Name: LEAF Plugin Bridge
-  Enabled: true
-  Layers: 1
-  LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
-    HasSegmentScaleCompensation: false
-  Children:
-    []
-  Components:
-    - !<own> ce0fe15d-3ac8-47f6-8398-9036453526fc
 - !<SceneObject/13dbbd79-456a-48e3-a1e5-58ba58eba5d9>
   PrefabRemaps:
     []
@@ -752,8 +737,8 @@
     gotItLabel: true
     missedLabel: true
     labelTextColor: true
-    gotItBackingColor: true
-    missedBackingColor: true
+    gotItColor: true
+    missedColor: true
   ScriptTypesDefault:
     {}
   ScriptInputs:
@@ -763,8 +748,8 @@
       gotItLabel: Got it
       missedLabel: Missed
       labelTextColor: !<Vec4> {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
-      gotItBackingColor: !<Vec4> {x: 0.100000, y: 0.680000, z: 0.340000, w: 0.960000}
-      missedBackingColor: !<Vec4> {x: 0.920000, y: 0.240000, z: 0.300000, w: 0.960000}
+      gotItColor: !<Vec4> {x: 0.130000, y: 0.770000, z: 0.370000, w: 1.000000}
+      missedColor: !<Vec4> {x: 0.950000, y: 0.300000, z: 0.330000, w: 1.000000}
   ScriptTypes:
     "":
       {}
@@ -818,6 +803,21 @@
   ScriptTypes:
     "":
       {}
+- !<SceneObject/1cd699d3-d995-49dc-8a47-6d2bc56c09ae>
+  PrefabRemaps:
+    []
+  Name: LEAF Plugin Bridge
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> fdc77a00-034b-4983-a2ab-acdfc058868c
 - !<RenderMeshVisual/1f969daa-5809-4500-b314-98d91ccba131>
   PrefabRemaps:
     []
@@ -1437,6 +1437,7 @@
       eyeHeightCm: !<float> 160.000000
       nameShowSec: !<float> 2.000000
       gazeDwellSec: !<float> 2.000000
+      previewStandBackCm: !<float> 360.000000
       alignToUserOnStart: true
       debugColliders: false
       runSelfTest: false
@@ -3337,7 +3338,8 @@
   ScriptAsset: !<reference> 1e022827-ca2a-4a9b-a8b4-3fb1c8732ca9
   ScriptInputsDefault:
     panelWidthCm: true
-    cardTint: true
+    cardTextColor: true
+    cardSubtleTextColor: true
     primaryButtonColor: true
     secondaryButtonColor: true
     titleText: true
@@ -3348,7 +3350,9 @@
   ScriptInputs:
     "":
       panelWidthCm: !<float> 16.000000
-      cardTint: !<Vec4> {x: 0.460000, y: 0.390000, z: 0.310000, w: 0.920000}
+      cardTint: !<Vec4> {x: 0.970000, y: 0.960000, z: 0.920000, w: 0.960000}
+      cardTextColor: !<Vec4> {x: 0.110000, y: 0.150000, z: 0.420000, w: 1.000000}
+      cardSubtleTextColor: !<Vec4> {x: 0.270000, y: 0.310000, z: 0.520000, w: 1.000000}
       primaryButtonColor: !<Vec4> {x: 0.050000, y: 0.500000, z: 1.000000, w: 1.000000}
       secondaryButtonColor: !<Vec4> {x: 0.580000, y: 0.280000, z: 0.980000, w: 1.000000}
       titleText: Loci
@@ -3525,22 +3529,6 @@
     index-2: !<reference> 2dae2a27-8ce6-466a-8bff-622195c1b3a8
     thumb-3_end_end_end_end: !<reference> bf2095b6-c6f8-48c8-b840-e0a6cec0dc99
     wrist_to_pinky: !<reference> 3b4f5057-b516-4d3b-9c8d-14c81af2f505
-- !<ScriptComponent/ce0fe15d-3ac8-47f6-8398-9036453526fc>
-  PrefabRemaps:
-    []
-  Name: MessagingBridge
-  Enabled: true
-  ScriptAsset: !<reference> 9aa407db-2872-4afc-a162-cf7faf2a0f29
-  ScriptInputsDefault:
-    {}
-  ScriptTypesDefault:
-    {}
-  ScriptInputs:
-    "":
-      {}
-  ScriptTypes:
-    "":
-      {}
 - !<SceneObject/ce2213a1-7aa1-4201-a3c7-c2aaa06fd4ff>
   PrefabRemaps:
     []
@@ -4241,6 +4229,22 @@
     []
   Components:
     - !<own> e3b96d35-4f80-4f55-8c49-c3ab768d34f9
+- !<ScriptComponent/fdc77a00-034b-4983-a2ab-acdfc058868c>
+  PrefabRemaps:
+    []
+  Name: MessagingBridge
+  Enabled: true
+  ScriptAsset: !<reference> 9aa407db-2872-4afc-a162-cf7faf2a0f29
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      {}
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/fe93d992-1114-4f1f-8bef-0a0bbd75747d>
   PrefabRemaps:
     []

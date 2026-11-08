@@ -128,6 +128,15 @@ export class LociMain extends BaseScriptComponent {
   @ui.group_end
 
   @ui.separator
+  @ui.label('<span style="color: #60A5FA;">Lens Studio preview only (ignored on Specs)</span>')
+  @ui.group_start("Preview")
+  @input
+  @hint("Preview camera starts this far behind the user's spot (the user's spot is 0.5 m from the table front). The Specs view is only ~32° wide, so from the user's spot the chair and shelf are out of frame; 360 puts the start card, all 5 spots and their ✓/✗ targets in one frame for recording. 0 = start at the user's spot. While > 0, gaze dwell is off in the preview (the camera is a recording view, not the user's eyes).")
+  @widget(new SliderWidget(0, 400, 10))
+  previewStandBackCm: number = 360
+  @ui.group_end
+
+  @ui.separator
   @ui.label('<span style="color: #60A5FA;">Debug</span>')
   @ui.group_start("Debug")
   @input
@@ -157,6 +166,7 @@ export class LociMain extends BaseScriptComponent {
   private _placementTimes: number[] = []
   private _lastListSource = ""
   private started = false
+  private standBackCm = 0
 
   onAwake(): void {
     this.tween = new Tweener(this)
@@ -177,9 +187,11 @@ export class LociMain extends BaseScriptComponent {
   }
 
   private start(): void {
+    this.standBackCm = this.alignToUserOnStart && global.deviceInfoSystem.isEditor() ? Math.max(0, this.previewStandBackCm) : 0
     if (this.alignToUserOnStart) this.alignPalace()
     this.eyeWorld = this.cameraObject.getTransform().getWorldPosition()
-    this.log(`camera start ${this.eyeWorld.toString()}, room floor at ${this.palaceRoot.getTransform().getWorldPosition().toString()}`)
+    this.log(`camera start ${this.eyeWorld.toString()}, room floor at ${this.palaceRoot.getTransform().getWorldPosition().toString()}` +
+      (this.standBackCm > 0 ? `, preview camera ${this.standBackCm} cm behind the user's spot (gaze dwell off)` : ""))
     this.audio.setup(this.cameraObject)
     this.guide.setup(this.shapeKit, this.cameraObject)
     for (const s of this.spots) {
@@ -210,14 +222,19 @@ export class LociMain extends BaseScriptComponent {
     }
   }
 
-  /** Puts the authored room's floor under the user's start pose, facing where they look. */
+  /**
+   * Puts the authored room's floor under the user's start pose, facing where they look.
+   * In the Lens Studio preview the room also moves `standBackCm` ahead along the look
+   * direction, so the camera starts that far behind the user's spot.
+   */
   private alignPalace(): void {
     const cam = this.cameraObject.getTransform()
     const p = cam.getWorldPosition()
     const look = cam.back
     const yaw = Math.atan2(-look.x, -look.z)
+    const ahead = new vec3(-Math.sin(yaw), 0, -Math.cos(yaw)).uniformScale(this.standBackCm)
     const pt = this.palaceRoot.getTransform()
-    pt.setWorldPosition(new vec3(p.x, p.y - this.eyeHeightCm, p.z))
+    pt.setWorldPosition(new vec3(p.x, p.y - this.eyeHeightCm, p.z).add(ahead))
     pt.setWorldRotation(quat.angleAxis(yaw, vec3.up()))
   }
 
@@ -495,7 +512,7 @@ export class LociMain extends BaseScriptComponent {
   private onUpdate(): void {
     if (!this.started) return
     const st = this.state
-    if (this.gazeDwellSec <= 0 || st.phase !== "study" || st.studyBusy) {
+    if (this.gazeDwellSec <= 0 || this.standBackCm > 0 || st.phase !== "study" || st.studyBusy) {
       this.dwell = 0
       return
     }
