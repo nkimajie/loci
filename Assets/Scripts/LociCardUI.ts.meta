@@ -30,7 +30,9 @@
   ScriptInputsHidden:
     cardTint: false
     panelWidthCm: false
+    primaryButtonColor: false
     resultsFadeSec: false
+    secondaryButtonColor: false
     subtitleText: false
     titleText: false
   ScriptTypesHidden:
@@ -44,6 +46,8 @@
   DefaultScriptInputs:
     - panelWidthCm: !<float> 16.000000
       cardTint: !<Vec4> {x: 0.460000, y: 0.390000, z: 0.310000, w: 0.920000}
+      primaryButtonColor: !<Vec4> {x: 0.050000, y: 0.500000, z: 1.000000, w: 1.000000}
+      secondaryButtonColor: !<Vec4> {x: 0.580000, y: 0.280000, z: 0.980000, w: 1.000000}
       titleText: Loci
       subtitleText: Turn your list into a route
       resultsFadeSec: !<float> 10.000000
@@ -57,6 +61,8 @@
     - '// @ui {"widget":"group_start", "label":"Settings"}'
     - '// @input float panelWidthCm = 16 {"hint":"Card width in cm", "widget":"slider", "min":12, "max":24, "step":0.5}'
     - '// @input vec4 cardTint = "{0.46, 0.39, 0.31, 0.92}" {"hint":"Card tint — keep it pale/light: the Specs display is additive, so dark colours vanish", "widget":"color"}'
+    - "// @input vec4 primaryButtonColor = \"{0.05, 0.50, 1.0, 1}\" {\"hint\":\"Fill for each card's main button (Sample list, Quiz me, Review missed): bright and saturated\", \"widget\":\"color\"}"
+    - '// @input vec4 secondaryButtonColor = "{0.58, 0.28, 0.98, 1}" {"hint":"Fill for the other card buttons: bright and saturated", "widget":"color"}'
     - '// @input string titleText = "Loci" {"hint":"Title on the start card"}'
     - '// @input string subtitleText = "Turn your list into a route" {"hint":"One-line subtitle under the title"}'
     - '// @input float resultsFadeSec = 10 {"hint":"Seconds before the results card fades to a small Options pill (0 = never)", "widget":"slider", "min":0, "max":30, "step":1}'

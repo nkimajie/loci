@@ -21,7 +21,8 @@ import {FlexAlign, FlexAlignSelf, FlexDirection, FlexJustify} from "SpectaclesUI
 import {BackPlate} from "SpectaclesUIKit.lspkg/Scripts/BackPlate"
 import {Button} from "SpectaclesUIKit.lspkg/Scripts/Components/Button/Button"
 import {ElementContent} from "SpectaclesUIKit.lspkg/Scripts/Components/Content/ElementContent"
-import {RoundedRectangle} from "SpectaclesUIKit.lspkg/Scripts/Visuals/RoundedRectangle/RoundedRectangle"
+import {GradientParameters, RoundedRectangle} from "SpectaclesUIKit.lspkg/Scripts/Visuals/RoundedRectangle/RoundedRectangle"
+import {RoundedRectangleVisual} from "SpectaclesUIKit.lspkg/Scripts/Visuals/RoundedRectangle/RoundedRectangleVisual"
 import Event, {PublicApi} from "SpectaclesInteractionKit.lspkg/Utils/Event"
 
 const ICON_MIC: Texture = requireAsset("../Icons/mic.png") as Texture
@@ -58,6 +59,29 @@ const VIEW_DISTANCE_CM = 82
 const PAD = 1.4
 const BUTTON_H = 3.4
 
+// Bright button skin for the additive Specs display: solid saturated fills (no dim
+// grey gradients), a white rim, and lighter fills on hover / press.
+const BUTTON_BORDER = new vec4(1, 1, 1, 0.95)
+const HOVER_LIGHTEN = 0.22
+const PRESS_LIGHTEN = 0.4
+
+type ButtonTone = "primary" | "secondary"
+
+function solidGradient(c: vec4): GradientParameters {
+  return {
+    enabled: true,
+    start: new vec2(-1, 0),
+    end: new vec2(1, 0),
+    stop0: {enabled: true, percent: 0, color: c},
+    stop1: {enabled: true, percent: 0.5, color: c},
+    stop2: {enabled: true, percent: 1, color: c},
+  }
+}
+
+function lighten(c: vec4, t: number): vec4 {
+  return new vec4(c.r + (1 - c.r) * t, c.g + (1 - c.g) * t, c.b + (1 - c.b) * t, c.a)
+}
+
 export type CardView = "none" | "start" | "switch" | "results" | "collapsed"
 
 interface ViewRec {
@@ -80,6 +104,16 @@ export class LociCardUI extends BaseScriptComponent {
   @hint("Card tint — keep it pale/light: the Specs display is additive, so dark colours vanish")
   @widget(new ColorWidget())
   cardTint: vec4 = new vec4(0.46, 0.39, 0.31, 0.92)
+
+  @input("vec4", "{0.05, 0.50, 1.0, 1}")
+  @hint("Fill for each card's main button (Sample list, Quiz me, Review missed): bright and saturated")
+  @widget(new ColorWidget())
+  primaryButtonColor: vec4 = new vec4(0.05, 0.5, 1.0, 1)
+
+  @input("vec4", "{0.58, 0.28, 0.98, 1}")
+  @hint("Fill for the other card buttons: bright and saturated")
+  @widget(new ColorWidget())
+  secondaryButtonColor: vec4 = new vec4(0.58, 0.28, 0.98, 1)
 
   @input
   @hint("Title on the start card")
@@ -184,9 +218,9 @@ export class LociCardUI extends BaseScriptComponent {
     const inner = this.panelWidthCm - PAD * 2
     this.addText(content, "Title", this.titleText, "Title2", inner, 4.2)
     this.addText(content, "Subtitle", this.subtitleText, "Caption", inner, 1.8)
-    this.addButton(content, "SayMyListButton", "Say my list", ICON_MIC, "PrimaryNeutral", inner, () => this._onSayList.invoke())
-    this.addButton(content, "SampleListButton", "Sample list", ICON_SAMPLE, "Primary", inner, () => this._onSampleList.invoke())
-    this.addButton(content, "MixedListButton", "Mixed list", ICON_MIXED, "PrimaryNeutral", inner, () => this._onMixedList.invoke())
+    this.addButton(content, "SayMyListButton", "Say my list", ICON_MIC, "secondary", inner, () => this._onSayList.invoke())
+    this.addButton(content, "SampleListButton", "Sample list", ICON_SAMPLE, "primary", inner, () => this._onSampleList.invoke())
+    this.addButton(content, "MixedListButton", "Mixed list", ICON_MIXED, "secondary", inner, () => this._onMixedList.invoke())
     this.statusLabel = this.addText(content, "StatusText", "", "Caption", inner, 2.4, true)
   }
 
@@ -195,8 +229,8 @@ export class LociCardUI extends BaseScriptComponent {
     const inner = this.panelWidthCm - PAD * 2
     this.addText(content, "SwitchTitle", "Route ready", "Headline1", inner, 3.0)
     this.addText(content, "SwitchHint", "Walk it again, or test yourself", "Caption", inner, 1.8)
-    this.addButton(content, "WalkAgainButton", "Walk again", ICON_WALK, "PrimaryNeutral", inner, () => this._onWalkAgain.invoke())
-    this.addButton(content, "QuizMeButton", "Quiz me", ICON_QUIZ, "Primary", inner, () => this._onQuizMe.invoke())
+    this.addButton(content, "WalkAgainButton", "Walk again", ICON_WALK, "secondary", inner, () => this._onWalkAgain.invoke())
+    this.addButton(content, "QuizMeButton", "Quiz me", ICON_QUIZ, "primary", inner, () => this._onQuizMe.invoke())
   }
 
   private buildResults(): void {
@@ -204,15 +238,15 @@ export class LociCardUI extends BaseScriptComponent {
     const inner = this.panelWidthCm - PAD * 2
     this.scoreLabel = this.addText(content, "ScoreText", "5 / 5", "Title1", inner, 4.6)
     this.resultsHint = this.addText(content, "ResultsHint", "Missed spots are glowing", "Caption", inner, 2.4, true)
-    this.addButton(content, "ReviewMissedButton", "Review missed", ICON_REVIEW, "Primary", inner, () => this._onReviewMissed.invoke())
-    this.addButton(content, "QuizAgainButton", "Quiz again", ICON_REPLAY, "PrimaryNeutral", inner, () => this._onQuizAgain.invoke())
-    this.addButton(content, "NewListButton", "New list", ICON_NEW, "PrimaryNeutral", inner, () => this._onNewList.invoke())
+    this.addButton(content, "ReviewMissedButton", "Review missed", ICON_REVIEW, "primary", inner, () => this._onReviewMissed.invoke())
+    this.addButton(content, "QuizAgainButton", "Quiz again", ICON_REPLAY, "secondary", inner, () => this._onQuizAgain.invoke())
+    this.addButton(content, "NewListButton", "New list", ICON_NEW, "secondary", inner, () => this._onNewList.invoke())
   }
 
   private buildCollapsed(): void {
     const {content} = this.panel("collapsed", "ResultsCollapsed")
     const inner = this.panelWidthCm - PAD * 2
-    this.optionsLabel = this.addButton(content, "ShowOptionsButton", "5 / 5  ·  Options", ICON_REPLAY, "PrimaryNeutral", inner, () => {
+    this.optionsLabel = this.addButton(content, "ShowOptionsButton", "5 / 5  ·  Options", ICON_REPLAY, "secondary", inner, () => {
       this.show("results")
       this.fadeLeft = this.resultsFadeSec > 0 ? this.resultsFadeSec : -1
     })
@@ -280,18 +314,25 @@ export class LociCardUI extends BaseScriptComponent {
   }
 
   /** Full-width button whose whole face is one ElementContent (icon + label). */
-  private addButton(parent: SceneObject, name: string, label: string, icon: Texture, style: string, width: number, onPress: () => void): ElementContent {
+  private addButton(parent: SceneObject, name: string, label: string, icon: Texture, tone: ButtonTone, width: number, onPress: () => void): ElementContent {
     const so = global.scene.createSceneObject(name)
     so.setParent(parent)
     const btn = so.createComponent(Button.getTypeName()) as Button
-    btn.setVariant({theme: "SnapOS2", shape: "Capsule", style})
+    btn.setVariant({theme: "SnapOS2", shape: "Capsule", style: "Primary"})
     btn.size = new vec3(width, BUTTON_H, 1)
+    this.paintButton(btn, tone === "primary" ? this.primaryButtonColor : this.secondaryButtonColor)
     const ec = so.createComponent(ElementContent.getTypeName()) as ElementContent
     ec.text = label
     ec.textSize = roleSize("Button", VIEW_DISTANCE_CM)
     ec.leadingIcon = icon
     ec.leadingIconSize = 1.7
     ec.spacing = 0.6
+    // Pure white label on the bright fill (theme default is 0.85 grey). These are the
+    // ElementContent Inspector inputs "Use Text Color Override" / "Text Color Override".
+    const textOverride = ec as unknown as {_useTextColorOverride: boolean; _textColorOverride: vec4}
+    textOverride._useTextColorOverride = true
+    textOverride._textColorOverride = new vec4(1, 1, 1, 1)
+    ec.markColorsDirty()
     btn.onTriggerUp.add(() => {
       if (this.isActiveButton(so)) onPress()
     })
@@ -301,6 +342,33 @@ export class LociCardUI extends BaseScriptComponent {
     const flex = parent.getComponent(FlexLayout.getTypeName()) as FlexLayout | null
     if (flex) flex.addItems([item])
     return ec
+  }
+
+  /**
+   * Replace the theme's dim gradient with a solid bright fill per state. The Button's
+   * onInitialized fires before its visual applies the theme, so paint one frame later.
+   */
+  private paintButton(btn: Button, fill: vec4): void {
+    const schedule = () => {
+      const later = this.createEvent("DelayedCallbackEvent") as DelayedCallbackEvent
+      later.bind(() => {
+        const v = btn.visual
+        if (!(v instanceof RoundedRectangleVisual)) return
+        const hover = lighten(fill, HOVER_LIGHTEN)
+        const press = lighten(fill, PRESS_LIGHTEN)
+        v.defaultGradient = solidGradient(fill)
+        v.hoveredGradient = solidGradient(hover)
+        v.triggeredGradient = solidGradient(press)
+        v.inactiveGradient = solidGradient(new vec4(fill.r, fill.g, fill.b, fill.a * 0.5))
+        v.borderDefaultGradient = solidGradient(BUTTON_BORDER)
+        v.borderHoveredGradient = solidGradient(BUTTON_BORDER)
+        v.borderTriggeredGradient = solidGradient(BUTTON_BORDER)
+        v.borderInactiveGradient = solidGradient(BUTTON_BORDER)
+      })
+      later.reset(0)
+    }
+    if (btn.initialized) schedule()
+    else btn.onInitialized.add(schedule)
   }
 
   /** Ignore presses that land while a view is popping out. */

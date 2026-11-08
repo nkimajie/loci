@@ -42,6 +42,9 @@ function applyTextRole(t: Text, role: TextRole, distanceCm: number = 110): void 
 const VIEW_DISTANCE_CM = 130 // eye → answer targets (chair / table / shelf are ~1.0–1.5 m from the eyes)
 const LAYOUT_Z_LIFT = 0.02
 const LABEL_H = 3.2
+const LABEL_PAD_X = 0.9 // backing pill padding around the label text
+const LABEL_PAD_Y = 0.35
+const LABEL_CORNER = 1.0
 
 @component
 export class LociAnswerUI extends BaseScriptComponent {
@@ -67,15 +70,20 @@ export class LociAnswerUI extends BaseScriptComponent {
   @hint("Label under the cross target")
   missedLabel: string = "Missed"
 
-  @input("vec4", "{0.62, 1.0, 0.66, 1}")
-  @hint("Colour of the 'Got it' label")
+  @input("vec4", "{1, 1, 1, 1}")
+  @hint("Label text colour (keep it light: the Specs display is additive)")
   @widget(new ColorWidget())
-  gotItColor: vec4 = new vec4(0.62, 1.0, 0.66, 1)
+  labelTextColor: vec4 = new vec4(1, 1, 1, 1)
 
-  @input("vec4", "{1.0, 0.72, 0.66, 1}")
-  @hint("Colour of the 'Missed' label")
+  @input("vec4", "{0.10, 0.68, 0.34, 0.96}")
+  @hint("Backing pill behind the 'Got it' label: bright and saturated so white text reads on any surface")
   @widget(new ColorWidget())
-  missedColor: vec4 = new vec4(1.0, 0.72, 0.66, 1)
+  gotItBackingColor: vec4 = new vec4(0.1, 0.68, 0.34, 0.96)
+
+  @input("vec4", "{0.92, 0.24, 0.30, 0.96}")
+  @hint("Backing pill behind the 'Missed' label: bright and saturated so white text reads on any surface")
+  @widget(new ColorWidget())
+  missedBackingColor: vec4 = new vec4(0.92, 0.24, 0.3, 0.96)
   @ui.group_end
 
   private host!: SceneObject
@@ -107,12 +115,12 @@ export class LociAnswerUI extends BaseScriptComponent {
     const row = this.flexRow(this.host, colW * 2 + gap, colH, {gap, justify: FlexJustify.Center, align: FlexAlign.Start})
 
     this.flexChild(row, {w: colW, h: colH}, (cell) => {
-      this.addTarget(cell, "GotItButton", ICON_CHECK, "Primary", this.gotItLabel, this.gotItColor, colW, colH, () => {
+      this.addTarget(cell, "GotItButton", ICON_CHECK, "Primary", this.gotItLabel, this.gotItBackingColor, colW, colH, () => {
         if (this.wantVisible) this._onGotIt.invoke()
       })
     })
     this.flexChild(row, {w: colW, h: colH}, (cell) => {
-      this.addTarget(cell, "MissedButton", ICON_CLOSE, "PrimaryNeutral", this.missedLabel, this.missedColor, colW, colH, () => {
+      this.addTarget(cell, "MissedButton", ICON_CLOSE, "PrimaryNeutral", this.missedLabel, this.missedBackingColor, colW, colH, () => {
         if (this.wantVisible) this._onMissed.invoke()
       })
     })
@@ -141,7 +149,7 @@ export class LociAnswerUI extends BaseScriptComponent {
     icon: Texture,
     style: string,
     label: string,
-    color: vec4,
+    backing: vec4,
     w: number,
     h: number,
     onPress: () => void,
@@ -162,7 +170,13 @@ export class LociAnswerUI extends BaseScriptComponent {
       t.text = label
       t.depthTest = true
       applyTextRole(t, "Headline2", VIEW_DISTANCE_CM)
-      t.textFill.color = color
+      t.textFill.color = this.labelTextColor
+      // Solid pill behind the label so it reads against the chair / table / shelf.
+      const bg = t.backgroundSettings
+      bg.enabled = true
+      bg.fill.color = backing
+      bg.margins = Rect.create(LABEL_PAD_X, LABEL_PAD_X, LABEL_PAD_Y, LABEL_PAD_Y)
+      bg.cornerRadius = LABEL_CORNER
       t.horizontalAlignment = HorizontalAlignment.Center
       t.verticalAlignment = VerticalAlignment.Center
       t.horizontalOverflow = HorizontalOverflow.Overflow

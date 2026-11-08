@@ -29,9 +29,10 @@
   PackagePolicy: CanBeUnpacked
   ScriptInputsHidden:
     buttonSizeCm: false
-    gotItColor: false
+    gotItBackingColor: false
     gotItLabel: false
-    missedColor: false
+    labelTextColor: false
+    missedBackingColor: false
     missedLabel: false
     spacingCm: false
   ScriptTypesHidden:
@@ -47,8 +48,9 @@
       spacingCm: !<float> 14.000000
       gotItLabel: Got it
       missedLabel: Missed
-      gotItColor: !<Vec4> {x: 0.620000, y: 1.000000, z: 0.660000, w: 1.000000}
-      missedColor: !<Vec4> {x: 1.000000, y: 0.720000, z: 0.660000, w: 1.000000}
+      labelTextColor: !<Vec4> {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
+      gotItBackingColor: !<Vec4> {x: 0.100000, y: 0.680000, z: 0.340000, w: 0.960000}
+      missedBackingColor: !<Vec4> {x: 0.920000, y: 0.240000, z: 0.300000, w: 0.960000}
   ScriptTypes:
     -
       {}
@@ -61,6 +63,7 @@
     - '// @input float spacingCm = 14 {"hint":"Centre-to-centre distance between the two targets in cm (brief: 14 cm)", "widget":"slider", "min":10, "max":24, "step":0.5}'
     - '// @input string gotItLabel = "Got it" {"hint":"Label under the check target"}'
     - '// @input string missedLabel = "Missed" {"hint":"Label under the cross target"}'
-    - "// @input vec4 gotItColor = \"{0.62, 1.0, 0.66, 1}\" {\"hint\":\"Colour of the 'Got it' label\", \"widget\":\"color\"}"
-    - "// @input vec4 missedColor = \"{1.0, 0.72, 0.66, 1}\" {\"hint\":\"Colour of the 'Missed' label\", \"widget\":\"color\"}"
+    - '// @input vec4 labelTextColor = "{1, 1, 1, 1}" {"hint":"Label text colour (keep it light: the Specs display is additive)", "widget":"color"}'
+    - "// @input vec4 gotItBackingColor = \"{0.10, 0.68, 0.34, 0.96}\" {\"hint\":\"Backing pill behind the 'Got it' label: bright and saturated so white text reads on any surface\", \"widget\":\"color\"}"
+    - "// @input vec4 missedBackingColor = \"{0.92, 0.24, 0.30, 0.96}\" {\"hint\":\"Backing pill behind the 'Missed' label: bright and saturated so white text reads on any surface\", \"widget\":\"color\"}"
     - '// @ui {"widget":"group_end"}'
