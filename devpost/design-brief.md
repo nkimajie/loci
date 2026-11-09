@@ -98,7 +98,7 @@ Each one can be checked in Lens Studio's preview, via pinch, and each is a LEAF 
 Extra LEAF checks: a wrong pinch reveals the right spot (red shake, then a brief orange-ring reveal); each item is asked exactly once; "Quiz again" resets the score; "New list" clears every spot. A study-pack check (C10) is described under "Study pack and start card" below.
 
 ### Study pack and start card
-- **Start card.** Three packs, top to bottom: "Study pack" (the main, blue button), "Errands (warm-up)" and "Mixed list". "Build my palace" will join them later.
+- **Start card.** Three packs, top to bottom: "Study pack" (the main, blue button), "Errands (warm-up)" and "Mixed list". "Build my palace" sits below them (see "Build my palace" below).
   - "Errands (warm-up)" is the v1 "Sample list", unchanged: umbrella, keys, milk, call mom, gift. Done criterion 1 now refers to it.
 - **Study pack: the scientific method.** One step per spot, in route order:
   1. Chair: a white speech bubble with a blue "?" (Ask a question). Animation: the bubble chatters, squashing, stretching and waggling, while the "?" pops out toward me, spins and tucks back in.
@@ -117,6 +117,26 @@ Extra LEAF checks: a wrong pinch reveals the right spot (red shake, then a brief
   - The preview start card hides the button. On Specs it shows as a fourth button. For debugging, the card's "Show Voice In Preview" setting puts it back in the preview.
   - The packs send fixed text through the same parser and matcher that voice uses, so everything after speech-to-text is still tested.
 - **LEAF (C10).** The start card shows the three packs in order, with no "Say my list" in the preview. The synonyms match. "Study pack" places the 5 models in route order. Each step's name shows and its animation plays (including its signature move) and settles back to rest. Find-it asks for each step by name with its icon, and ends at "5 / 5".
+
+### Build my palace (custom spots)
+- **Start card.** The fixed chair–table–shelf route stays the default, now called "Quick route". The start card's fourth button, "Build my palace", lets me choose my own five places instead.
+- **Building.** The card says "Pinch 5 places for your palace" and counts "0 of 5", "1 of 5" and so on. I pinch any surface: chair seat, table, shelf top or the floor.
+  - Each accepted pinch drops a numbered, glowing place (a cyan disc with a number above it). A thin bright line joins it to the previous place, so the route draws itself in order.
+  - A pinch closer than 25 cm to an existing place is rejected gently. That place gives a small shake, and the card says "Too close to place 2 — try 25 cm away".
+  - "Quick route" on the build card cancels and keeps the fixed route.
+- **After 5 places.** The route's five spots move to my places, and the start card reads "Your palace: pick a pack for your 5 places". The chosen pack then drops onto them in the order I pinched them.
+  - Everything after that is unchanged: the study walk, the Find-it quiz with markers at my places, the results with missed places glowing, and Review missed.
+  - The numbered places hide while the objects are out. After "New list" they come back, because the palace is kept for the next list; reusing one palace for many lists is how the method of loci is meant to be used. The start card's last button is then "Quick route", which returns to the fixed spots.
+- **How a pinch becomes a place.**
+  - In the preview, the pinch's SIK interactor ray (from the eye through the mouse or the far-pinch point) is raycast against Box colliders on the table, chair and shelf stand-ins (table top, chair seat, shelf top and boards) and an invisible floor. Only hits on the top of a surface count. The colliders exist only while building, so they never get in the way of other pinches.
+  - On Specs, the same code first asks World Query surface hit-testing (the "Build With World Query" setting, on by default) and falls back to the stand-ins. The preview never uses World Query, and on-device placement is untested here.
+  - Pinches on the card's buttons are ignored.
+- **Why.** The method of loci works best in a place you know. Choosing the places yourself, in your own order, is the first step of the technique, not a setting.
+- **LEAF (C11–C13).** The place-pinching tests drive a camera-ray "far pointer" through LEAF, which follows the same path as a mouse click in the preview. LEAF's simulated hand pinches up close, with a short ray beside the target that can reach a surface from below, so it isn't used for places.
+  - C11: 5 pinches create 5 places in order, numbered 1–5 and joined by 4 lines, each exactly where its ray hit. The route spots then move there.
+  - C12: a pinch about 12 cm from place 2 is rejected (place 2 shakes, the card explains, still 2 of 5). A far-enough pinch is accepted. "Quick route" cancels.
+  - C13: on a built palace, the Errands objects drop onto the custom places, the study walk and Find-it run there, and missing the milk gives "4 / 5" with only its place glowing. "New list" keeps the palace, and "Quick route" puts the fixed spots back.
+- **Start card size.** With four buttons, the preview start card drops its empty status line (it only reports what voice heard). On Specs it also has "Say my list" and the status line, making it about 37 cm tall at the table's front edge.
 
 ### Framing fix for recording (Lens Studio preview only)
 - **Problem.** The Specs view is only about 32° wide. From where the user stands (0.5 m from the table front), the chair and the shelf are about 87° apart, so the whole route can never be in one preview frame from there. Standing far enough back to fit it made the start card's text too small to read in a screen recording.

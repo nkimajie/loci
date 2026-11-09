@@ -2,8 +2,12 @@
  * LociCardUI — the small light "Loci" card ~20 cm above the table's front edge
  * (in the Lens Studio preview LociMain moves it to ~0.9 m in front of the viewer).
  * One spot, five views:
- *   start     — "Loci", Study pack / Errands (warm-up) / Mixed list (+ Say my list on
- *               Specs; voice is on-device only, so the preview hides it), status line
+ *   start     — "Loci", Study pack / Errands (warm-up) / Mixed list / Build my palace
+ *               (+ Say my list and a status line on Specs; voice is on-device only, so
+ *               the preview hides both). With a custom palace built, the title reads
+ *               "Your palace" and the last button becomes "Quick route".
+ *   build     — "Build my palace": "Pinch 5 places for your palace", "2 of 5", a status
+ *               line (e.g. too close) and a Quick route button to cancel
  *   switch    — Walk again / Quiz me
  *   prompt    — Find-it quiz: small 3D icon of the item, "Where's the <item>?", "2 of 5"
  *   results   — "4 / 5" score + Review missed / Quiz again / New list (fades after ~10 s)
@@ -15,8 +19,11 @@
  *       showResults(score, hint), hideAll(), setStatus(msg), clearPromptIcon();
  *       getters visibleView / scoreText / statusText / promptText / promptProgress /
  *       promptIconHost.
- *       getter voiceButtonShown.
- *       Emits onSayList, onStudyPack, onErrands, onMixedList, onWalkAgain, onQuizMe,
+ *       showBuild(progress), setBuildProgress(text), setBuildStatus(text), setPalaceMode(custom);
+ *       getters voiceButtonShown / startTitle / routeButtonLabel / buildHint / buildProgress /
+ *       buildStatus.
+ *       Emits onSayList, onStudyPack, onErrands, onMixedList, onRouteButton (Build my palace /
+ *       Quick route), onBuildCancel, onWalkAgain, onQuizMe,
  *       onReviewMissed, onQuizAgain, onNewList.
  * Must not: parse lists, score, or decide the flow — LociMain does.
  */
@@ -40,6 +47,8 @@ const ICON_QUIZ: Texture = requireAsset("../Icons/quiz.png") as Texture
 const ICON_REVIEW: Texture = requireAsset("../Icons/visibility.png") as Texture
 const ICON_REPLAY: Texture = requireAsset("../Icons/replay.png") as Texture
 const ICON_NEW: Texture = requireAsset("../Icons/add.png") as Texture
+const ICON_BUILD: Texture = requireAsset("../Icons/add_location_alt.png") as Texture
+const ICON_ROUTE: Texture = requireAsset("../Icons/route.png") as Texture
 
 // ── Type scale (canonical block from /specs-build-ui patterns.md → Typography)
 const FONT_SIZE_SCALE = 1.0
@@ -69,6 +78,8 @@ const PAD = 1.4
 const CAPTION_SCALE = 1.35
 // Find-it prompt: square slot for the item's small 3D icon.
 const ICON_SLOT_CM = 6.5
+// Build my palace: shown under the progress whenever there is no other message.
+const BUILD_RULE = "Keep places 25 cm apart"
 
 // Card buttons: solid bright fills (LociButtonSkin), white bold labels 1.5x the
 // type-scale Button size, on a taller capsule so the bigger label has room.
@@ -79,7 +90,7 @@ const BUTTON_ICON = 2.1
 
 type ButtonTone = "primary" | "secondary"
 
-export type CardView = "none" | "start" | "switch" | "prompt" | "results" | "collapsed"
+export type CardView = "none" | "start" | "build" | "switch" | "prompt" | "results" | "collapsed"
 
 interface ViewRec {
   root: SceneObject
@@ -158,11 +169,21 @@ export class LociCardUI extends BaseScriptComponent {
   private _prompt = ""
   private _progress = ""
   private _voiceShown = false
+  private titleLabel!: Text
+  private subtitleLabel!: Text
+  private routeButton!: ElementContent
+  private buildHintLabel!: Text
+  private buildProgressLabel!: Text
+  private buildStatusLabel!: Text
+  private _buildProgress = ""
+  private _buildStatus = ""
 
   private _onSayList = new Event<void>()
   private _onStudyPack = new Event<void>()
   private _onErrands = new Event<void>()
   private _onMixedList = new Event<void>()
+  private _onRouteButton = new Event<void>()
+  private _onBuildCancel = new Event<void>()
   private _onWalkAgain = new Event<void>()
   private _onQuizMe = new Event<void>()
   private _onReviewMissed = new Event<void>()
@@ -173,6 +194,9 @@ export class LociCardUI extends BaseScriptComponent {
   get onStudyPack(): PublicApi<void> { return this._onStudyPack.publicApi() }
   get onErrands(): PublicApi<void> { return this._onErrands.publicApi() }
   get onMixedList(): PublicApi<void> { return this._onMixedList.publicApi() }
+  /** The start card's last button: "Build my palace", or "Quick route" once a palace is built. */
+  get onRouteButton(): PublicApi<void> { return this._onRouteButton.publicApi() }
+  get onBuildCancel(): PublicApi<void> { return this._onBuildCancel.publicApi() }
   get onWalkAgain(): PublicApi<void> { return this._onWalkAgain.publicApi() }
   get onQuizMe(): PublicApi<void> { return this._onQuizMe.publicApi() }
   get onReviewMissed(): PublicApi<void> { return this._onReviewMissed.publicApi() }
@@ -215,9 +239,30 @@ export class LociCardUI extends BaseScriptComponent {
     return this._voiceShown
   }
 
+  get startTitle(): string {
+    return this.titleLabel ? this.titleLabel.text : ""
+  }
+
+  get routeButtonLabel(): string {
+    return this.routeButton ? this.routeButton.text : ""
+  }
+
+  get buildHint(): string {
+    return this.current === "build" && this.buildHintLabel ? this.buildHintLabel.text : ""
+  }
+
+  get buildProgress(): string {
+    return this.current === "build" ? this._buildProgress : ""
+  }
+
+  get buildStatus(): string {
+    return this.current === "build" ? this._buildStatus : ""
+  }
+
   onAwake(): void {
     this.sceneObject.createComponent("Component.Canvas")
     this.buildStart()
+    this.buildBuild()
     this.buildSwitch()
     this.buildPrompt()
     this.buildResults()
@@ -236,6 +281,32 @@ export class LociCardUI extends BaseScriptComponent {
 
   showSwitch(): void {
     this.show("switch")
+  }
+
+  /** "Build my palace" card: pinch 5 places. */
+  showBuild(progress: string): void {
+    this.setBuildProgress(progress)
+    this.setBuildStatus("")
+    this.show("build")
+  }
+
+  setBuildProgress(text: string): void {
+    this._buildProgress = text
+    if (this.buildProgressLabel) this.buildProgressLabel.text = text
+  }
+
+  /** A message under the progress ("Too close to place 2 — …"); "" shows the spacing rule. */
+  setBuildStatus(text: string): void {
+    this._buildStatus = text
+    if (this.buildStatusLabel) this.buildStatusLabel.text = text || BUILD_RULE
+  }
+
+  /** Start card wording for the fixed route ("Loci", Build my palace) or a built palace ("Your palace", Quick route). */
+  setPalaceMode(custom: boolean): void {
+    this.titleLabel.text = custom ? "Your palace" : this.titleText
+    this.subtitleLabel.text = custom ? "Pick a pack for your 5 places" : this.subtitleText
+    this.routeButton.text = custom ? "Quick route" : "Build my palace"
+    this.routeButton.leadingIcon = custom ? ICON_ROUTE : ICON_BUILD
   }
 
   /** Shows (or refreshes) the Find-it prompt. A refresh replays a quick pop so the change reads. */
@@ -279,17 +350,33 @@ export class LociCardUI extends BaseScriptComponent {
   private buildStart(): void {
     const {content} = this.panel("start", "StartCard")
     const inner = this.panelWidthCm - PAD * 2
-    this.addText(content, "Title", this.titleText, "Title2", inner, 3.6)
-    this.addText(content, "Subtitle", this.subtitleText, "Caption", inner, 2.4)
+    this.titleLabel = this.addText(content, "Title", this.titleText, "Title2", inner, 3.6)
+    this.subtitleLabel = this.addText(content, "Subtitle", this.subtitleText, "Caption", inner, 2.4)
     this.addButton(content, "StudyPackButton", "Study pack", ICON_STUDY, "primary", inner, () => this._onStudyPack.invoke())
     this.addButton(content, "ErrandsButton", "Errands (warm-up)", ICON_ERRANDS, "secondary", inner, () => this._onErrands.invoke())
     this.addButton(content, "MixedListButton", "Mixed list", ICON_MIXED, "secondary", inner, () => this._onMixedList.invoke())
-    // Speech-to-text only runs on Specs, so the preview start card leaves voice out.
+    this.routeButton = this.addButton(content, "BuildPalaceButton", "Build my palace", ICON_BUILD, "secondary", inner, () => this._onRouteButton.invoke())
+    // Speech-to-text only runs on Specs, so the preview start card leaves voice (and the
+    // status line that reports what was heard) out.
     this._voiceShown = this.showVoiceInPreview || !global.deviceInfoSystem.isEditor()
     if (this._voiceShown) {
       this.addButton(content, "SayMyListButton", "Say my list", ICON_MIC, "secondary", inner, () => this._onSayList.invoke())
+      this.statusLabel = this.addText(content, "StatusText", "", "Caption", inner, 3.0, true)
     }
-    this.statusLabel = this.addText(content, "StatusText", "", "Caption", inner, 3.0, true)
+  }
+
+  private buildBuild(): void {
+    const {content} = this.panel("build", "BuildCard")
+    const inner = this.panelWidthCm - PAD * 2
+    const title = this.addText(content, "BuildTitle", "Build my palace", "Headline1", inner, 3.8)
+    title.size *= 1.45 // same weight as the Find-it question
+    title.horizontalOverflow = HorizontalOverflow.Shrink
+    this.buildHintLabel = this.addText(content, "BuildHint", "Pinch 5 places for your palace", "Caption", inner, 2.6)
+    this.buildHintLabel.size *= 1.15
+    this.buildProgressLabel = this.addText(content, "BuildProgress", "0 of 5", "Title2", inner, 4.0)
+    this.buildStatusLabel = this.addText(content, "BuildStatus", BUILD_RULE, "Caption", inner, 2.6, true)
+    this.buildStatusLabel.horizontalOverflow = HorizontalOverflow.Shrink
+    this.addButton(content, "BuildCancelButton", "Quick route", ICON_ROUTE, "secondary", inner, () => this._onBuildCancel.invoke())
   }
 
   private buildSwitch(): void {

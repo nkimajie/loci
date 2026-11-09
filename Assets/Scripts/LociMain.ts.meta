@@ -30,6 +30,7 @@
   ScriptInputsHidden:
     alignToUserOnStart: false
     audio: false
+    buildWithWorldQuery: false
     cameraObject: false
     card: false
     debugColliders: false
@@ -82,6 +83,7 @@
       nameShowSec: !<float> 2.000000
       gazeDwellSec: !<float> 2.000000
       quizSeed: !<float> 7.000000
+      buildWithWorldQuery: true
       previewStandBackCm: !<float> 100.000000
       alignToUserOnStart: true
       debugColliders: false
@@ -119,6 +121,7 @@
     - "// @input float nameShowSec = 2 {\"hint\":\"Seconds an item's name shows after pinching it in study mode\", \"widget\":\"slider\", \"min\":0.5, \"max\":5, \"step\":0.1}"
     - '// @input float gazeDwellSec = 2 {"hint":"Seconds of looking at the current object that count as a pinch (0 = off)", "widget":"slider", "min":0, "max":5, "step":0.1}'
     - '// @input float quizSeed = 7 {"hint":"Seed for the Find-it prompt order (same seed → same order every run; each new quiz round reshuffles deterministically)"}'
+    - "// @input bool buildWithWorldQuery = true {\"hint\":\"Build my palace on Specs: hit-test real surfaces with World Query (stand-in colliders are the fallback). The Lens Studio preview always uses the stand-ins' colliders.\"}"
     - '// @ui {"widget":"group_end"}'
     - '// @ui {"widget":"separator"}'
     - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Lens Studio preview only (ignored on Specs)</span>"}'

@@ -1,6 +1,7 @@
 /**
  * LociMain — orchestrates the Loci memory-palace session:
- *   start card → list (Study pack / Errands / Mixed / voice) → objects drop onto 5 spots in route
+ *   start card [→ Build my palace: pinch 5 places, the 5 spots move there] →
+ *   list (Study pack / Errands / Mixed / voice) → objects drop onto 5 spots in route
  *   order → study walk (one spot pulses) → group glow → Walk again / Quiz me →
  *   Find-it quiz (objects vanish into neutral markers; "Where's the <item>?" in a seeded
  *   shuffled order; pinch the spot: green ring if right, red shake + orange-ring reveal of
@@ -19,7 +20,10 @@
  * visitedSpots, markerVisibleSpots, revealedObjectSpots, revealedSpot, quizOrder,
  * quizStep, quizTargetSpot, askedSpots, promptText, promptIconModelId, lastGuess,
  * ringKinds, shakingSpots, quizScore, cardView, getStateJson();
- * lastListSource ("study" | "errands" | "mixed" | "voice");
+ * lastListSource ("study" | "errands" | "mixed" | "voice"); palaceMode ("quick" | "custom"),
+ * palaceSpotCount, palaceLocalPositions, spotLocalPositions, palaceRejects, palaceShaking,
+ * palaceLineCount, palaceLabels, palaceVisible, startTitle, routeButtonLabel, buildProgress,
+ * buildStatus;
  * actions press*() / pinchItem(i) / guessSpot(i).
  */
 
@@ -29,6 +33,7 @@ import {LociGuide} from "./LociGuide"
 import {buildModel, buildTotem} from "./LociModelBuilder"
 import {findModel} from "./LociModelLibrary"
 import {LociNameTagUI} from "./LociNameTagUI"
+import {LociPalaceBuilder, MIN_GAP_CM, PALACE_SPOTS, PalaceReject} from "./LociPalaceBuilder"
 import {ListItem, parseAndMatch} from "./LociParser"
 import {runLociSelfTest} from "./LociSelfTest"
 import {LociShapeKit} from "./LociShapeKit"
@@ -49,7 +54,7 @@ const WRONG_REVEAL_HOLD_SEC = 1.6 // right spot shows its object with an orange 
 // Preview framing: the card floats this far in front of the camera, in the free band
 // above or below the route (whichever the start view has room for).
 const PREVIEW_CARD_DISTANCE_CM = 90
-const PREVIEW_CARD_HEIGHT_CM = 28 // tallest view (start card) incl. padding
+const PREVIEW_CARD_HEIGHT_CM = 29 // tallest view (start card: 4 buttons) incl. padding
 const PREVIEW_CARD_WIDTH_CM = 19
 const DEG = Math.PI / 180
 // Preview stand-back only: room x of the route's visual midpoint (chair's left edge
@@ -151,6 +156,10 @@ export class LociMain extends BaseScriptComponent {
   @input
   @hint("Seed for the Find-it prompt order (same seed → same order every run; each new quiz round reshuffles deterministically)")
   quizSeed: number = 7
+
+  @input
+  @hint("Build my palace on Specs: hit-test real surfaces with World Query (stand-in colliders are the fallback). The Lens Studio preview always uses the stand-ins' colliders.")
+  buildWithWorldQuery: boolean = true
   @ui.group_end
 
   @ui.separator
@@ -194,6 +203,9 @@ export class LociMain extends BaseScriptComponent {
   private started = false
   private standBackCm = 0
   private _promptIconId = ""
+  private builder!: LociPalaceBuilder
+  private _palaceMode: "quick" | "custom" = "quick"
+  private quickRouteLocal: vec3[] = []
 
   onAwake(): void {
     this.tween = new Tweener(this)
@@ -228,15 +240,35 @@ export class LociMain extends BaseScriptComponent {
       s.onMarkerPinched.add((i) => this.guessSpot(i))
     }
     this.placeCardForPreview()
+    let viewScale = 1
     if (this.standBackCm > 0) {
       // Name tags are sized for ~1.1 m; scale them with the preview camera's distance to the route.
       const d = this.spots[2].surfaceWorldPos.sub(this.eyeWorld).length
-      this.nameTag.setViewScale(Math.min(2.5, Math.max(1, (d / 110) * 0.65)))
+      viewScale = Math.min(2.5, Math.max(1, (d / 110) * 0.65))
+      this.nameTag.setViewScale(viewScale)
     }
+    // Quick route = the authored spots; Build my palace moves the same 5 spots.
+    this.quickRouteLocal = this.spots.map((s) => s.getSceneObject().getTransform().getLocalPosition())
+    this.builder = new LociPalaceBuilder({
+      owner: this,
+      kit: this.shapeKit,
+      audio: this.audio,
+      palaceRoot: this.palaceRoot,
+      eyeWorld: this.eyeWorld,
+      ignoreRoot: this.card.getSceneObject(),
+      viewScale,
+      useWorldQuery: this.buildWithWorldQuery,
+      log: (m) => this.log(m),
+    })
+    this.builder.onSpotAdded.add((i) => this.onPalaceSpot(i))
+    this.builder.onRejected.add((r) => this.onPalaceReject(r))
+    this.builder.onComplete.add((w) => this.onPalaceComplete(w))
     this.card.onSayList.add(() => this.pressSayList())
     this.card.onStudyPack.add(() => this.pressStudyPack())
     this.card.onErrands.add(() => this.pressErrands())
     this.card.onMixedList.add(() => this.pressMixedList())
+    this.card.onRouteButton.add(() => (this._palaceMode === "custom" ? this.pressQuickRoute() : this.pressBuildPalace()))
+    this.card.onBuildCancel.add(() => this.pressBuildCancel())
     this.card.onWalkAgain.add(() => this.pressWalkAgain())
     this.card.onQuizMe.add(() => this.pressQuizMe())
     this.card.onReviewMissed.add(() => this.pressReviewMissed())
@@ -363,6 +395,38 @@ export class LociMain extends BaseScriptComponent {
     return this.beginList(this.mixedListText, "mixed")
   }
 
+  /** Start card "Build my palace": pinch 5 places; the route's 5 spots move there. */
+  pressBuildPalace(): boolean {
+    if (this.state.phase !== "start") return false
+    this.restoreQuickRoute()
+    this.setPhase("palace")
+    this.guide.hide()
+    this.builder.begin()
+    this.card.showBuild(`0 of ${PALACE_SPOTS}`)
+    return true
+  }
+
+  /** Build card "Quick route": stop building and keep the fixed route. */
+  pressBuildCancel(): boolean {
+    if (this.state.phase !== "palace") return false
+    this.builder.clear()
+    this.restoreQuickRoute()
+    this.setPhase("start")
+    this.card.setPalaceMode(false)
+    this.card.showStart()
+    return true
+  }
+
+  /** Start card "Quick route" (shown once a palace is built): back to the fixed spots. */
+  pressQuickRoute(): boolean {
+    if (this.state.phase !== "start" || this._palaceMode !== "custom") return false
+    this.builder.clear()
+    this.restoreQuickRoute()
+    this.card.setPalaceMode(false)
+    this.log("route → quick route (fixed spots)")
+    return true
+  }
+
   pressSayList(): boolean {
     if (this.state.phase !== "start") return false
     this.setPhase("listening")
@@ -474,6 +538,46 @@ export class LociMain extends BaseScriptComponent {
     return true
   }
 
+  // ── Build my palace ──────────────────────────────────────────────────────
+
+  private onPalaceSpot(i: number): void {
+    this.card.setBuildProgress(`${i + 1} of ${PALACE_SPOTS}`)
+    this.card.setBuildStatus("")
+  }
+
+  private onPalaceReject(r: PalaceReject): void {
+    if (r.reason === "tooClose") {
+      this.card.setBuildStatus(`Too close to place ${r.near + 1} — try ${MIN_GAP_CM} cm away`)
+    } else {
+      this.card.setBuildStatus("Pinch the top of a surface")
+    }
+  }
+
+  /** 5 places chosen: the route's spots move there, then the start card asks for a pack. */
+  private onPalaceComplete(world: vec3[]): void {
+    for (let i = 0; i < SPOT_COUNT; i++) this.spots[i].relocate(world[i])
+    this._palaceMode = "custom"
+    this.audio.routeArpeggio(world, [0, 1, 2, 3, 4])
+    this.card.setBuildStatus("Your palace is ready")
+    this.log(`palace built: ${JSON.stringify(this.spots.map((s) => s.spotName))} now at custom places`)
+    this.later(1.2, () => {
+      this.setPhase("start")
+      this.card.setPalaceMode(true)
+      this.card.showStart()
+    })
+  }
+
+  private restoreQuickRoute(): void {
+    this._palaceMode = "quick"
+    this.spots.forEach((s, i) => {
+      const t = s.getSceneObject().getTransform()
+      if (t.getLocalPosition().distance(this.quickRouteLocal[i]) > 0.01) {
+        t.setLocalPosition(this.quickRouteLocal[i])
+        s.relocate(t.getWorldPosition())
+      }
+    })
+  }
+
   /** Back to the start card (New list). Also used by tests. */
   resetToStart(): void {
     this.flow += 1
@@ -487,6 +591,8 @@ export class LociMain extends BaseScriptComponent {
     this.state = new LociState()
     this._placementOrder = []
     this._placementTimes = []
+    // A built palace stays for the next list (that is the point of a memory palace).
+    this.builder.setVisible(this._palaceMode === "custom")
     this.setPhase("start")
     this.card.showStart()
   }
@@ -504,6 +610,7 @@ export class LociMain extends BaseScriptComponent {
     this.voice.stopListening()
     this.flow += 1
     this._lastListSource = source
+    this.builder.setVisible(false) // the objects take over the numbered places
     this.state.setList(items)
     this._placementOrder = []
     this._placementTimes = []
@@ -953,6 +1060,66 @@ export class LociMain extends BaseScriptComponent {
 
   get lastListSource(): string {
     return this._lastListSource
+  }
+
+  /** "quick" = the fixed route; "custom" = the 5 places pinched in Build my palace. */
+  get palaceMode(): string {
+    return this._palaceMode
+  }
+
+  get palaceSpotCount(): number {
+    return this.builder.count
+  }
+
+  /** Build-my-palace places in pinch order, in room (palace root) space. */
+  get palaceLocalPositions(): vec3[] {
+    return this.builder.localPositions
+  }
+
+  /** Where the 5 route spots are now, in room (palace root) space. */
+  get spotLocalPositions(): vec3[] {
+    const inv = this.palaceRoot.getTransform().getInvertedWorldTransform()
+    return this.spots.map((s) => inv.multiplyPoint(s.surfaceWorldPos))
+  }
+
+  get palaceRejects(): number {
+    return this.builder.rejectCount
+  }
+
+  get palaceShaking(): number[] {
+    return this.builder.shakingIndices
+  }
+
+  get palaceLineCount(): number {
+    return this.builder.lineCount
+  }
+
+  get palaceLabels(): string[] {
+    return this.builder.labels
+  }
+
+  get palaceVisible(): boolean {
+    return this.builder.visible && this.builder.count > 0
+  }
+
+  get startTitle(): string {
+    return this.card.startTitle
+  }
+
+  get routeButtonLabel(): string {
+    return this.card.routeButtonLabel
+  }
+
+  get buildHint(): string {
+    return this.card.buildHint
+  }
+
+  get buildProgress(): string {
+    return this.card.buildProgress
+  }
+
+  get buildStatus(): string {
+    return this.card.buildStatus
   }
 
   /** Start card offers "Say my list" (always on Specs; in the preview only if the card's showVoiceInPreview is on). */

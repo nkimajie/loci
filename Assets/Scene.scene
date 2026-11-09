@@ -1338,6 +1338,7 @@
     nameShowSec: true
     gazeDwellSec: true
     quizSeed: true
+    buildWithWorldQuery: true
     alignToUserOnStart: true
     debugColliders: true
     runSelfTest: true
@@ -1366,6 +1367,7 @@
       nameShowSec: !<float> 2.000000
       gazeDwellSec: !<float> 2.000000
       quizSeed: !<float> 7.000000
+      buildWithWorldQuery: true
       previewStandBackCm: !<float> 320.000000
       alignToUserOnStart: true
       debugColliders: false

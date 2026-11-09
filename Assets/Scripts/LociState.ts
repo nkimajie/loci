@@ -12,6 +12,7 @@ import {ListItem} from "./LociParser"
 export type Phase =
   | "start" // start card visible
   | "listening" // "Say my list" — waiting for speech
+  | "palace" // "Build my palace" — pinching 5 places for a custom route
   | "building" // objects dropping onto spots
   | "study" // walking the route, one spot pulses
   | "groupGlow" // all walked spots glow together (2 s)

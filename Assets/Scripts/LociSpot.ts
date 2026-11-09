@@ -10,7 +10,8 @@
  * Expects @inputs: its LociMarkerUI ("SpotN_Marker").
  * API: setup(), setItem(), dropIn(), clearItem(), setPinchable(), setPulse(),
  *      setGlow(), playStudyAnimation(), shrinkToMarker(), reveal(), setMarkerPulse(),
- *      showRing(), clearRing(), shakeWrong(); emits onItemPinched(index) / onMarkerPinched(index).
+ *      showRing(), clearRing(), shakeWrong(), relocate(worldPos) (Build my palace);
+ *      emits onItemPinched(index) / onMarkerPinched(index).
  * Must not: decide flow or order — LociMain owns the session.
  */
 
@@ -251,6 +252,15 @@ export class LociSpot extends BaseScriptComponent {
       this.ringMat = kit.glowMaterialFor(RING_COLORS.green, 0)
       kit.part(this.ringRoot, `Spot${this.spotNumber}_RingTorus`, "torus", vec3.zero(), new vec3(d, thick, d), new vec3(90, 0, 0), this.ringMat)
     }
+  }
+
+  /**
+   * Build my palace: moves this spot (object, marker, glow, ring and pinch target) so its
+   * surface point is `worldPos`, then re-aims everything at the user's eyes.
+   */
+  relocate(worldPos: vec3): void {
+    this.sceneObject.getTransform().setWorldPosition(worldPos)
+    if (this.kit && this.audio) this.setup(this.kit, this.audio, this.eyeWorld)
   }
 
   // ── Positions for guides / labels ───────────────────────────────────────

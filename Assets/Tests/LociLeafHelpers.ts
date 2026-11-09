@@ -9,6 +9,8 @@
  */
 
 import {findInteractableByName} from "Leaf.lspkg/Interactors/InteractableUtils"
+import {Interactable} from "SpectaclesInteractionKit.lspkg/Components/Interaction/Interactable/Interactable"
+import {DefaultLeafInteractor} from "Leaf.lspkg/Interactors/interactor/DefaultLeafInteractor"
 import {LeafHandInteractor} from "Leaf.lspkg/Interactors/interactor/LeafTwoHandInteractor"
 import {findSceneObjectByName, sleep, withTimeout} from "Leaf.lspkg/Utils/common/Utils"
 import {LociMain} from "../Scripts/LociMain"
@@ -237,4 +239,99 @@ export async function playFindIt(main: LociMain, missSpots: number[]): Promise<P
   await waitFor(() => main.phase === "results" && main.cardView === "results", 6000, "results card after 5 prompts", main)
   await sleep(400)
   return out
+}
+
+// ── Build my palace ─────────────────────────────────────────────────────────
+
+/** Authored Quick-route spots (room space): chair seat, table left, table centre, table right, shelf top. */
+export const QUICK_ROUTE = [
+  new vec3(-80, 45, -80),
+  new vec3(-35, 75, -90),
+  new vec3(0, 75, -110),
+  new vec3(35, 75, -90),
+  new vec3(90, 120, -100),
+]
+
+/** Five custom places (room space, on top of surfaces), none of them a Quick-route spot. */
+export const PALACE_PLACES = [
+  {what: "chair seat", at: new vec3(-75, 45, -72)},
+  {what: "table left", at: new vec3(-45, 75, -100)},
+  {what: "table right", at: new vec3(45, 75, -100)},
+  {what: "shelf top", at: new vec3(90, 120, -96)},
+  {what: "floor", at: new vec3(60, 0, -25)},
+]
+
+export function roomDist(a: vec3, b: vec3): number {
+  return a.distance(b)
+}
+
+export function fmt(v: vec3): string {
+  return `(${v.x.toFixed(1)}, ${v.y.toFixed(1)}, ${v.z.toFixed(1)})`
+}
+
+/**
+ * A thin pinch target (a 4 cm pad, 2 mm thick) centred on a room-space surface point, so the
+ * far pointer's ray runs from the camera exactly through that point. The Lens raycasts that
+ * ray against the stand-ins' colliders and ignores this helper.
+ */
+export function makeAimPoint(main: LociMain, name: string, roomLocal: vec3): SceneObject {
+  const so = global.scene.createSceneObject(name)
+  so.setParent(main.palaceRoot)
+  so.getTransform().setLocalPosition(roomLocal)
+  const c = so.createComponent("Physics.ColliderComponent") as ColliderComponent
+  const box = Shape.createBoxShape()
+  box.size = new vec3(4, 0.2, 4)
+  c.shape = box
+  c.fitVisual = false
+  so.createComponent(Interactable.getTypeName())
+  return so
+}
+
+/**
+ * Far-field pointer for pinching places: a LEAF-driven SIK interactor whose ray runs from the
+ * camera through the target, like a mouse click in the preview or a far pinch on Specs.
+ * (LEAF's simulated hand pinches up close, with a short ray beside the target, which can
+ * reach a surface from below.) One per Build-my-palace run; LEAF cleans it up afterwards.
+ */
+let farPointer: DefaultLeafInteractor | null = null
+
+/** Pinch-driven: start card "Build my palace" → the build card waits for places. */
+export async function pinchBuildPalace(main: LociMain): Promise<void> {
+  farPointer = new DefaultLeafInteractor("LociFarPointer")
+  await waitFor(() => main.routeButtonLabel === "Build my palace", 2000, "Build my palace button", main)
+  await pinch("BuildPalaceButton", main)
+  await waitFor(() => main.phase === "palace" && main.cardView === "build", 3000, "build card after Build my palace", main)
+  await sleep(300)
+}
+
+/** One real SIK pinch aimed at a room-space point; resolves once the Lens added or rejected it. */
+export async function pinchPlace(main: LociMain, name: string, roomLocal: vec3): Promise<"added" | "rejected"> {
+  const count = main.palaceSpotCount
+  const rejects = main.palaceRejects
+  const aim = makeAimPoint(main, name, roomLocal)
+  await sleep(100)
+  try {
+    await waitFor(() => !!findInteractableByName(name, undefined, true), 2000, `aim target "${name}"`, main)
+    const target = findInteractableByName(name, undefined, true)!
+    if (!farPointer) throw new Error("pinchBuildPalace() must run before pinchPlace()")
+    log(`pinch (far) → ${name} at ${fmt(roomLocal)}`)
+    await withTimeout(farPointer.trigger(target), 10000, `far pinch on "${name}" did not complete within 10000 ms`)
+    await waitFor(() => main.palaceSpotCount !== count || main.palaceRejects !== rejects, 3000, `pinch at ${fmt(roomLocal)} counted`, main)
+  } finally {
+    aim.destroy()
+  }
+  return main.palaceRejects !== rejects ? "rejected" : "added"
+}
+
+/** Builds a palace on `places` (all accepted) and waits for the "Your palace" start card. */
+export async function buildPalace(main: LociMain, places: vec3[]): Promise<void> {
+  await pinchBuildPalace(main)
+  for (let k = 0; k < places.length; k++) {
+    const r = await pinchPlace(main, `PalaceAim${k + 1}`, places[k])
+    if (r !== "added") throw new Error(`place ${k + 1} at ${fmt(places[k])} was rejected | state=${main.getStateJson()}`)
+    await sleep(200)
+  }
+  await waitFor(() => main.phase === "start" && main.cardView === "start" && main.palaceMode === "custom", 4000, "start card with the built palace", main)
+  await waitFor(() => !!findInteractableByName("ErrandsButton", undefined, true), 3000, "start card buttons live", main)
+  await sleep(300)
 }
