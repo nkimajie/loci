@@ -1,7 +1,7 @@
 /**
  * Done criterion 2 — pinching the current object moves the pulse and arrow to the next
  * spot, only one spot pulses at a time, and "Quiz me" appears after spot 5.
- * Setup (pinch): SampleListButton. Steps under test (pinch): Spot1_Item … Spot5_Item,
+ * Setup (pinch): ErrandsButton. Steps under test (pinch): Spot1_Item … Spot5_Item,
  * plus one pinch on a non-current object (Spot2_Item while spot 1 is current) that must be ignored.
  */
 
@@ -10,7 +10,7 @@ import {Scenario} from "Leaf.lspkg/Scenarios/scenario/Scenario"
 import {expect} from "Leaf.lspkg/Utils/common/Expect"
 import {findSceneObjectByName, sleep} from "Leaf.lspkg/Utils/common/Utils"
 import {LociMain} from "../Scripts/LociMain"
-import {LociMonitor, flatDist, j, log, pinch, pinchSampleListAndWaitForStudy, setupAtStart, waitFor} from "./LociLeafHelpers"
+import {LociMonitor, flatDist, j, log, pinch, pinchErrandsAndWaitForStudy, setupAtStart, waitFor} from "./LociLeafHelpers"
 
 function checkArrowAt(main: LociMain, k: number): string {
   const arrow = findSceneObjectByName("RouteArrow")
@@ -32,7 +32,7 @@ export class LociC2StudyWalkScenario extends Scenario {
   async run(): Promise<void> {
     const main = await setupAtStart()
     const mon = new LociMonitor(this, main)
-    await pinchSampleListAndWaitForStudy(main)
+    await pinchErrandsAndWaitForStudy(main)
     mon.resetPulseTracking()
     const arrowLog: string[] = []
     const advanceSec: string[] = []

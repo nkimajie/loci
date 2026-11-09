@@ -4,7 +4,7 @@
  * "Where's the <item>?" with a small 3D icon of that item, in the seeded shuffled order.
  * Pinching the right spot brings its object back with a green ring and moves to the
  * next prompt; the found spot is no longer a candidate.
- * Setup (all pinch): SampleListButton, Spot1_Item … Spot5_Item.
+ * Setup (all pinch): ErrandsButton, Spot1_Item … Spot5_Item.
  * Steps under test (pinch): QuizMeButton, Spot{answer}_MarkerButton.
  */
 
@@ -14,13 +14,13 @@ import {expect} from "Leaf.lspkg/Utils/common/Expect"
 import {sleep} from "Leaf.lspkg/Utils/common/Utils"
 import {quizRoundSeed, seededShuffle} from "../Scripts/LociState"
 import {
-  SAMPLE_MODELS,
-  SAMPLE_QUESTIONS,
+  ERRANDS_MODELS,
+  ERRANDS_QUESTIONS,
   j,
   log,
   pinch,
   pinchGuess,
-  pinchSampleListAndWaitForStudy,
+  pinchErrandsAndWaitForStudy,
   pinchStudyWalkToSwitch,
   setupAtStart,
   waitFor,
@@ -31,7 +31,7 @@ import {
 export class LociC3QuizRevealScenario extends Scenario {
   async run(): Promise<void> {
     const main = await setupAtStart()
-    await pinchSampleListAndWaitForStudy(main)
+    await pinchErrandsAndWaitForStudy(main)
     await pinchStudyWalkToSwitch(main)
 
     // Step under test 1: Quiz me.
@@ -57,8 +57,8 @@ export class LociC3QuizRevealScenario extends Scenario {
 
     const t0 = order[0]
     expect(main.quizTargetSpot, "prompt 1 asks for the first item in the order").toBe(t0)
-    expect(main.promptText, "prompt 1 question").toBe(SAMPLE_QUESTIONS[t0])
-    expect(main.promptIconModelId, "prompt 1 icon is the item's model").toBe(SAMPLE_MODELS[t0])
+    expect(main.promptText, "prompt 1 question").toBe(ERRANDS_QUESTIONS[t0])
+    expect(main.promptIconModelId, "prompt 1 icon is the item's model").toBe(ERRANDS_MODELS[t0])
     expect(main.promptProgress, "prompt 1 progress").toBe("1 of 5")
 
     // Step under test 2: pinch the right spot.
@@ -67,7 +67,7 @@ export class LociC3QuizRevealScenario extends Scenario {
     log(`C3 after right pinch: guess=${j(g)} revealed=${j(main.revealedObjectSpots)} rings=${j(main.ringKinds)} nameTag="${main.nameTagText}" score=${main.quizScore} markers=${j(main.markerVisibleSpots)} glow=${main.spot(t0).currentGlowMode}`)
     expect(g.correct, "guess recorded as correct").toBe(true)
     expect(j(main.revealedObjectSpots), "only the found object popped back").toBe(j([t0]))
-    expect(main.placedModelIds[t0], "the found spot shows its model").toBe(SAMPLE_MODELS[t0])
+    expect(main.placedModelIds[t0], "the found spot shows its model").toBe(ERRANDS_MODELS[t0])
     expect(main.ringKinds[t0], "green ring on the found spot").toBe("green")
     expect(main.quizScore, "score counts the correct first try").toBe(1)
     expect(main.answersGiven[t0], "answer stored for that spot").toBe(true)
@@ -78,8 +78,8 @@ export class LociC3QuizRevealScenario extends Scenario {
     const t1 = await waitForPrompt(main, 1)
     log(`C3 prompt 2: target=spot${t1 + 1} prompt="${main.promptText}" icon=${main.promptIconModelId} pinchable=${j(main.pinchableSpots)} revealed=${j(main.revealedObjectSpots)}`)
     expect(t1, "prompt 2 asks for the second item in the order").toBe(order[1])
-    expect(main.promptText, "prompt 2 question").toBe(SAMPLE_QUESTIONS[t1])
-    expect(main.promptIconModelId, "prompt 2 icon").toBe(SAMPLE_MODELS[t1])
+    expect(main.promptText, "prompt 2 question").toBe(ERRANDS_QUESTIONS[t1])
+    expect(main.promptIconModelId, "prompt 2 icon").toBe(ERRANDS_MODELS[t1])
     expect(main.promptProgress, "prompt 2 progress").toBe("2 of 5")
     expect(main.pinchableSpots.indexOf(t0) < 0, "found spot is not a guess target any more").toBe(true)
     expect(j(main.revealedObjectSpots), "found object stays in place").toBe(j([t0]))

@@ -3,7 +3,7 @@
  * On prompt 1, pinch a wrong (hidden) spot: that spot shakes red, then the right spot
  * briefly shows its object with an orange ring and its name, then hides again under a
  * neutral marker, and prompt 2 appears. The score stays 0 and the item is marked missed.
- * Setup (all pinch): SampleListButton, Spot1_Item … Spot5_Item, QuizMeButton.
+ * Setup (all pinch): ErrandsButton, Spot1_Item … Spot5_Item, QuizMeButton.
  * Step under test (pinch): Spot{wrong}_MarkerButton.
  */
 
@@ -11,12 +11,12 @@ import {Scenario} from "Leaf.lspkg/Scenarios/scenario/Scenario"
 import {expect} from "Leaf.lspkg/Utils/common/Expect"
 import {sleep} from "Leaf.lspkg/Utils/common/Utils"
 import {
-  SAMPLE_MODELS,
+  ERRANDS_MODELS,
   j,
   log,
   pinchGuess,
   pinchQuizMeAndWaitForPrompt,
-  pinchSampleListAndWaitForStudy,
+  pinchErrandsAndWaitForStudy,
   pinchStudyWalkToSwitch,
   setupAtStart,
   waitFor,
@@ -28,7 +28,7 @@ import {
 export class LociC6WrongRevealsCorrectScenario extends Scenario {
   async run(): Promise<void> {
     const main = await setupAtStart()
-    await pinchSampleListAndWaitForStudy(main)
+    await pinchErrandsAndWaitForStudy(main)
     await pinchStudyWalkToSwitch(main)
     await pinchQuizMeAndWaitForPrompt(main)
 
@@ -57,7 +57,7 @@ export class LociC6WrongRevealsCorrectScenario extends Scenario {
     })
 
     const g = await pinchGuess(main, wrong)
-    log(`C6 asked spot${target + 1} (${SAMPLE_MODELS[target]}), pinched spot${wrong + 1}: guess=${j(g)}`)
+    log(`C6 asked spot${target + 1} (${ERRANDS_MODELS[target]}), pinched spot${wrong + 1}: guess=${j(g)}`)
     expect(g.correct, "guess recorded as wrong").toBe(false)
     expect(g.target, "guess target").toBe(target)
     expect(g.pinched, "guess pinched").toBe(wrong)

@@ -1,9 +1,11 @@
 /**
  * LociModelLibrary — the prebuilt model catalogue (pure data, no scene access).
  *
- * Owns: the 10 prebuilt models (5 sample models + book, cup, apple, shoe, laptop),
- *       their synonym lists, part recipes built from simple shapes, and which
- *       silly animation each one plays. Also the per-spot word-totem base styles.
+ * Owns: the 15 prebuilt models — the errands pack (umbrella, key, milk, phone, gift),
+ *       the scientific-method study pack (speech bubble, magnifying glass, light bulb,
+ *       flask, checkered flag) and book, cup, apple, shoe, laptop — their synonym lists,
+ *       part recipes built from simple shapes, and which silly animation each one plays.
+ *       Also the per-spot word-totem base styles.
  * Units: 1.0 = the spot's nominal object size. Base sits at y = 0, centred on x/z,
  *        front faces +Z (the spot turns the model toward the user).
  *        Parts that belong to a group use positions RELATIVE to the group pivot.
@@ -25,6 +27,11 @@ export type AnimKind =
   | "step"
   | "lidOpen"
   | "bounceSpin"
+  | "chatter"
+  | "searchZoom"
+  | "lightUp"
+  | "fizz"
+  | "flagWave"
 
 export interface PartDef {
   shape: ShapeKind
@@ -73,6 +80,55 @@ export const C: {[name: string]: Rgb} = {
   violet: [0.74, 0.55, 1.0],
   lime: [0.68, 0.96, 0.36],
   keys: [0.78, 0.82, 0.9],
+  // Checkered-flag dark squares: deep blue, not black (black is invisible on the additive display).
+  ink: [0.2, 0.26, 0.62],
+}
+
+/** A smooth stroke drawn as overlapping flat beads (used for the speech bubble's "?"). */
+function beads(points: V3[], d: number, color: Rgb, group: string): PartDef[] {
+  return points.map((p) => ({shape: "sphere" as ShapeKind, pos: p, size: [d, d, 0.04] as V3, color, group}))
+}
+
+/** "?" glyph in the XY plane, centred on its group pivot: a hook of beads, a stem and a dot. */
+function questionMark(color: Rgb, group: string): PartDef[] {
+  const pts: V3[] = []
+  for (let a = 165; a >= -45; a -= 30) {
+    const r = (a * Math.PI) / 180
+    pts.push([0.1 * Math.cos(r), 0.09 + 0.1 * Math.sin(r), 0.01])
+  }
+  pts.push([0.03, -0.01, 0.01], [0.005, -0.045, 0.01], [0, -0.075, 0.01])
+  const out = beads(pts, 0.075, color, group)
+  out.push({shape: "sphere", pos: [0, -0.185, 0.01], size: [0.095, 0.095, 0.04], color, group})
+  return out
+}
+
+/** 4 x 3 checkered flag cloth; each column is its own group (c0..c3) so it can wave. */
+function checkeredCloth(): PartDef[] {
+  const out: PartDef[] = []
+  for (let k = 0; k < 4; k++) {
+    for (let r = 0; r < 3; r++) {
+      out.push({shape: "box", pos: [0, (r - 1) * 0.14, 0], size: [0.14, 0.14, 0.03], color: (k + r) % 2 === 0 ? C.white : C.ink, group: "c" + k})
+    }
+  }
+  return out
+}
+
+/** Light-bulb "idea" rays: short capsules fanned over the top of the bulb (group "rays"). */
+function bulbRays(): PartDef[] {
+  const out: PartDef[] = []
+  for (let i = 0; i <= 6; i++) {
+    const deg = i * 30
+    const r = (deg * Math.PI) / 180
+    out.push({
+      shape: "capsule",
+      pos: [0.5 * Math.cos(r), 0.5 * Math.sin(r), 0],
+      size: [0.06, 0.16, 0.06],
+      rot: [0, 0, deg - 90],
+      color: i % 2 === 0 ? C.yellow : C.white,
+      group: "rays",
+    })
+  }
+  return out
 }
 
 export const MODEL_LIBRARY: ModelDef[] = [
@@ -176,6 +232,146 @@ export const MODEL_LIBRARY: ModelDef[] = [
       {shape: "capsule", pos: [-0.11, 0.22, 0], size: [0.13, 0.28, 0.13], rot: [0, 0, 55], color: C.yellow, group: "lid"},
       {shape: "capsule", pos: [0.11, 0.22, 0], size: [0.13, 0.28, 0.13], rot: [0, 0, -55], color: C.yellow, group: "lid"},
       {shape: "sphere", pos: [0, 0.16, 0], size: [0.12, 0.12, 0.12], color: C.amber, group: "lid"},
+    ],
+  },
+  {
+    id: "speech",
+    displayName: "Speech bubble",
+    synonyms: [
+      "speech bubble",
+      "speech balloon",
+      "chat bubble",
+      "bubble",
+      "question",
+      "question mark",
+      "ask",
+      "ask a question",
+      "ask questions",
+    ],
+    anim: "chatter",
+    groups: [{name: "mark", pivot: [0, 0.52, 0.1]}],
+    parts: [
+      // Sky outline behind a white elliptical bubble (cylinders turned to face the user).
+      {shape: "cylinder", pos: [0, 0.52, -0.03], size: [1.04, 0.16, 0.82], rot: [90, 0, 0], color: C.sky},
+      {shape: "cone", pos: [-0.25, 0.155, -0.03], size: [0.3, 0.36, 0.12], rot: [0, 0, 150], color: C.sky},
+      {shape: "cylinder", pos: [0, 0.52, 0], size: [0.96, 0.2, 0.74], rot: [90, 0, 0], color: C.white},
+      {shape: "cone", pos: [-0.24, 0.17, 0], size: [0.24, 0.3, 0.16], rot: [0, 0, 150], color: C.white},
+      ...questionMark(C.blue, "mark"),
+    ],
+  },
+  {
+    id: "magnifier",
+    displayName: "Magnifying glass",
+    synonyms: [
+      "magnifying glass",
+      "magnifier",
+      "magnifying lens",
+      "loupe",
+      "research",
+      "do research",
+      "background research",
+      "search",
+      "investigate",
+      "investigation",
+    ],
+    anim: "searchZoom",
+    groups: [{name: "glass", pivot: [-0.1, 0.62, 0]}],
+    parts: [
+      // Thin gold rim (a disc behind) around a big sky-blue lens (a thicker disc in front).
+      {shape: "cylinder", pos: [0, 0, -0.01], size: [0.7, 0.06, 0.7], rot: [90, 0, 0], color: C.gold, group: "glass"},
+      {shape: "cylinder", pos: [0, 0, 0.01], size: [0.58, 0.08, 0.58], rot: [90, 0, 0], color: C.skyLight, group: "glass"},
+      {shape: "capsule", pos: [-0.12, 0.12, 0.055], size: [0.06, 0.18, 0.02], rot: [0, 0, 45], color: C.white, group: "glass"},
+      {shape: "cylinder", pos: [0.183, 0.337, 0], size: [0.09, 0.1, 0.09], rot: [0, 0, 45], color: C.gold},
+      {shape: "cylinder", pos: [0.324, 0.196, 0], size: [0.11, 0.3, 0.11], rot: [0, 0, 45], color: C.coral},
+      {shape: "sphere", pos: [0.452, 0.068, 0], size: [0.12, 0.12, 0.12], color: C.coral},
+    ],
+  },
+  {
+    id: "bulb",
+    displayName: "Light bulb",
+    synonyms: [
+      "light bulb",
+      "lightbulb",
+      "bulb",
+      "idea",
+      "bright idea",
+      "hypothesis",
+      "hypotheses",
+      "make a hypothesis",
+      "form a hypothesis",
+    ],
+    anim: "lightUp",
+    groups: [{name: "rays", pivot: [0, 0.64, 0], startHidden: true}],
+    parts: [
+      {shape: "sphere", pos: [0, 0.64, 0], size: [0.6, 0.62, 0.6], color: C.yellow},
+      {shape: "cone", pos: [0, 0.4, 0], size: [0.46, 0.36, 0.46], rot: [180, 0, 0], color: C.yellow},
+      {shape: "sphere", pos: [-0.13, 0.76, 0.22], size: [0.09, 0.13, 0.04], color: C.white},
+      {shape: "cylinder", pos: [0, 0.21, 0], size: [0.26, 0.22, 0.26], color: C.silver},
+      {shape: "torus", pos: [0, 0.15, 0], size: [0.28, 0.035, 0.28], color: C.white},
+      {shape: "torus", pos: [0, 0.21, 0], size: [0.28, 0.035, 0.28], color: C.white},
+      {shape: "torus", pos: [0, 0.27, 0], size: [0.28, 0.035, 0.28], color: C.white},
+      {shape: "cylinder", pos: [0, 0.07, 0], size: [0.14, 0.06, 0.14], color: C.amber},
+      {shape: "sphere", pos: [0, 0.03, 0], size: [0.08, 0.05, 0.08], color: C.amber},
+      ...bulbRays(),
+    ],
+  },
+  {
+    id: "flask",
+    displayName: "Flask",
+    synonyms: [
+      "flask",
+      "conical flask",
+      "erlenmeyer flask",
+      "beaker",
+      "potion",
+      "experiment",
+      "do an experiment",
+      "test",
+      "lab",
+      "chemistry",
+    ],
+    anim: "fizz",
+    groups: [{name: "bubbles", pivot: [0, 0.94, 0], startHidden: true}],
+    parts: [
+      {shape: "cone", pos: [0, 0.35, 0], size: [0.74, 0.7, 0.74], color: C.lime},
+      {shape: "sphere", pos: [-0.08, 0.2, 0.25], size: [0.08, 0.08, 0.04], color: C.white},
+      {shape: "sphere", pos: [0.1, 0.12, 0.29], size: [0.06, 0.06, 0.04], color: C.white},
+      {shape: "sphere", pos: [0.02, 0.32, 0.2], size: [0.05, 0.05, 0.03], color: C.white},
+      {shape: "cylinder", pos: [0, 0.73, 0], size: [0.2, 0.42, 0.2], color: C.skyLight},
+      {shape: "torus", pos: [0, 0.94, 0], size: [0.26, 0.05, 0.26], color: C.white},
+      {shape: "sphere", pos: [0, 0.08, 0], size: [0.1, 0.1, 0.1], color: C.white, group: "bubbles"},
+      {shape: "sphere", pos: [0.05, 0.2, 0], size: [0.08, 0.08, 0.08], color: C.lime, group: "bubbles"},
+      {shape: "sphere", pos: [-0.04, 0.3, 0], size: [0.07, 0.07, 0.07], color: C.skyLight, group: "bubbles"},
+      {shape: "sphere", pos: [0.03, 0.4, 0], size: [0.06, 0.06, 0.06], color: C.white, group: "bubbles"},
+    ],
+  },
+  {
+    id: "flag",
+    displayName: "Checkered flag",
+    synonyms: [
+      "checkered flag",
+      "chequered flag",
+      "finish flag",
+      "racing flag",
+      "flag",
+      "finish",
+      "finish line",
+      "conclusion",
+      "conclude",
+      "draw a conclusion",
+    ],
+    anim: "flagWave",
+    groups: [
+      {name: "c0", pivot: [-0.12, 0.77, 0]},
+      {name: "c1", pivot: [0.02, 0.77, 0]},
+      {name: "c2", pivot: [0.16, 0.77, 0]},
+      {name: "c3", pivot: [0.3, 0.77, 0]},
+    ],
+    parts: [
+      {shape: "cylinder", pos: [-0.21, 0.035, 0], size: [0.32, 0.07, 0.32], color: C.coral},
+      {shape: "cylinder", pos: [-0.21, 0.52, 0], size: [0.06, 0.98, 0.06], color: C.silver},
+      {shape: "sphere", pos: [-0.21, 1.03, 0], size: [0.1, 0.1, 0.1], color: C.gold},
+      ...checkeredCloth(),
     ],
   },
   {

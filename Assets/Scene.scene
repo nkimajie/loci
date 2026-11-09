@@ -6,7 +6,7 @@
     - !<own> f5d74682-203a-4970-81ea-9fa7b88c96bb
     - !<own> 8bfcd6d4-b897-4891-9095-2c319c245018
     - !<own> a3e303ed-d2c3-4266-81a1-046f8d64b9c5
-    - !<own> ab39b4d0-b588-4d25-911c-d7f0ce8c1efb
+    - !<own> b391d47a-2968-41d6-a730-40f566b02e35
   layers: !<Layers/267ee9a7-aff2-4f9d-9a49-f71214747d03>
     userLayers:
       - id: 1
@@ -1331,7 +1331,8 @@
   Enabled: true
   ScriptAsset: !<reference> 7dad6e6b-f9cc-4292-bdf5-1181292c78c9
   ScriptInputsDefault:
-    sampleListText: true
+    studyPackText: true
+    errandsListText: true
     mixedListText: true
     eyeHeightCm: true
     nameShowSec: true
@@ -1358,7 +1359,8 @@
       spot3: !<MappingBased.AssignableType_9> 82773fbd-c121-41fe-bb6a-17473f72c2a4
       spot4: !<MappingBased.AssignableType_10> 83a44e37-50f4-4857-a9b8-86df50e40db5
       spot5: !<MappingBased.AssignableType_11> 3c418202-36b5-4d1d-972e-de0e81380516
-      sampleListText: "umbrella, keys, milk, call mom, gift"
+      studyPackText: "ask a question, research, hypothesis, experiment, conclusion"
+      errandsListText: "umbrella, keys, milk, call mom, gift"
       mixedListText: "umbrella, keys, volcano, mobile, gift"
       eyeHeightCm: !<float> 160.000000
       nameShowSec: !<float> 2.000000
@@ -1518,6 +1520,22 @@
       mouseTargetingMode: !<float> 2.000000
       moveInDepth: false
       moveInDepthAmount: !<float> 5.000000
+  ScriptTypes:
+    "":
+      {}
+- !<ScriptComponent/62153d96-392d-4e85-ba87-fb46e523afb4>
+  PrefabRemaps:
+    []
+  Name: MessagingBridge
+  Enabled: true
+  ScriptAsset: !<reference> 9aa407db-2872-4afc-a162-cf7faf2a0f29
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      {}
   ScriptTypes:
     "":
       {}
@@ -2764,21 +2782,6 @@
     []
   Components:
     - !<own> 11c4bb09-7c38-4023-9802-74f9f28709a9
-- !<SceneObject/ab39b4d0-b588-4d25-911c-d7f0ce8c1efb>
-  PrefabRemaps:
-    []
-  Name: LEAF Plugin Bridge
-  Enabled: true
-  Layers: 1
-  LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
-    HasSegmentScaleCompensation: false
-  Children:
-    []
-  Components:
-    - !<own> c3df62f2-240b-4919-8787-71f7e14017cf
 - !<SceneObject/abfa4c71-3560-46f0-9471-90e212f21185>
   PrefabRemaps:
     []
@@ -2868,6 +2871,21 @@
   BlendNormals: false
   BlendShapes:
     {}
+- !<SceneObject/b391d47a-2968-41d6-a730-40f566b02e35>
+  PrefabRemaps:
+    []
+  Name: LEAF Plugin Bridge
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> 62153d96-392d-4e85-ba87-fb46e523afb4
 - !<SceneObject/b463be13-dddb-4b36-a3dd-c344bd3d8ef5>
   PrefabRemaps:
     []
@@ -3155,22 +3173,6 @@
     []
   Components:
     - !<own> b9a8cc17-00eb-4b82-82b5-d147301ee0ea
-- !<ScriptComponent/c3df62f2-240b-4919-8787-71f7e14017cf>
-  PrefabRemaps:
-    []
-  Name: MessagingBridge
-  Enabled: true
-  ScriptAsset: !<reference> 9aa407db-2872-4afc-a162-cf7faf2a0f29
-  ScriptInputsDefault:
-    {}
-  ScriptTypesDefault:
-    {}
-  ScriptInputs:
-    "":
-      {}
-  ScriptTypes:
-    "":
-      {}
 - !<RenderMeshVisual/c5636fa1-fee2-45a5-ace2-d27d1d84abf7>
   PrefabRemaps:
     []
@@ -3248,6 +3250,7 @@
     secondaryButtonColor: true
     titleText: true
     subtitleText: true
+    showVoiceInPreview: true
     resultsFadeSec: true
   ScriptTypesDefault:
     {}
@@ -3261,6 +3264,7 @@
       secondaryButtonColor: !<Vec4> {x: 0.580000, y: 0.280000, z: 0.980000, w: 1.000000}
       titleText: Loci
       subtitleText: Turn your list into a route
+      showVoiceInPreview: false
       resultsFadeSec: !<float> 10.000000
   ScriptTypes:
     "":

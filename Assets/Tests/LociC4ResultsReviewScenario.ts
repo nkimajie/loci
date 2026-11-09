@@ -2,7 +2,7 @@
  * Done criterion 4 (v2, Find-it) — pinching the right spot for 4 items and a wrong spot
  * for the milk shows "4 / 5", only the milk's spot (spot 3) glows, and "Review missed"
  * walks only spot 3.
- * Setup (all pinch): SampleListButton, Spot1_Item … Spot5_Item, QuizMeButton.
+ * Setup (all pinch): ErrandsButton, Spot1_Item … Spot5_Item, QuizMeButton.
  * Steps under test (pinch): Spot{n}_MarkerButton ×5 (wrong spot for the milk),
  * ReviewMissedButton, Spot3_Item.
  */
@@ -17,7 +17,7 @@ import {
   log,
   pinch,
   pinchQuizMeAndWaitForPrompt,
-  pinchSampleListAndWaitForStudy,
+  pinchErrandsAndWaitForStudy,
   pinchStudyWalkToSwitch,
   playFindIt,
   setupAtStart,
@@ -31,7 +31,7 @@ export class LociC4ResultsReviewScenario extends Scenario {
   async run(): Promise<void> {
     const main = await setupAtStart()
     const mon = new LociMonitor(this, main)
-    await pinchSampleListAndWaitForStudy(main)
+    await pinchErrandsAndWaitForStudy(main)
     await pinchStudyWalkToSwitch(main)
     await pinchQuizMeAndWaitForPrompt(main)
 

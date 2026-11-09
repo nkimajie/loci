@@ -3,7 +3,7 @@
  * Plays a full round finding every item first time and checks the 5 prompts: one per
  * item, no repeats, in the seeded shuffle (not route order), each with that item's
  * question, 3D icon and "n of 5" progress; ends at "5 / 5" with nothing glowing.
- * Setup (all pinch): SampleListButton, Spot1_Item … Spot5_Item, QuizMeButton.
+ * Setup (all pinch): ErrandsButton, Spot1_Item … Spot5_Item, QuizMeButton.
  * Steps under test (pinch): Spot{answer}_MarkerButton ×5.
  */
 
@@ -11,12 +11,12 @@ import {Scenario} from "Leaf.lspkg/Scenarios/scenario/Scenario"
 import {expect} from "Leaf.lspkg/Utils/common/Expect"
 import {quizRoundSeed, seededShuffle} from "../Scripts/LociState"
 import {
-  SAMPLE_MODELS,
-  SAMPLE_QUESTIONS,
+  ERRANDS_MODELS,
+  ERRANDS_QUESTIONS,
   j,
   log,
   pinchQuizMeAndWaitForPrompt,
-  pinchSampleListAndWaitForStudy,
+  pinchErrandsAndWaitForStudy,
   pinchStudyWalkToSwitch,
   playFindIt,
   setupAtStart,
@@ -26,7 +26,7 @@ import {
 export class LociC7EachItemOnceScenario extends Scenario {
   async run(): Promise<void> {
     const main = await setupAtStart()
-    await pinchSampleListAndWaitForStudy(main)
+    await pinchErrandsAndWaitForStudy(main)
     await pinchStudyWalkToSwitch(main)
     await pinchQuizMeAndWaitForPrompt(main)
 
@@ -42,8 +42,8 @@ export class LociC7EachItemOnceScenario extends Scenario {
     expect(j(asked), "asked in the seeded shuffled order").toBe(j(expectedOrder))
     expect(j(asked) !== j([0, 1, 2, 3, 4]), "not plain route order").toBe(true)
     prompts.forEach((p, k) => {
-      expect(p.question, `prompt ${k + 1} question`).toBe(SAMPLE_QUESTIONS[p.target])
-      expect(p.icon, `prompt ${k + 1} icon`).toBe(SAMPLE_MODELS[p.target])
+      expect(p.question, `prompt ${k + 1} question`).toBe(ERRANDS_QUESTIONS[p.target])
+      expect(p.icon, `prompt ${k + 1} icon`).toBe(ERRANDS_MODELS[p.target])
       expect(p.progress, `prompt ${k + 1} progress`).toBe(`${k + 1} of 5`)
       expect(p.correct, `prompt ${k + 1} found first time`).toBe(true)
     })

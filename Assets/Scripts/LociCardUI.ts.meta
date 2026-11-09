@@ -35,6 +35,7 @@
     primaryButtonColor: false
     resultsFadeSec: false
     secondaryButtonColor: false
+    showVoiceInPreview: false
     subtitleText: false
     titleText: false
   ScriptTypesHidden:
@@ -54,6 +55,7 @@
       secondaryButtonColor: !<Vec4> {x: 0.580000, y: 0.280000, z: 0.980000, w: 1.000000}
       titleText: Loci
       subtitleText: Turn your list into a route
+      showVoiceInPreview: false
       resultsFadeSec: !<float> 10.000000
   ScriptTypes:
     -
@@ -67,9 +69,10 @@
     - '// @input vec4 cardTint = "{0.97, 0.96, 0.92, 0.96}" {"hint":"Card background: light and bright (the Specs display is additive, so dark colours vanish)", "widget":"color"}'
     - '// @input vec4 cardTextColor = "{0.11, 0.15, 0.42, 1}" {"hint":"Title / score text on the light card: deep ink so it stands out from the bright card", "widget":"color"}'
     - '// @input vec4 cardSubtleTextColor = "{0.27, 0.31, 0.52, 1}" {"hint":"Subtitle / status / hint text on the light card", "widget":"color"}'
-    - "// @input vec4 primaryButtonColor = \"{0.05, 0.50, 1.0, 1}\" {\"hint\":\"Fill for each card's main button (Sample list, Quiz me, Review missed): bright and saturated\", \"widget\":\"color\"}"
+    - "// @input vec4 primaryButtonColor = \"{0.05, 0.50, 1.0, 1}\" {\"hint\":\"Fill for each card's main button (Study pack, Quiz me, Review missed): bright and saturated\", \"widget\":\"color\"}"
     - '// @input vec4 secondaryButtonColor = "{0.58, 0.28, 0.98, 1}" {"hint":"Fill for the other card buttons: bright and saturated", "widget":"color"}'
     - '// @input string titleText = "Loci" {"hint":"Title on the start card"}'
     - '// @input string subtitleText = "Turn your list into a route" {"hint":"One-line subtitle under the title"}'
+    - "// @input bool showVoiceInPreview {\"hint\":\"Show 'Say my list' in the Lens Studio preview too. Voice (speech-to-text) only works on Specs, so by default the preview start card leaves it out; on Specs it always shows.\"}"
     - '// @input float resultsFadeSec = 10 {"hint":"Seconds before the results card fades to a small Options pill (0 = never)", "widget":"slider", "min":0, "max":30, "step":1}'
     - '// @ui {"widget":"group_end"}'

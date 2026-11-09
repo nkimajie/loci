@@ -95,7 +95,28 @@ Each one can be checked in Lens Studio's preview, via pinch, and each is a LEAF 
 3. "Quiz me" makes all 5 objects vanish behind identical neutral markers, and a prompt asks "Where's the <item>?" with that item's icon, in the seeded shuffled order. Pinching the right spot brings the object back with a green ring.
 4. Pinching the right spot for 4 items and a wrong spot for the milk shows "4 / 5", only the milk's spot glows, and "Review missed" walks only that spot.
 
-Extra LEAF checks: a wrong pinch reveals the right spot (red shake, then a brief orange-ring reveal); each item is asked exactly once; "Quiz again" resets the score; "New list" clears every spot.
+Extra LEAF checks: a wrong pinch reveals the right spot (red shake, then a brief orange-ring reveal); each item is asked exactly once; "Quiz again" resets the score; "New list" clears every spot. A study-pack check (C10) is described under "Study pack and start card" below.
+
+### Study pack and start card
+- **Start card.** Three packs, top to bottom: "Study pack" (the main, blue button), "Errands (warm-up)" and "Mixed list". "Build my palace" will join them later.
+  - "Errands (warm-up)" is the v1 "Sample list", unchanged: umbrella, keys, milk, call mom, gift. Done criterion 1 now refers to it.
+- **Study pack: the scientific method.** One step per spot, in route order:
+  1. Chair: a white speech bubble with a blue "?" (Ask a question). Animation: the bubble chatters, squashing, stretching and waggling, while the "?" pops out toward me, spins and tucks back in.
+  2. Table left: a magnifying glass with a gold rim and coral handle (Research). Animation: it scans left and right, then the lens zooms up big.
+  3. Table centre: a yellow light bulb (Hypothesis). Animation: it crouches and jumps, and its rays flicker on and burst out, a visual "ding!".
+  4. Table right: a green flask (Experiment). Animation: it shakes harder and harder, hops, and bubbles fizz out of the neck.
+  5. Shelf: a checkered flag (Conclusion). Animation: a wave ripples along the cloth with a victory hop.
+  - All five are bright and built from simple shapes, like the errands models. The flag's dark squares are deep blue, not black, because black disappears on the additive display.
+- **Why a study pack.** Errands show the technique. Study material is where it pays off: an ordered list of abstract steps that has to be learned. "Hypothesis" is hard to picture; a light bulb jumping on the table is not, and the route keeps the steps in order.
+- **Names and questions.** The name tag shows the step ("Hypothesis"); the object is its picture. Find-it asks for the step:
+  - "Where's the question?", "Where's the research?", "Where's the hypothesis?", "Where's the experiment?", "Where's the conclusion?"
+  - A phrase asks for the noun after its article: "ask a question" asks for "the question". "Call mom" still asks for "the phone".
+  - Long questions shrink to stay on one line of the card.
+- **Synonyms.** Each new model also matches its object names and its step words, through the same matcher as voice. For example, "lightbulb" and "idea" give the light bulb; "beaker" and "experiments" give the flask; "chequered flag" and "finish line" give the flag. Near-misses such as "glass" still become word totems.
+- **Voice is on-device only.** "Say my list" uses the Specs speech-to-text (ASR) module, which works only on Specs, with internet, not in the Lens Studio preview.
+  - The preview start card hides the button. On Specs it shows as a fourth button. For debugging, the card's "Show Voice In Preview" setting puts it back in the preview.
+  - The packs send fixed text through the same parser and matcher that voice uses, so everything after speech-to-text is still tested.
+- **LEAF (C10).** The start card shows the three packs in order, with no "Say my list" in the preview. The synonyms match. "Study pack" places the 5 models in route order. Each step's name shows and its animation plays (including its signature move) and settles back to rest. Find-it asks for each step by name with its icon, and ends at "5 / 5".
 
 ### Framing fix for recording (Lens Studio preview only)
 - **Problem.** The Specs view is only about 32° wide. From where the user stands (0.5 m from the table front), the chair and the shelf are about 87° apart, so the whole route can never be in one preview frame from there. Standing far enough back to fit it made the start card's text too small to read in a screen recording.
@@ -114,7 +135,7 @@ Extra LEAF checks: a wrong pinch reveals the right spot (red shake, then a brief
 - Remembering lists or scores between sessions.
 
 ## Risks and open questions
-- Feel unproven: voice input (speech-to-text may not work in the preview), the 2-second look, and how the animations and chimes feel on real glasses.
+- Feel unproven: voice input (on-device only, so the preview can't test it), the 2-second look, and how the animations and chimes feel on real glasses.
 - Spots 1 and 5 sit at the edges of the narrow view; the chime and arrow are expected to carry them, but only real glasses can confirm.
 
 ## Build notes for CLAD

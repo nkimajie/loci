@@ -2,7 +2,7 @@
  * LociSelfTest — scripted check of the brief's 5 done criteria (debug only).
  *
  * Runs when LociMain.runSelfTest is ticked. Drives the same action methods the
- * pinch targets call (pressSampleList, pinchItem, guessSpot, pressReviewMissed, …),
+ * pinch targets call (pressErrands, pinchItem, guessSpot, pressReviewMissed, …),
  * reads LociMain's test-facing state, and prints "[LociSelfTest] PASS/FAIL C<n>".
  * This verifies flow logic; the SIK pinch path itself is covered by LEAF tests.
  * Must not: ship enabled — LociMain.runSelfTest defaults to false.
@@ -32,7 +32,8 @@ interface LociTestTarget {
   awaitingGuess: boolean
   cardView: string
   nameShowSec: number
-  pressSampleList(): boolean
+  pressStudyPack(): boolean
+  pressErrands(): boolean
   pressMixedList(): boolean
   pressQuizMe(): boolean
   pressReviewMissed(): boolean
@@ -54,7 +55,7 @@ const same = (a: any[], b: any[]) => JSON.stringify(a) === JSON.stringify(b)
 const SHOWCASE_END: string = "start"
 /** true = skip the criteria checks and go straight to the showcase. */
 const SHOWCASE_ONLY: boolean = false
-/** Which preset list the showcase uses: "mixed" | "sample". */
+/** Which preset list the showcase uses: "mixed" | "errands" | "study". */
 const SHOWCASE_LIST: string = "mixed"
 /** Once parked, re-aim the view as if the user looked down / left by these degrees (0, 0 = off). */
 const SHOWCASE_LOOK_DOWN_DEG: number = 0
@@ -81,14 +82,14 @@ export function runLociSelfTest(main: LociTestTarget, tween: Tweener): void {
   }
   const steps: Step[] = []
   if (SHOWCASE_ONLY) {
-    steps.push({wait: 0.8, run: () => void (SHOWCASE_LIST === "sample" ? main.pressSampleList() : main.pressMixedList())})
+    steps.push({wait: 0.8, run: () => void (SHOWCASE_LIST === "errands" ? main.pressErrands() : SHOWCASE_LIST === "study" ? main.pressStudyPack() : main.pressMixedList())})
     steps.push({wait: 4.4, run: () => {}})
   } else {
   steps.push({
     wait: 0.8,
     run: () => {
       check("C1", main.phase === "start" && main.cardView === "start", "start card not showing at launch")
-      check("C1", main.pressSampleList(), "Sample list press ignored")
+      check("C1", main.pressErrands(), "Errands press ignored")
       monitoring = true
     },
   })

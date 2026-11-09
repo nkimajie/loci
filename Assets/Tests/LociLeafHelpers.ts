@@ -15,7 +15,18 @@ import {LociMain} from "../Scripts/LociMain"
 import {Guess} from "../Scripts/LociState"
 
 export const SPOT_PARENTS = ["Spot1_Chair", "Spot2_TableLeft", "Spot3_TableCentre", "Spot4_TableRight", "Spot5_Shelf"]
-export const SAMPLE_MODELS = ["umbrella", "key", "milk", "phone", "gift"]
+/** "Errands (warm-up)" pack (the v1 "Sample list"): models in route order. */
+export const ERRANDS_MODELS = ["umbrella", "key", "milk", "phone", "gift"]
+/** "Study pack" (the scientific method): models, name-tag labels and Find-it questions in route order. */
+export const STUDY_MODELS = ["speech", "magnifier", "bulb", "flask", "flag"]
+export const STUDY_LABELS = ["Ask a question", "Research", "Hypothesis", "Experiment", "Conclusion"]
+export const STUDY_QUESTIONS = [
+  "Where's the question?",
+  "Where's the research?",
+  "Where's the hypothesis?",
+  "Where's the experiment?",
+  "Where's the conclusion?",
+]
 
 export function log(msg: string): void {
   print("[LociLeaf] " + msg)
@@ -53,7 +64,7 @@ export async function setupAtStart(): Promise<LociMain> {
   await sleep(1500)
   const main = getMain()
   await waitFor(() => main.phase === "start" && main.cardView === "start", 8000, "start card", main)
-  await waitFor(() => !!findInteractableByName("SampleListButton", undefined, true), 5000, "SampleListButton enabled", main)
+  await waitFor(() => !!findInteractableByName("ErrandsButton", undefined, true), 5000, "ErrandsButton enabled", main)
   main.gazeDwellSec = 0
   log(`setup: gazeDwellSec=0 for this run; runSelfTest=${main.runSelfTest}; state=${main.getStateJson()}`)
   await sleep(300)
@@ -129,10 +140,10 @@ export function flatDist(a: vec3, b: vec3): number {
   return Math.sqrt(dx * dx + dz * dz)
 }
 
-/** Pinch-driven: Sample list → wait for study at spot 1. */
-export async function pinchSampleListAndWaitForStudy(main: LociMain): Promise<void> {
-  await pinch("SampleListButton", main)
-  await waitFor(() => main.phase === "study" && main.currentSpotIndex === 0, 6000, "study at spot 1 after Sample list", main)
+/** Pinch-driven: Errands (warm-up) → wait for study at spot 1. */
+export async function pinchErrandsAndWaitForStudy(main: LociMain): Promise<void> {
+  await pinch("ErrandsButton", main)
+  await waitFor(() => main.phase === "study" && main.currentSpotIndex === 0, 6000, "study at spot 1 after Errands", main)
 }
 
 /**
@@ -151,8 +162,8 @@ export async function pinchStudyWalkToSwitch(main: LociMain): Promise<void> {
   await sleep(400)
 }
 
-/** Find-it prompt text for each sample-list spot (route order). */
-export const SAMPLE_QUESTIONS = ["Where's the umbrella?", "Where are the keys?", "Where's the milk?", "Where's the phone?", "Where's the gift?"]
+/** Find-it prompt text for each Errands spot (route order). */
+export const ERRANDS_QUESTIONS = ["Where's the umbrella?", "Where are the keys?", "Where's the milk?", "Where's the phone?", "Where's the gift?"]
 
 /** Pinch-driven: Quiz me → objects vanish into 5 markers and Find-it prompt 1 waits for a pinch. */
 export async function pinchQuizMeAndWaitForPrompt(main: LociMain): Promise<void> {

@@ -3,7 +3,7 @@
  * Round 1 misses the milk ("4 / 5", spot 3 glows). "Quiz again" hides every object again
  * behind neutral markers, clears the score, answers and missed glow, starts a new seeded
  * order at "1 of 5"; round 2 finding everything ends at "5 / 5" with nothing glowing.
- * Setup (all pinch): SampleListButton, Spot1_Item … Spot5_Item, QuizMeButton, round 1.
+ * Setup (all pinch): ErrandsButton, Spot1_Item … Spot5_Item, QuizMeButton, round 1.
  * Steps under test (pinch): QuizAgainButton, Spot{answer}_MarkerButton ×5.
  */
 
@@ -17,7 +17,7 @@ import {
   log,
   pinch,
   pinchQuizMeAndWaitForPrompt,
-  pinchSampleListAndWaitForStudy,
+  pinchErrandsAndWaitForStudy,
   pinchStudyWalkToSwitch,
   playFindIt,
   setupAtStart,
@@ -30,7 +30,7 @@ const MILK_SPOT = 2
 export class LociC8QuizAgainResetsScenario extends Scenario {
   async run(): Promise<void> {
     const main = await setupAtStart()
-    await pinchSampleListAndWaitForStudy(main)
+    await pinchErrandsAndWaitForStudy(main)
     await pinchStudyWalkToSwitch(main)
     await pinchQuizMeAndWaitForPrompt(main)
 

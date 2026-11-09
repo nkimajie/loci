@@ -296,5 +296,63 @@ export function poseModel(b: BuiltModel, t: number): void {
       setGroup(b, "screen", Z, new vec3(Math.sin(Math.PI * t) * 1.45, 0, 0), ONE)
       break
     }
+    case "chatter": {
+      // Speech bubble "talks" (three squash-stretch pulses with a waggle) while the "?"
+      // pops out toward the user, spins once and tucks back in.
+      const env = 1 - t
+      const talk = Math.sin(t * 6 * Math.PI)
+      setRoot(b, new vec3(0, hop(t, 0.1), 0), new vec3(0, 0, talk * 0.12 * env), talk * 0.1 * env)
+      const u = clamp01(t / 0.8)
+      const pop = Math.sin(Math.PI * u)
+      setGroup(b, "mark", new vec3(0, pop * 0.12, pop * 0.25), new vec3(0, Ease.inOutSine(u) * TWO_PI, 0), vec3.one().uniformScale(1 + pop * 0.5))
+      break
+    }
+    case "searchZoom": {
+      // Magnifying glass scans left-right twice, then the lens zooms up big at the user.
+      const scanEnv = t < 0.55 ? 1 : Math.max(0, 1 - (t - 0.55) / 0.15)
+      const scan = Math.sin(t * 2 * TWO_PI) * scanEnv
+      setRoot(b, new vec3(scan * 0.18, hop(t, 0.06), 0), new vec3(0, scan * 0.35, scan * 0.12), 0)
+      let zoom = 0
+      if (t > 0.55) {
+        const u = (t - 0.55) / 0.45
+        zoom = Math.sin(u * Math.PI) * 0.6 * (1 - u * 0.3)
+      }
+      setGroup(b, "glass", new vec3(0, 0, zoom * 0.25), Z, vec3.one().uniformScale(1 + zoom))
+      break
+    }
+    case "lightUp": {
+      // Light bulb crouches, jumps — ding! — rays flicker on, burst out and turn, then go out.
+      const on = t > 0.22 && t < 0.92 && !(t < 0.36 && Math.sin(t * 90) < 0)
+      const rays = b.groups["rays"]
+      if (rays) rays.enabled = on
+      const k = 0.6 + 0.6 * Ease.outBack(clamp01((t - 0.22) / 0.3))
+      setGroup(b, "rays", Z, new vec3(0, 0, Math.max(0, t - 0.22) * 1.2), vec3.one().uniformScale(k))
+      const crouch = t < 0.15 ? (t / 0.15) * 0.15 : 0
+      const jump = t >= 0.15 ? hop((t - 0.15) / 0.5, 0.3) : 0
+      setRoot(b, new vec3(0, jump, 0), new vec3(0, 0, Math.sin(t * 28) * 0.15 * (t > 0.3 ? 1 - t : 0)), crouch)
+      break
+    }
+    case "fizz": {
+      // Flask shakes harder and harder, hops, and a stream of bubbles rises out of the neck.
+      const shakeEnv = t < 0.45 ? t / 0.45 : Math.max(0, 1 - (t - 0.45) / 0.2)
+      setRoot(b, new vec3(0, hop((t - 0.4) / 0.35, 0.25), 0), new vec3(0, 0, Math.sin(t * 70) * 0.12 * shakeEnv), t > 0.36 && t < 0.42 ? 0.12 : 0)
+      const bubbles = b.groups["bubbles"]
+      if (bubbles) bubbles.enabled = t > 0.42 && t < 0.97
+      const u = clamp01((t - 0.42) / 0.55)
+      setGroup(b, "bubbles", new vec3(Math.sin(u * 12) * 0.04, u * 0.5, 0), new vec3(0, u * 3, 0), vec3.one().uniformScale(0.5 + u * 0.9))
+      break
+    }
+    case "flagWave": {
+      // Checkered flag waves (a wave travels along the four cloth columns) with a victory hop.
+      const env = Math.sin(Math.PI * t)
+      const ph = t * 4 * TWO_PI
+      for (let k = 0; k < 4; k++) {
+        const a = ph - k * 0.9
+        setGroup(b, "c" + k, new vec3(0, Math.sin(a + 0.5) * 0.01 * k * env, Math.sin(a) * 0.05 * (k + 1) * env), new vec3(0, Math.cos(a) * 0.25 * env, 0), ONE)
+      }
+      const jumps = Math.abs(Math.sin(t * 2 * Math.PI)) * 0.12 * (1 - t)
+      setRoot(b, new vec3(0, jumps, 0), new vec3(0, Math.sin(t * TWO_PI) * 0.3 * (1 - t), 0), 0)
+      break
+    }
   }
 }

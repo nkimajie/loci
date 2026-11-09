@@ -2,7 +2,8 @@
  * LociCardUI — the small light "Loci" card ~20 cm above the table's front edge
  * (in the Lens Studio preview LociMain moves it to ~0.9 m in front of the viewer).
  * One spot, five views:
- *   start     — "Loci", Say my list / Sample list / Mixed list, status line
+ *   start     — "Loci", Study pack / Errands (warm-up) / Mixed list (+ Say my list on
+ *               Specs; voice is on-device only, so the preview hides it), status line
  *   switch    — Walk again / Quiz me
  *   prompt    — Find-it quiz: small 3D icon of the item, "Where's the <item>?", "2 of 5"
  *   results   — "4 / 5" score + Review missed / Quiz again / New list (fades after ~10 s)
@@ -14,7 +15,8 @@
  *       showResults(score, hint), hideAll(), setStatus(msg), clearPromptIcon();
  *       getters visibleView / scoreText / statusText / promptText / promptProgress /
  *       promptIconHost.
- *       Emits onSayList, onSampleList, onMixedList, onWalkAgain, onQuizMe,
+ *       getter voiceButtonShown.
+ *       Emits onSayList, onStudyPack, onErrands, onMixedList, onWalkAgain, onQuizMe,
  *       onReviewMissed, onQuizAgain, onNewList.
  * Must not: parse lists, score, or decide the flow — LociMain does.
  */
@@ -30,7 +32,8 @@ import Event, {PublicApi} from "SpectaclesInteractionKit.lspkg/Utils/Event"
 import {paintButton, whiteContent} from "./LociButtonSkin"
 
 const ICON_MIC: Texture = requireAsset("../Icons/mic.png") as Texture
-const ICON_SAMPLE: Texture = requireAsset("../Icons/format_list_numbered.png") as Texture
+const ICON_STUDY: Texture = requireAsset("../Icons/science.png") as Texture
+const ICON_ERRANDS: Texture = requireAsset("../Icons/shopping_bag.png") as Texture
 const ICON_MIXED: Texture = requireAsset("../Icons/shuffle.png") as Texture
 const ICON_WALK: Texture = requireAsset("../Icons/directions_walk.png") as Texture
 const ICON_QUIZ: Texture = requireAsset("../Icons/quiz.png") as Texture
@@ -110,7 +113,7 @@ export class LociCardUI extends BaseScriptComponent {
   cardSubtleTextColor: vec4 = new vec4(0.27, 0.31, 0.52, 1)
 
   @input("vec4", "{0.05, 0.50, 1.0, 1}")
-  @hint("Fill for each card's main button (Sample list, Quiz me, Review missed): bright and saturated")
+  @hint("Fill for each card's main button (Study pack, Quiz me, Review missed): bright and saturated")
   @widget(new ColorWidget())
   primaryButtonColor: vec4 = new vec4(0.05, 0.5, 1.0, 1)
 
@@ -126,6 +129,10 @@ export class LociCardUI extends BaseScriptComponent {
   @input
   @hint("One-line subtitle under the title")
   subtitleText: string = "Turn your list into a route"
+
+  @input
+  @hint("Show 'Say my list' in the Lens Studio preview too. Voice (speech-to-text) only works on Specs, so by default the preview start card leaves it out; on Specs it always shows.")
+  showVoiceInPreview: boolean = false
 
   @input
   @hint("Seconds before the results card fades to a small Options pill (0 = never)")
@@ -150,9 +157,11 @@ export class LociCardUI extends BaseScriptComponent {
   private _status = ""
   private _prompt = ""
   private _progress = ""
+  private _voiceShown = false
 
   private _onSayList = new Event<void>()
-  private _onSampleList = new Event<void>()
+  private _onStudyPack = new Event<void>()
+  private _onErrands = new Event<void>()
   private _onMixedList = new Event<void>()
   private _onWalkAgain = new Event<void>()
   private _onQuizMe = new Event<void>()
@@ -161,7 +170,8 @@ export class LociCardUI extends BaseScriptComponent {
   private _onNewList = new Event<void>()
 
   get onSayList(): PublicApi<void> { return this._onSayList.publicApi() }
-  get onSampleList(): PublicApi<void> { return this._onSampleList.publicApi() }
+  get onStudyPack(): PublicApi<void> { return this._onStudyPack.publicApi() }
+  get onErrands(): PublicApi<void> { return this._onErrands.publicApi() }
   get onMixedList(): PublicApi<void> { return this._onMixedList.publicApi() }
   get onWalkAgain(): PublicApi<void> { return this._onWalkAgain.publicApi() }
   get onQuizMe(): PublicApi<void> { return this._onQuizMe.publicApi() }
@@ -198,6 +208,11 @@ export class LociCardUI extends BaseScriptComponent {
 
   get promptIconSizeCm(): number {
     return ICON_SLOT_CM
+  }
+
+  /** True when the start card has a "Say my list" button (always on Specs; preview only if showVoiceInPreview). */
+  get voiceButtonShown(): boolean {
+    return this._voiceShown
   }
 
   onAwake(): void {
@@ -266,9 +281,14 @@ export class LociCardUI extends BaseScriptComponent {
     const inner = this.panelWidthCm - PAD * 2
     this.addText(content, "Title", this.titleText, "Title2", inner, 3.6)
     this.addText(content, "Subtitle", this.subtitleText, "Caption", inner, 2.4)
-    this.addButton(content, "SayMyListButton", "Say my list", ICON_MIC, "secondary", inner, () => this._onSayList.invoke())
-    this.addButton(content, "SampleListButton", "Sample list", ICON_SAMPLE, "primary", inner, () => this._onSampleList.invoke())
+    this.addButton(content, "StudyPackButton", "Study pack", ICON_STUDY, "primary", inner, () => this._onStudyPack.invoke())
+    this.addButton(content, "ErrandsButton", "Errands (warm-up)", ICON_ERRANDS, "secondary", inner, () => this._onErrands.invoke())
     this.addButton(content, "MixedListButton", "Mixed list", ICON_MIXED, "secondary", inner, () => this._onMixedList.invoke())
+    // Speech-to-text only runs on Specs, so the preview start card leaves voice out.
+    this._voiceShown = this.showVoiceInPreview || !global.deviceInfoSystem.isEditor()
+    if (this._voiceShown) {
+      this.addButton(content, "SayMyListButton", "Say my list", ICON_MIC, "secondary", inner, () => this._onSayList.invoke())
+    }
     this.statusLabel = this.addText(content, "StatusText", "", "Caption", inner, 3.0, true)
   }
 
@@ -292,6 +312,7 @@ export class LociCardUI extends BaseScriptComponent {
     this.iconHost.getTransform().setLocalPosition(new vec3(0, 0, ICON_SLOT_CM * 0.45))
     this.promptLabel = this.addText(content, "PromptText", "Where's the …?", "Headline1", inner, 4.0)
     this.promptLabel.size *= 1.45 // the question is the one line that must read at a glance
+    this.promptLabel.horizontalOverflow = HorizontalOverflow.Shrink // long questions stay on one line
     this.promptHintLabel = this.addText(content, "PromptHint", "Pinch the spot where it was", "Caption", inner, 2.4, true)
     this.promptProgressLabel = this.addText(content, "PromptProgress", "1 of 5", "Caption", inner, 2.2, true)
   }

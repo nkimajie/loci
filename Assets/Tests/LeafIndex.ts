@@ -1,8 +1,9 @@
 /**
  * LeafIndex — registers the Loci LEAF scenarios: C1–C5 are the done criteria in
- * devpost/design-brief.md (C3/C4 updated for the v2 Find-it quiz); C6–C9 cover the
- * Find-it details (wrong pinch reveals the right spot, each item asked once, Quiz again
- * resets the score, New list clears every spot). Attached to the root "LeafIndex" SceneObject.
+ * devpost/design-brief.md (C1 now on "Errands (warm-up)", C3/C4 updated for the v2 Find-it
+ * quiz); C6–C9 cover the Find-it details (wrong pinch reveals the right spot, each item asked
+ * once, Quiz again resets the score, New list clears every spot); C10 covers the scientific-
+ * method Study pack and the start card. Attached to the root "LeafIndex" SceneObject.
  */
 
 import {scenariosIndex} from "Leaf.lspkg/Scenarios/decorator/ScenarioIndexDecorator"
@@ -16,6 +17,7 @@ import {LociC6WrongRevealsCorrectScenario} from "./LociC6WrongRevealsCorrectScen
 import {LociC7EachItemOnceScenario} from "./LociC7EachItemOnceScenario"
 import {LociC8QuizAgainResetsScenario} from "./LociC8QuizAgainResetsScenario"
 import {LociC9NewListClearsScenario} from "./LociC9NewListClearsScenario"
+import {LociC10StudyPackScenario} from "./LociC10StudyPackScenario"
 
 @component
 export class LeafIndex extends BaseScriptComponent {
@@ -30,5 +32,6 @@ export class LeafIndex extends BaseScriptComponent {
     {id: "loci-c7-each-item-once", typename: LociC7EachItemOnceScenario.getTypeName()},
     {id: "loci-c8-quiz-again-resets", typename: LociC8QuizAgainResetsScenario.getTypeName()},
     {id: "loci-c9-new-list-clears", typename: LociC9NewListClearsScenario.getTypeName()},
+    {id: "loci-c10-study-pack", typename: LociC10StudyPackScenario.getTypeName()},
   ]
 }

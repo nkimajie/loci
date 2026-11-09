@@ -1,6 +1,6 @@
 /**
  * LociMain — orchestrates the Loci memory-palace session:
- *   start card → list (Sample / Mixed / voice) → objects drop onto 5 spots in route
+ *   start card → list (Study pack / Errands / Mixed / voice) → objects drop onto 5 spots in route
  *   order → study walk (one spot pulses) → group glow → Walk again / Quiz me →
  *   Find-it quiz (objects vanish into neutral markers; "Where's the <item>?" in a seeded
  *   shuffled order; pinch the spot: green ring if right, red shake + orange-ring reveal of
@@ -19,6 +19,7 @@
  * visitedSpots, markerVisibleSpots, revealedObjectSpots, revealedSpot, quizOrder,
  * quizStep, quizTargetSpot, askedSpots, promptText, promptIconModelId, lastGuess,
  * ringKinds, shakingSpots, quizScore, cardView, getStateJson();
+ * lastListSource ("study" | "errands" | "mixed" | "voice");
  * actions press*() / pinchItem(i) / guessSpot(i).
  */
 
@@ -121,8 +122,12 @@ export class LociMain extends BaseScriptComponent {
   @ui.label('<span style="color: #60A5FA;">Settings</span>')
   @ui.group_start("Settings")
   @input
-  @hint("Text the 'Sample list' button sends through the list parser (route order)")
-  sampleListText: string = "umbrella, keys, milk, call mom, gift"
+  @hint("Text the 'Study pack' button sends through the list parser (route order): the scientific method, one step per spot")
+  studyPackText: string = "ask a question, research, hypothesis, experiment, conclusion"
+
+  @input
+  @hint("Text the 'Errands (warm-up)' button sends through the list parser (route order)")
+  errandsListText: string = "umbrella, keys, milk, call mom, gift"
 
   @input
   @hint("Text the 'Mixed list' button sends through the same parser + matcher as voice")
@@ -229,7 +234,8 @@ export class LociMain extends BaseScriptComponent {
       this.nameTag.setViewScale(Math.min(2.5, Math.max(1, (d / 110) * 0.65)))
     }
     this.card.onSayList.add(() => this.pressSayList())
-    this.card.onSampleList.add(() => this.pressSampleList())
+    this.card.onStudyPack.add(() => this.pressStudyPack())
+    this.card.onErrands.add(() => this.pressErrands())
     this.card.onMixedList.add(() => this.pressMixedList())
     this.card.onWalkAgain.add(() => this.pressWalkAgain())
     this.card.onQuizMe.add(() => this.pressQuizMe())
@@ -345,8 +351,12 @@ export class LociMain extends BaseScriptComponent {
 
   // ── Actions (UI events and tests both call these) ─────────────────────────
 
-  pressSampleList(): boolean {
-    return this.beginList(this.sampleListText, "sample")
+  pressStudyPack(): boolean {
+    return this.beginList(this.studyPackText, "study")
+  }
+
+  pressErrands(): boolean {
+    return this.beginList(this.errandsListText, "errands")
   }
 
   pressMixedList(): boolean {
@@ -600,14 +610,23 @@ export class LociMain extends BaseScriptComponent {
     this.log(`find-it prompt ${st.quizStep + 1}/${SPOT_COUNT}: ${name} (answer: spot ${target + 1})`)
   }
 
-  /** "Where's the umbrella?", "Where are the keys?"; phrases like "call mom" use the object's name. */
+  /**
+   * "Where's the umbrella?", "Where are the keys?", "Where's the hypothesis?".
+   * Phrases ask for the thing they name: "ask a question" → "the question" (the words
+   * after an article); "call mom" → the matched object's name ("the phone").
+   */
   private promptQuestion(spotIndex: number): string {
     const item = this.state.items[spotIndex] || this.spots[spotIndex].listItem
     if (!item) return "Where was it?"
     let noun = item.word.toLowerCase()
-    const def = item.modelId ? findModel(item.modelId) : null
-    if (def && noun.indexOf(" ") >= 0) noun = def.displayName.toLowerCase()
-    const plural = noun.indexOf(" ") < 0 && noun.length > 3 && /[^su]s$/.test(noun)
+    if (noun.indexOf(" ") >= 0) {
+      const afterArticle = /\b(?:a|an|the)\s+(.+)$/.exec(noun)
+      const def = item.modelId ? findModel(item.modelId) : null
+      if (afterArticle) noun = afterArticle[1]
+      else if (def) noun = def.displayName.toLowerCase()
+    }
+    // Simple plurals only: "keys" yes; "hypothesis", "glass", "virus" no.
+    const plural = noun.indexOf(" ") < 0 && noun.length > 3 && /[^siu]s$/.test(noun)
     return plural ? `Where are the ${noun}?` : `Where's the ${noun}?`
   }
 
@@ -681,7 +700,7 @@ export class LociMain extends BaseScriptComponent {
   private onVoiceError(message: string): void {
     if (this.state.phase !== "listening") return
     this.setPhase("start")
-    this.card.setStatus(message + " — try Sample list.")
+    this.card.setStatus(message + " — try Study pack.")
   }
 
   // ── Per frame: gaze dwell (extra path; pinch is the tested path) ─────────
@@ -934,6 +953,11 @@ export class LociMain extends BaseScriptComponent {
 
   get lastListSource(): string {
     return this._lastListSource
+  }
+
+  /** Start card offers "Say my list" (always on Specs; in the preview only if the card's showVoiceInPreview is on). */
+  get voiceButtonShown(): boolean {
+    return this.card.voiceButtonShown
   }
 
   spot(i: number): LociSpot {

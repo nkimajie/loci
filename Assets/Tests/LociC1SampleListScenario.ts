@@ -1,13 +1,13 @@
 /**
- * Done criterion 1 — "Sample list" places the 5 models one at a time, in route order,
+ * Done criterion 1 — "Errands (warm-up)" places the 5 models one at a time, in route order,
  * at chair, table left, table centre, table right, shelf.
- * Step under test: real SIK pinch on SampleListButton. No setup shortcuts.
+ * Step under test: real SIK pinch on ErrandsButton. No setup shortcuts.
  */
 
 import {Scenario} from "Leaf.lspkg/Scenarios/scenario/Scenario"
 import {expect} from "Leaf.lspkg/Utils/common/Expect"
 import {findSceneObjectByName, sleep} from "Leaf.lspkg/Utils/common/Utils"
-import {LociMonitor, SAMPLE_MODELS, SPOT_PARENTS, j, log, pinch, setupAtStart, waitFor} from "./LociLeafHelpers"
+import {LociMonitor, ERRANDS_MODELS, SPOT_PARENTS, j, log, pinch, setupAtStart, waitFor} from "./LociLeafHelpers"
 
 @component
 export class LociC1SampleListScenario extends Scenario {
@@ -16,8 +16,8 @@ export class LociC1SampleListScenario extends Scenario {
     const mon = new LociMonitor(this, main)
     expect(main.placementOrder.length, "nothing placed before the pinch").toBe(0)
 
-    await pinch("SampleListButton", main)
-    await waitFor(() => mon.phaseTime("building") !== undefined, 2000, "building phase after Sample list pinch", main)
+    await pinch("ErrandsButton", main)
+    await waitFor(() => mon.phaseTime("building") !== undefined, 2000, "building phase after Errands pinch", main)
     const tBuild = mon.phaseTime("building")!
 
     // Mid-build: objects must still be arriving (one at a time, not all at once).
@@ -47,7 +47,7 @@ export class LociC1SampleListScenario extends Scenario {
     for (let i = 1; i < counts.length; i++) {
       expect(counts[i] - counts[i - 1], `placed count jumped ${counts[i - 1]}→${counts[i]}`).toBe(1)
     }
-    expect(j(ids), "placed models in route order").toBe(j(SAMPLE_MODELS))
+    expect(j(ids), "placed models in route order").toBe(j(ERRANDS_MODELS))
 
     for (let i = 0; i < 5; i++) {
       const item = main.spot(i).itemSceneObject
@@ -64,7 +64,7 @@ export class LociC1SampleListScenario extends Scenario {
     expect(studyDelay > 3.4 && studyDelay < 4.3, `study should start ~3.8 s after the pinch, got ${studyDelay.toFixed(2)}`).toBe(true)
     expect(main.currentSpotIndex, "study starts at spot 1").toBe(0)
     expect(j(main.pulsingSpots), "only spot 1 pulses at study start").toBe(j([0]))
-    expect(main.lastListSource, "list source").toBe("sample")
+    expect(main.lastListSource, "list source").toBe("errands")
     log(`C1 PASS state=${main.getStateJson()}`)
   }
 }
