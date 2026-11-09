@@ -1,0 +1,650 @@
+# LEAF run 2026-11-09 (UTC), Lens Studio 5.23.2 preview. Filtered: LEAF results, test measurements ([LociLeaf]) and the Lens's own flow log ([Loci]).
+13:06:53.369  [Loci] preview camera pitch 0.0° → room tilted 16.0° so the route reads as from a -16° look-down
+13:06:53.369  [Loci] camera start {x: 0, y: 0, z: 0}, room floor at {x: -5, y: -65.5979, z: -351.706}, preview camera 320 cm behind the user's spot (gaze dwell off)
+13:06:53.371  [Loci] preview card 90 cm in front of the camera, -6.3° elevation (camera pitch 0.0°, vfov 36.6°, route 14.7°…4.4°, room below 1.4° spare)
+13:06:53.371  [Loci] palace build: 6 surfaces (TableTop, ChairSeat, ShelfTop, ShelfBoard_1, ShelfBoard_2, PalaceFloor)
+13:06:53.371  [Loci] phase → start
+13:07:12.916  [Loci] preview camera pitch 0.0° → room tilted 16.0° so the route reads as from a -16° look-down
+13:07:12.916  [Loci] camera start {x: 0, y: 0, z: 0}, room floor at {x: -5, y: -65.5979, z: -351.706}, preview camera 320 cm behind the user's spot (gaze dwell off)
+13:07:12.918  [Loci] preview card 90 cm in front of the camera, -6.3° elevation (camera pitch 0.0°, vfov 36.6°, route 14.7°…4.4°, room below 1.4° spare)
+13:07:12.919  [Loci] palace build: 6 surfaces (TableTop, ChairSeat, ShelfTop, ShelfBoard_1, ShelfBoard_2, PalaceFloor)
+13:07:12.919  [Loci] phase → start
+13:07:13.294  LEAF [  0.003s]Running with runner config: {"__leaf__log_level":"INFO","__leaf__timeout_secs":"600","__leaf__diagnostic_policy":"fallback","__leaf__diagnostic_report_duration_ms":"-1"}
+13:07:14.810  [LociLeaf] setup: gazeDwellSec=0 for this run; runSelfTest=false; state={"phase":"start","currentSpotIndex":-1,"pulsingSpots":[],"placedModelIds":["","","","",""],"totemTexts":["","","","",""],"placementOrder":[],"scoreText":"","missedSpots":[],"glowingSpots":[],"walkQueue":[],"visitedSpots":[],"markerVisibleSpots":[],"revealedSpot":-1,"revealedObjectSpots":[],"quizOrder":[],"quizStep":0,"quizTargetSpot":-1,"askedSpots":[],"answers":[null,null,null,null,null],"ringKinds":["","","","",""],"cardView":"start","promptText":"","nameTagText":""}
+13:07:15.118  [LociLeaf] pinch → ErrandsButton
+13:07:16.267  [Loci] phase → building
+13:07:16.653  [Loci] placed spot 1 (Chair): umbrella "umbrella"
+13:07:17.187  [Loci] placed spot 2 (Table left): key "keys"
+13:07:17.609  [LociLeaf] C1 placed after 1.3 s: 2
+13:07:17.753  [Loci] placed spot 3 (Table centre): milk "milk"
+13:07:18.299  [Loci] placed spot 4 (Table right): phone "call mom"
+13:07:18.847  [Loci] placed spot 5 (Shelf): gift "gift"
+13:07:20.000  [Loci] phase → study
+13:07:20.006  [Loci] study → spot 1 (Chair) pulses
+13:07:20.340  [LociLeaf] C1 placementOrder=[0,1,2,3,4] placementTimes(rel. to pinch)=[0.386,0.921,1.487,2.033,2.581] placedModelIds=["umbrella","key","milk","phone","gift"] studyStartsAfter=3.73s countTimeline=[0,1,2,3,4,5]
+13:07:20.344  [LociLeaf] C1 PASS (state JSON in leaf-results.json)
+13:07:20.344  LEAF [  7.053s]PASSED: loci-c1-sample-list
+13:07:20.345  LEAF [  7.054s][loci-c1-sample-list] PASSED
+13:08:30.404  [Loci] preview camera pitch 0.0° → room tilted 16.0° so the route reads as from a -16° look-down
+13:08:30.404  [Loci] camera start {x: 0, y: 0, z: 0}, room floor at {x: -5, y: -65.5979, z: -351.706}, preview camera 320 cm behind the user's spot (gaze dwell off)
+13:08:30.407  [Loci] preview card 90 cm in front of the camera, -6.3° elevation (camera pitch 0.0°, vfov 36.6°, route 14.7°…4.4°, room below 1.4° spare)
+13:08:30.407  [Loci] palace build: 6 surfaces (TableTop, ChairSeat, ShelfTop, ShelfBoard_1, ShelfBoard_2, PalaceFloor)
+13:08:30.407  [Loci] phase → start
+13:08:30.858  LEAF [  0.000s]Running with runner config: {"__leaf__log_level":"INFO","__leaf__timeout_secs":"600","__leaf__diagnostic_policy":"fallback","__leaf__diagnostic_report_duration_ms":"-1"}
+13:08:32.377  [LociLeaf] setup: gazeDwellSec=0 for this run; runSelfTest=false; state={"phase":"start","currentSpotIndex":-1,"pulsingSpots":[],"placedModelIds":["","","","",""],"totemTexts":["","","","",""],"placementOrder":[],"scoreText":"","missedSpots":[],"glowingSpots":[],"walkQueue":[],"visitedSpots":[],"markerVisibleSpots":[],"revealedSpot":-1,"revealedObjectSpots":[],"quizOrder":[],"quizStep":0,"quizTargetSpot":-1,"askedSpots":[],"answers":[null,null,null,null,null],"ringKinds":["","","","",""],"cardView":"start","promptText":"","nameTagText":""}
+13:08:32.688  [LociLeaf] pinch → ErrandsButton
+13:08:33.818  [Loci] phase → building
+13:08:34.215  [Loci] placed spot 1 (Chair): umbrella "umbrella"
+13:08:34.758  [Loci] placed spot 2 (Table left): key "keys"
+13:08:35.315  [Loci] placed spot 3 (Table centre): milk "milk"
+13:08:35.853  [Loci] placed spot 4 (Table right): phone "call mom"
+13:08:36.396  [Loci] placed spot 5 (Shelf): gift "gift"
+13:08:37.560  [Loci] phase → study
+13:08:37.563  [Loci] study → spot 1 (Chair) pulses
+13:08:37.589  [LociLeaf] pinch → Spot2_Item
+13:08:39.262  [LociLeaf] C2 non-current pinch on Spot2_Item completed (SIK events fired)
+13:08:40.148  [LociLeaf] pinch → Spot1_Item
+13:08:43.281  [Loci] study → spot 2 (Table left) pulses
+13:08:43.572  [LociLeaf] pinch → Spot2_Item
+13:08:46.726  [Loci] study → spot 3 (Table centre) pulses
+13:08:47.020  [LociLeaf] pinch → Spot3_Item
+13:08:50.166  [Loci] study → spot 4 (Table right) pulses
+13:08:50.503  [LociLeaf] pinch → Spot4_Item
+13:08:53.654  [Loci] study → spot 5 (Shelf) pulses
+13:08:53.950  [LociLeaf] pinch → Spot5_Item
+13:08:57.073  [Loci] phase → groupGlow
+13:08:59.085  [Loci] phase → switch
+13:08:59.654  [LociLeaf] C2 visited=[0,1,2,3,4] advanceSec=["1.99","1.99","2.00","1.99","2.00"] arrows=["spot1: flat=0.33cm above=42.2cm","spot2: flat=0.35cm above=24.8cm","spot3: flat=0.07cm above=30.8cm","spot4: flat=0.38cm above=27.3cm","spot5: flat=0.28cm above=30.0cm"] maxPulsing=1 pulsedOrder=[0,1,2,3,4] multiPulse=[] groupGlowSec=2.01 glowing@switch=[] switchCardScale=1.00
+13:08:59.655  [LociLeaf] C2 PASS (state JSON in leaf-results.json)
+13:08:59.655  LEAF [ 28.797s]PASSED: loci-c2-study-walk
+13:08:59.656  LEAF [ 28.797s][loci-c2-study-walk] PASSED
+13:09:07.312  [Loci] preview camera pitch 0.0° → room tilted 16.0° so the route reads as from a -16° look-down
+13:09:07.313  [Loci] camera start {x: 0, y: 0, z: 0}, room floor at {x: -5, y: -65.5979, z: -351.706}, preview camera 320 cm behind the user's spot (gaze dwell off)
+13:09:07.315  [Loci] preview card 90 cm in front of the camera, -6.3° elevation (camera pitch 0.0°, vfov 36.6°, route 14.7°…4.4°, room below 1.4° spare)
+13:09:07.316  [Loci] palace build: 6 surfaces (TableTop, ChairSeat, ShelfTop, ShelfBoard_1, ShelfBoard_2, PalaceFloor)
+13:09:07.316  [Loci] phase → start
+13:09:07.832  LEAF [  0.000s]Running with runner config: {"__leaf__log_level":"INFO","__leaf__timeout_secs":"600","__leaf__diagnostic_policy":"fallback","__leaf__diagnostic_report_duration_ms":"-1"}
+13:09:09.340  [LociLeaf] setup: gazeDwellSec=0 for this run; runSelfTest=false; state={"phase":"start","currentSpotIndex":-1,"pulsingSpots":[],"placedModelIds":["","","","",""],"totemTexts":["","","","",""],"placementOrder":[],"scoreText":"","missedSpots":[],"glowingSpots":[],"walkQueue":[],"visitedSpots":[],"markerVisibleSpots":[],"revealedSpot":-1,"revealedObjectSpots":[],"quizOrder":[],"quizStep":0,"quizTargetSpot":-1,"askedSpots":[],"answers":[null,null,null,null,null],"ringKinds":["","","","",""],"cardView":"start","promptText":"","nameTagText":""}
+13:09:09.643  [LociLeaf] pinch → ErrandsButton
+13:09:10.782  [Loci] phase → building
+13:09:11.180  [Loci] placed spot 1 (Chair): umbrella "umbrella"
+13:09:11.716  [Loci] placed spot 2 (Table left): key "keys"
+13:09:12.261  [Loci] placed spot 3 (Table centre): milk "milk"
+13:09:12.832  [Loci] placed spot 4 (Table right): phone "call mom"
+13:09:13.362  [Loci] placed spot 5 (Shelf): gift "gift"
+13:09:14.529  [Loci] phase → study
+13:09:14.535  [Loci] study → spot 1 (Chair) pulses
+13:09:14.785  [LociLeaf] pinch → Spot1_Item
+13:09:17.917  [Loci] study → spot 2 (Table left) pulses
+13:09:18.204  [LociLeaf] pinch → Spot2_Item
+13:09:21.378  [Loci] study → spot 3 (Table centre) pulses
+13:09:21.629  [LociLeaf] pinch → Spot3_Item
+13:09:24.749  [Loci] study → spot 4 (Table right) pulses
+13:09:24.997  [LociLeaf] pinch → Spot4_Item
+13:09:28.130  [Loci] study → spot 5 (Shelf) pulses
+13:09:28.397  [LociLeaf] pinch → Spot5_Item
+13:09:31.539  [Loci] phase → groupGlow
+13:09:33.555  [Loci] phase → switch
+13:09:34.007  [LociLeaf] pinch → QuizMeButton
+13:09:35.145  [Loci] phase → quizIntro
+13:09:35.145  [Loci] find-it order (seed 7, round 1): [3,5,4,2,1]
+13:09:37.127  [Loci] phase → quiz
+13:09:37.129  [Loci] find-it prompt 1/5: Milk (answer: spot 3)
+13:09:37.674  [LociLeaf] C3 after Quiz me: order=[3,5,4,2,1] markers=[0,1,2,3,4] revealed=[] glow=["neutral","neutral","neutral","neutral","neutral"] pulsing=[] arrow=false card=prompt prompt="Where's the milk?" icon=milk progress="1 of 5"
+13:09:37.681  [LociLeaf] pinch → Spot3_MarkerButton
+13:09:38.824  [Loci] find-it: asked spot 3 (milk), pinched spot 3 → correct
+13:09:39.671  [LociLeaf] C3 after right pinch: guess={"target":2,"pinched":2,"correct":true} revealed=[2] rings=["","","green","",""] nameTag="Milk" score=1 markers=[0,1,3,4] glow=off
+13:09:40.415  [Loci] find-it prompt 2/5: Gift (answer: spot 5)
+13:09:40.767  [LociLeaf] C3 prompt 2: target=spot5 prompt="Where's the gift?" icon=gift pinchable=[0,1,3,4] revealed=[2]
+13:09:40.768  [LociLeaf] C3 PASS (state JSON in leaf-results.json)
+13:09:40.768  LEAF [ 32.936s]PASSED: loci-c3-quiz-reveal
+13:09:40.768  LEAF [ 32.936s][loci-c3-quiz-reveal] PASSED
+13:09:49.895  [Loci] preview camera pitch 0.0° → room tilted 16.0° so the route reads as from a -16° look-down
+13:09:49.895  [Loci] camera start {x: 0, y: 0, z: 0}, room floor at {x: -5, y: -65.5979, z: -351.706}, preview camera 320 cm behind the user's spot (gaze dwell off)
+13:09:49.897  [Loci] preview card 90 cm in front of the camera, -6.3° elevation (camera pitch 0.0°, vfov 36.6°, route 14.7°…4.4°, room below 1.4° spare)
+13:09:49.898  [Loci] palace build: 6 surfaces (TableTop, ChairSeat, ShelfTop, ShelfBoard_1, ShelfBoard_2, PalaceFloor)
+13:09:49.898  [Loci] phase → start
+13:09:50.360  LEAF [  0.000s]Running with runner config: {"__leaf__log_level":"INFO","__leaf__timeout_secs":"600","__leaf__diagnostic_policy":"fallback","__leaf__diagnostic_report_duration_ms":"-1"}
+13:09:51.868  [LociLeaf] setup: gazeDwellSec=0 for this run; runSelfTest=false; state={"phase":"start","currentSpotIndex":-1,"pulsingSpots":[],"placedModelIds":["","","","",""],"totemTexts":["","","","",""],"placementOrder":[],"scoreText":"","missedSpots":[],"glowingSpots":[],"walkQueue":[],"visitedSpots":[],"markerVisibleSpots":[],"revealedSpot":-1,"revealedObjectSpots":[],"quizOrder":[],"quizStep":0,"quizTargetSpot":-1,"askedSpots":[],"answers":[null,null,null,null,null],"ringKinds":["","","","",""],"cardView":"start","promptText":"","nameTagText":""}
+13:09:52.177  [LociLeaf] pinch → ErrandsButton
+13:09:53.334  [Loci] phase → building
+13:09:53.733  [Loci] placed spot 1 (Chair): umbrella "umbrella"
+13:09:54.272  [Loci] placed spot 2 (Table left): key "keys"
+13:09:54.819  [Loci] placed spot 3 (Table centre): milk "milk"
+13:09:55.380  [Loci] placed spot 4 (Table right): phone "call mom"
+13:09:55.915  [Loci] placed spot 5 (Shelf): gift "gift"
+13:09:57.071  [Loci] phase → study
+13:09:57.075  [Loci] study → spot 1 (Chair) pulses
+13:09:57.377  [LociLeaf] pinch → Spot1_Item
+13:10:00.536  [Loci] study → spot 2 (Table left) pulses
+13:10:00.812  [LociLeaf] pinch → Spot2_Item
+13:10:03.950  [Loci] study → spot 3 (Table centre) pulses
+13:10:04.198  [LociLeaf] pinch → Spot3_Item
+13:10:07.353  [Loci] study → spot 4 (Table right) pulses
+13:10:07.602  [LociLeaf] pinch → Spot4_Item
+13:10:10.734  [Loci] study → spot 5 (Shelf) pulses
+13:10:10.989  [LociLeaf] pinch → Spot5_Item
+13:10:14.126  [Loci] phase → groupGlow
+13:10:16.130  [Loci] phase → switch
+13:10:16.577  [LociLeaf] pinch → QuizMeButton
+13:10:17.715  [Loci] phase → quizIntro
+13:10:17.715  [Loci] find-it order (seed 7, round 1): [3,5,4,2,1]
+13:10:19.700  [Loci] phase → quiz
+13:10:19.702  [Loci] find-it prompt 1/5: Milk (answer: spot 3)
+13:10:20.460  [LociLeaf] pinch → Spot1_MarkerButton
+13:10:21.595  [Loci] find-it: asked spot 3 (milk), pinched spot 1 → wrong
+13:10:22.134  [LociLeaf] find-it 1/5: "Where's the milk?" icon=milk answer=spot3 pinched=spot1 → wrong
+13:10:24.293  [Loci] find-it prompt 2/5: Gift (answer: spot 5)
+13:10:24.676  [LociLeaf] pinch → Spot5_MarkerButton
+13:10:25.818  [Loci] find-it: asked spot 5 (gift), pinched spot 5 → correct
+13:10:26.362  [LociLeaf] find-it 2/5: "Where's the gift?" icon=gift answer=spot5 pinched=spot5 → correct
+13:10:27.407  [Loci] find-it prompt 3/5: Call mom (answer: spot 4)
+13:10:27.793  [LociLeaf] pinch → Spot4_MarkerButton
+13:10:28.925  [Loci] find-it: asked spot 4 (call mom), pinched spot 4 → correct
+13:10:29.468  [LociLeaf] find-it 3/5: "Where's the phone?" icon=phone answer=spot4 pinched=spot4 → correct
+13:10:30.512  [Loci] find-it prompt 4/5: Keys (answer: spot 2)
+13:10:30.926  [LociLeaf] pinch → Spot2_MarkerButton
+13:10:32.070  [Loci] find-it: asked spot 2 (keys), pinched spot 2 → correct
+13:10:32.610  [LociLeaf] find-it 4/5: "Where are the keys?" icon=key answer=spot2 pinched=spot2 → correct
+13:10:33.650  [Loci] find-it prompt 5/5: Umbrella (answer: spot 1)
+13:10:34.083  [LociLeaf] pinch → Spot1_MarkerButton
+13:10:35.212  [Loci] find-it: asked spot 1 (umbrella), pinched spot 1 → correct
+13:10:35.739  [LociLeaf] find-it 5/5: "Where's the umbrella?" icon=umbrella answer=spot1 pinched=spot1 → correct
+13:10:37.107  [Loci] phase → results
+13:10:37.113  [Loci] results 4 / 5, missed [3]
+13:10:37.526  [LociLeaf] C4 results: scoreText="4 / 5" label="4 / 5" answers=[true,true,false,true,true] missed=[2] glowing=[2] revealed=[0,1,2,3,4] card=results
+13:10:37.528  [LociLeaf] pinch → ReviewMissedButton
+13:10:38.659  [Loci] phase → study
+13:10:38.665  [Loci] study → spot 3 (Table centre) pulses
+13:10:39.506  [LociLeaf] C4 review start: walkQueue=[2] review=true current=2 pulsing=[2] glowing=[]
+13:10:39.508  [LociLeaf] pinch → Spot3_Item
+13:10:42.620  [Loci] phase → groupGlow
+13:10:42.642  [LociLeaf] C4 review end: visited=[2] glowing=[2]
+13:10:44.627  [Loci] phase → switch
+13:10:44.629  [LociLeaf] C4 after review: visited=[2] pulsedDuringReview=[2] maxPulsing=1 card=switch
+13:10:44.629  [LociLeaf] C4 PASS (state JSON in leaf-results.json)
+13:10:44.629  LEAF [ 54.269s]PASSED: loci-c4-results-review
+13:10:44.629  LEAF [ 54.269s][loci-c4-results-review] PASSED
+13:10:45.401  [Loci] preview camera pitch 0.0° → room tilted 16.0° so the route reads as from a -16° look-down
+13:10:45.401  [Loci] camera start {x: 0, y: 0, z: 0}, room floor at {x: -5, y: -65.5979, z: -351.706}, preview camera 320 cm behind the user's spot (gaze dwell off)
+13:10:45.403  [Loci] preview card 90 cm in front of the camera, -6.3° elevation (camera pitch 0.0°, vfov 36.6°, route 14.7°…4.4°, room below 1.4° spare)
+13:10:45.404  [Loci] palace build: 6 surfaces (TableTop, ChairSeat, ShelfTop, ShelfBoard_1, ShelfBoard_2, PalaceFloor)
+13:10:45.404  [Loci] phase → start
+13:10:45.871  LEAF [  0.001s]Running with runner config: {"__leaf__log_level":"INFO","__leaf__timeout_secs":"600","__leaf__diagnostic_policy":"fallback","__leaf__diagnostic_report_duration_ms":"-1"}
+13:10:47.373  [LociLeaf] setup: gazeDwellSec=0 for this run; runSelfTest=false; state={"phase":"start","currentSpotIndex":-1,"pulsingSpots":[],"placedModelIds":["","","","",""],"totemTexts":["","","","",""],"placementOrder":[],"scoreText":"","missedSpots":[],"glowingSpots":[],"walkQueue":[],"visitedSpots":[],"markerVisibleSpots":[],"revealedSpot":-1,"revealedObjectSpots":[],"quizOrder":[],"quizStep":0,"quizTargetSpot":-1,"askedSpots":[],"answers":[null,null,null,null,null],"ringKinds":["","","","",""],"cardView":"start","promptText":"","nameTagText":""}
+13:10:47.678  [LociLeaf] pinch → MixedListButton
+13:10:48.813  [Loci] phase → building
+13:10:49.193  [Loci] placed spot 1 (Chair): umbrella "umbrella"
+13:10:49.749  [Loci] placed spot 2 (Table left): key "keys"
+13:10:50.311  [Loci] placed spot 3 (Table centre): totem "volcano"
+13:10:50.861  [Loci] placed spot 4 (Table right): phone "mobile"
+13:10:51.399  [Loci] placed spot 5 (Shelf): gift "gift"
+13:10:52.552  [Loci] phase → study
+13:10:52.557  [Loci] study → spot 1 (Chair) pulses
+13:10:52.973  [LociLeaf] C5 listWords=["umbrella","keys","volcano","mobile","gift"] placedModelIds=["umbrella","key","totem","phone","gift"] totemTexts=["","","volcano","",""] source=mixed
+13:10:52.974  [LociLeaf] C5 Text3D under Spot3_TableCentre: total=1 enabled=1 -> ["TotemWord:\"volcano\":on"]
+13:10:52.977  [LociLeaf] C5 PASS (state JSON in leaf-results.json)
+13:10:52.978  LEAF [  7.107s]PASSED: loci-c5-mixed-list
+13:10:52.978  LEAF [  7.108s][loci-c5-mixed-list] PASSED
+13:11:02.213  [Loci] preview camera pitch 0.0° → room tilted 16.0° so the route reads as from a -16° look-down
+13:11:02.213  [Loci] camera start {x: 0, y: 0, z: 0}, room floor at {x: -5, y: -65.5979, z: -351.706}, preview camera 320 cm behind the user's spot (gaze dwell off)
+13:11:02.215  [Loci] preview card 90 cm in front of the camera, -6.3° elevation (camera pitch 0.0°, vfov 36.6°, route 14.7°…4.4°, room below 1.4° spare)
+13:11:02.216  [Loci] palace build: 6 surfaces (TableTop, ChairSeat, ShelfTop, ShelfBoard_1, ShelfBoard_2, PalaceFloor)
+13:11:02.216  [Loci] phase → start
+13:11:02.635  LEAF [  0.000s]Running with runner config: {"__leaf__log_level":"INFO","__leaf__timeout_secs":"600","__leaf__diagnostic_policy":"fallback","__leaf__diagnostic_report_duration_ms":"-1"}
+13:11:04.141  [LociLeaf] setup: gazeDwellSec=0 for this run; runSelfTest=false; state={"phase":"start","currentSpotIndex":-1,"pulsingSpots":[],"placedModelIds":["","","","",""],"totemTexts":["","","","",""],"placementOrder":[],"scoreText":"","missedSpots":[],"glowingSpots":[],"walkQueue":[],"visitedSpots":[],"markerVisibleSpots":[],"revealedSpot":-1,"revealedObjectSpots":[],"quizOrder":[],"quizStep":0,"quizTargetSpot":-1,"askedSpots":[],"answers":[null,null,null,null,null],"ringKinds":["","","","",""],"cardView":"start","promptText":"","nameTagText":""}
+13:11:04.455  [LociLeaf] pinch → ErrandsButton
+13:11:05.591  [Loci] phase → building
+13:11:05.988  [Loci] placed spot 1 (Chair): umbrella "umbrella"
+13:11:06.526  [Loci] placed spot 2 (Table left): key "keys"
+13:11:07.088  [Loci] placed spot 3 (Table centre): milk "milk"
+13:11:07.621  [Loci] placed spot 4 (Table right): phone "call mom"
+13:11:08.182  [Loci] placed spot 5 (Shelf): gift "gift"
+13:11:09.326  [Loci] phase → study
+13:11:09.327  [Loci] study → spot 1 (Chair) pulses
+13:11:09.615  [LociLeaf] pinch → Spot1_Item
+13:11:12.730  [Loci] study → spot 2 (Table left) pulses
+13:11:13.022  [LociLeaf] pinch → Spot2_Item
+13:11:16.154  [Loci] study → spot 3 (Table centre) pulses
+13:11:16.427  [LociLeaf] pinch → Spot3_Item
+13:11:19.573  [Loci] study → spot 4 (Table right) pulses
+13:11:19.819  [LociLeaf] pinch → Spot4_Item
+13:11:22.954  [Loci] study → spot 5 (Shelf) pulses
+13:11:23.248  [LociLeaf] pinch → Spot5_Item
+13:11:26.366  [Loci] phase → groupGlow
+13:11:28.370  [Loci] phase → switch
+13:11:28.813  [LociLeaf] pinch → QuizMeButton
+13:11:29.962  [Loci] phase → quizIntro
+13:11:29.963  [Loci] find-it order (seed 7, round 1): [3,5,4,2,1]
+13:11:31.948  [Loci] phase → quiz
+13:11:31.950  [Loci] find-it prompt 1/5: Milk (answer: spot 3)
+13:11:32.735  [LociLeaf] pinch → Spot1_MarkerButton
+13:11:33.880  [Loci] find-it: asked spot 3 (milk), pinched spot 1 → wrong
+13:11:34.435  [LociLeaf] C6 asked spot3 (milk), pinched spot1: guess={"target":2,"pinched":0,"correct":false}
+13:11:36.564  [Loci] find-it prompt 2/5: Gift (answer: spot 5)
+13:11:36.836  [LociLeaf] C6 timeline (s after pinch): {"wrongShakes":1.1478425419190899,"targetRevealed":1.7333705419441685,"orangeRing":1.7333705419441685,"nameShown":1.7333705419441685,"targetHiddenAgain":3.6779261250048876,"nextPrompt":3.832314957980998} wrongObjectEverShown=false score=0 answers=[null,null,false,null,null] markers=[0,1,2,3,4] revealed=[]
+13:11:36.836  [LociLeaf] C6 PASS (state JSON in leaf-results.json)
+13:11:36.836  LEAF [ 34.201s]PASSED: loci-c6-wrong-reveals-correct
+13:11:36.837  LEAF [ 34.201s][loci-c6-wrong-reveals-correct] PASSED
+13:11:37.553  [Loci] preview camera pitch 0.0° → room tilted 16.0° so the route reads as from a -16° look-down
+13:11:37.553  [Loci] camera start {x: 0, y: 0, z: 0}, room floor at {x: -5, y: -65.5979, z: -351.706}, preview camera 320 cm behind the user's spot (gaze dwell off)
+13:11:37.555  [Loci] preview card 90 cm in front of the camera, -6.3° elevation (camera pitch 0.0°, vfov 36.6°, route 14.7°…4.4°, room below 1.4° spare)
+13:11:37.556  [Loci] palace build: 6 surfaces (TableTop, ChairSeat, ShelfTop, ShelfBoard_1, ShelfBoard_2, PalaceFloor)
+13:11:37.556  [Loci] phase → start
+13:11:38.038  LEAF [  0.001s]Running with runner config: {"__leaf__log_level":"INFO","__leaf__timeout_secs":"600","__leaf__diagnostic_policy":"fallback","__leaf__diagnostic_report_duration_ms":"-1"}
+13:11:39.544  [LociLeaf] setup: gazeDwellSec=0 for this run; runSelfTest=false; state={"phase":"start","currentSpotIndex":-1,"pulsingSpots":[],"placedModelIds":["","","","",""],"totemTexts":["","","","",""],"placementOrder":[],"scoreText":"","missedSpots":[],"glowingSpots":[],"walkQueue":[],"visitedSpots":[],"markerVisibleSpots":[],"revealedSpot":-1,"revealedObjectSpots":[],"quizOrder":[],"quizStep":0,"quizTargetSpot":-1,"askedSpots":[],"answers":[null,null,null,null,null],"ringKinds":["","","","",""],"cardView":"start","promptText":"","nameTagText":""}
+13:11:39.848  [LociLeaf] pinch → ErrandsButton
+13:11:40.984  [Loci] phase → building
+13:11:41.362  [Loci] placed spot 1 (Chair): umbrella "umbrella"
+13:11:41.921  [Loci] placed spot 2 (Table left): key "keys"
+13:11:42.473  [Loci] placed spot 3 (Table centre): milk "milk"
+13:11:43.033  [Loci] placed spot 4 (Table right): phone "call mom"
+13:11:43.561  [Loci] placed spot 5 (Shelf): gift "gift"
+13:11:44.728  [Loci] phase → study
+13:11:44.732  [Loci] study → spot 1 (Chair) pulses
+13:11:45.029  [LociLeaf] pinch → Spot1_Item
+13:11:48.146  [Loci] study → spot 2 (Table left) pulses
+13:11:48.419  [LociLeaf] pinch → Spot2_Item
+13:11:51.543  [Loci] study → spot 3 (Table centre) pulses
+13:11:51.815  [LociLeaf] pinch → Spot3_Item
+13:11:54.951  [Loci] study → spot 4 (Table right) pulses
+13:11:55.204  [LociLeaf] pinch → Spot4_Item
+13:11:58.338  [Loci] study → spot 5 (Shelf) pulses
+13:11:58.610  [LociLeaf] pinch → Spot5_Item
+13:12:01.744  [Loci] phase → groupGlow
+13:12:03.748  [Loci] phase → switch
+13:12:04.205  [LociLeaf] pinch → QuizMeButton
+13:12:05.393  [Loci] phase → quizIntro
+13:12:05.393  [Loci] find-it order (seed 7, round 1): [3,5,4,2,1]
+13:12:07.382  [Loci] phase → quiz
+13:12:07.385  [Loci] find-it prompt 1/5: Milk (answer: spot 3)
+13:12:08.166  [LociLeaf] pinch → Spot3_MarkerButton
+13:12:09.293  [Loci] find-it: asked spot 3 (milk), pinched spot 3 → correct
+13:12:09.822  [LociLeaf] find-it 1/5: "Where's the milk?" icon=milk answer=spot3 pinched=spot3 → correct
+13:12:10.891  [Loci] find-it prompt 2/5: Gift (answer: spot 5)
+13:12:11.249  [LociLeaf] pinch → Spot5_MarkerButton
+13:12:12.394  [Loci] find-it: asked spot 5 (gift), pinched spot 5 → correct
+13:12:12.930  [LociLeaf] find-it 2/5: "Where's the gift?" icon=gift answer=spot5 pinched=spot5 → correct
+13:12:13.971  [Loci] find-it prompt 3/5: Call mom (answer: spot 4)
+13:12:14.355  [LociLeaf] pinch → Spot4_MarkerButton
+13:12:15.498  [Loci] find-it: asked spot 4 (call mom), pinched spot 4 → correct
+13:12:16.030  [LociLeaf] find-it 3/5: "Where's the phone?" icon=phone answer=spot4 pinched=spot4 → correct
+13:12:17.100  [Loci] find-it prompt 4/5: Keys (answer: spot 2)
+13:12:17.457  [LociLeaf] pinch → Spot2_MarkerButton
+13:12:18.576  [Loci] find-it: asked spot 2 (keys), pinched spot 2 → correct
+13:12:19.110  [LociLeaf] find-it 4/5: "Where are the keys?" icon=key answer=spot2 pinched=spot2 → correct
+13:12:20.173  [Loci] find-it prompt 5/5: Umbrella (answer: spot 1)
+13:12:20.571  [LociLeaf] pinch → Spot1_MarkerButton
+13:12:21.716  [Loci] find-it: asked spot 1 (umbrella), pinched spot 1 → correct
+13:12:22.265  [LociLeaf] find-it 5/5: "Where's the umbrella?" icon=umbrella answer=spot1 pinched=spot1 → correct
+13:12:23.603  [Loci] phase → results
+13:12:23.607  [Loci] results 5 / 5, missed []
+13:12:24.045  [LociLeaf] C7 asked=[3,5,4,2,1] expected=[3,5,4,2,1] questions=["Where's the milk?","Where's the gift?","Where's the phone?","Where are the keys?","Where's the umbrella?"] icons=["milk","gift","phone","key","umbrella"] progress=["1 of 5","2 of 5","3 of 5","4 of 5","5 of 5"] askedSpots=[2,4,3,1,0] score="5 / 5"
+13:12:24.046  [LociLeaf] C7 PASS (state JSON in leaf-results.json)
+13:12:24.046  LEAF [ 46.009s]PASSED: loci-c7-each-item-once
+13:12:24.046  LEAF [ 46.009s][loci-c7-each-item-once] PASSED
+13:12:24.821  [Loci] preview camera pitch 0.0° → room tilted 16.0° so the route reads as from a -16° look-down
+13:12:24.821  [Loci] camera start {x: 0, y: 0, z: 0}, room floor at {x: -5, y: -65.5979, z: -351.706}, preview camera 320 cm behind the user's spot (gaze dwell off)
+13:12:24.824  [Loci] preview card 90 cm in front of the camera, -6.3° elevation (camera pitch 0.0°, vfov 36.6°, route 14.7°…4.4°, room below 1.4° spare)
+13:12:24.825  [Loci] palace build: 6 surfaces (TableTop, ChairSeat, ShelfTop, ShelfBoard_1, ShelfBoard_2, PalaceFloor)
+13:12:24.825  [Loci] phase → start
+13:12:25.341  LEAF [  0.000s]Running with runner config: {"__leaf__log_level":"INFO","__leaf__timeout_secs":"600","__leaf__diagnostic_policy":"fallback","__leaf__diagnostic_report_duration_ms":"-1"}
+13:12:26.860  [LociLeaf] setup: gazeDwellSec=0 for this run; runSelfTest=false; state={"phase":"start","currentSpotIndex":-1,"pulsingSpots":[],"placedModelIds":["","","","",""],"totemTexts":["","","","",""],"placementOrder":[],"scoreText":"","missedSpots":[],"glowingSpots":[],"walkQueue":[],"visitedSpots":[],"markerVisibleSpots":[],"revealedSpot":-1,"revealedObjectSpots":[],"quizOrder":[],"quizStep":0,"quizTargetSpot":-1,"askedSpots":[],"answers":[null,null,null,null,null],"ringKinds":["","","","",""],"cardView":"start","promptText":"","nameTagText":""}
+13:12:27.166  [LociLeaf] pinch → ErrandsButton
+13:12:28.311  [Loci] phase → building
+13:12:28.698  [Loci] placed spot 1 (Chair): umbrella "umbrella"
+13:12:29.257  [Loci] placed spot 2 (Table left): key "keys"
+13:12:29.803  [Loci] placed spot 3 (Table centre): milk "milk"
+13:12:30.353  [Loci] placed spot 4 (Table right): phone "call mom"
+13:12:30.894  [Loci] placed spot 5 (Shelf): gift "gift"
+13:12:32.063  [Loci] phase → study
+13:12:32.068  [Loci] study → spot 1 (Chair) pulses
+13:12:32.380  [LociLeaf] pinch → Spot1_Item
+13:12:35.513  [Loci] study → spot 2 (Table left) pulses
+13:12:35.827  [LociLeaf] pinch → Spot2_Item
+13:12:39.065  [Loci] study → spot 3 (Table centre) pulses
+13:12:39.345  [LociLeaf] pinch → Spot3_Item
+13:12:42.489  [Loci] study → spot 4 (Table right) pulses
+13:12:42.749  [LociLeaf] pinch → Spot4_Item
+13:12:45.871  [Loci] study → spot 5 (Shelf) pulses
+13:12:46.146  [LociLeaf] pinch → Spot5_Item
+13:12:49.283  [Loci] phase → groupGlow
+13:12:51.303  [Loci] phase → switch
+13:12:51.709  [LociLeaf] pinch → QuizMeButton
+13:12:52.853  [Loci] phase → quizIntro
+13:12:52.853  [Loci] find-it order (seed 7, round 1): [3,5,4,2,1]
+13:12:54.840  [Loci] phase → quiz
+13:12:54.841  [Loci] find-it prompt 1/5: Milk (answer: spot 3)
+13:12:55.654  [LociLeaf] pinch → Spot1_MarkerButton
+13:12:56.801  [Loci] find-it: asked spot 3 (milk), pinched spot 1 → wrong
+13:12:57.348  [LociLeaf] find-it 1/5: "Where's the milk?" icon=milk answer=spot3 pinched=spot1 → wrong
+13:12:59.498  [Loci] find-it prompt 2/5: Gift (answer: spot 5)
+13:12:59.880  [LociLeaf] pinch → Spot5_MarkerButton
+13:13:00.999  [Loci] find-it: asked spot 5 (gift), pinched spot 5 → correct
+13:13:01.529  [LociLeaf] find-it 2/5: "Where's the gift?" icon=gift answer=spot5 pinched=spot5 → correct
+13:13:02.579  [Loci] find-it prompt 3/5: Call mom (answer: spot 4)
+13:13:02.969  [LociLeaf] pinch → Spot4_MarkerButton
+13:13:04.088  [Loci] find-it: asked spot 4 (call mom), pinched spot 4 → correct
+13:13:04.630  [LociLeaf] find-it 3/5: "Where's the phone?" icon=phone answer=spot4 pinched=spot4 → correct
+13:13:05.669  [Loci] find-it prompt 4/5: Keys (answer: spot 2)
+13:13:06.088  [LociLeaf] pinch → Spot2_MarkerButton
+13:13:07.274  [Loci] find-it: asked spot 2 (keys), pinched spot 2 → correct
+13:13:07.805  [LociLeaf] find-it 4/5: "Where are the keys?" icon=key answer=spot2 pinched=spot2 → correct
+13:13:08.835  [Loci] find-it prompt 5/5: Umbrella (answer: spot 1)
+13:13:09.240  [LociLeaf] pinch → Spot1_MarkerButton
+13:13:10.389  [Loci] find-it: asked spot 1 (umbrella), pinched spot 1 → correct
+13:13:10.929  [LociLeaf] find-it 5/5: "Where's the umbrella?" icon=umbrella answer=spot1 pinched=spot1 → correct
+13:13:12.281  [Loci] phase → results
+13:13:12.287  [Loci] results 4 / 5, missed [3]
+13:13:12.726  [LociLeaf] C9 before New list: score="4 / 5" models=["umbrella","key","milk","phone","gift"] glowing=[2] visuals=[1,1,1,1,1]
+13:13:12.729  [LociLeaf] pinch → NewListButton
+13:13:13.873  [Loci] phase → start
+13:13:15.216  [LociLeaf] C9 after New list: models=["","","","",""] markers=[] revealed=[] glowing=[] rings=["","","","",""] pinchable=[] visuals=[0,0,0,0,0] prompt="" name="" score="" quizRound=0
+13:13:15.219  [LociLeaf] pinch → ErrandsButton
+13:13:16.367  [Loci] phase → building
+13:13:16.747  [Loci] placed spot 1 (Chair): umbrella "umbrella"
+13:13:17.314  [Loci] placed spot 2 (Table left): key "keys"
+13:13:17.856  [Loci] placed spot 3 (Table centre): milk "milk"
+13:13:18.416  [Loci] placed spot 4 (Table right): phone "call mom"
+13:13:18.953  [Loci] placed spot 5 (Shelf): gift "gift"
+13:13:20.103  [Loci] phase → study
+13:13:20.105  [Loci] study → spot 1 (Chair) pulses
+13:13:20.105  [LociLeaf] C9 after Errands again: models=["umbrella","key","milk","phone","gift"] order=[0,1,2,3,4] phase=study
+13:13:20.106  [LociLeaf] C9 PASS (state JSON in leaf-results.json)
+13:13:20.106  LEAF [ 54.765s]PASSED: loci-c9-new-list-clears
+13:13:20.106  LEAF [ 54.765s][loci-c9-new-list-clears] PASSED
+13:13:20.871  [Loci] preview camera pitch 0.0° → room tilted 16.0° so the route reads as from a -16° look-down
+13:13:20.871  [Loci] camera start {x: 0, y: 0, z: 0}, room floor at {x: -5, y: -65.5979, z: -351.706}, preview camera 320 cm behind the user's spot (gaze dwell off)
+13:13:20.874  [Loci] preview card 90 cm in front of the camera, -6.3° elevation (camera pitch 0.0°, vfov 36.6°, route 14.7°…4.4°, room below 1.4° spare)
+13:13:20.874  [Loci] palace build: 6 surfaces (TableTop, ChairSeat, ShelfTop, ShelfBoard_1, ShelfBoard_2, PalaceFloor)
+13:13:20.874  [Loci] phase → start
+13:13:21.370  LEAF [  0.000s]Running with runner config: {"__leaf__log_level":"INFO","__leaf__timeout_secs":"600","__leaf__diagnostic_policy":"fallback","__leaf__diagnostic_report_duration_ms":"-1"}
+13:13:22.879  [LociLeaf] setup: gazeDwellSec=0 for this run; runSelfTest=false; state={"phase":"start","currentSpotIndex":-1,"pulsingSpots":[],"placedModelIds":["","","","",""],"totemTexts":["","","","",""],"placementOrder":[],"scoreText":"","missedSpots":[],"glowingSpots":[],"walkQueue":[],"visitedSpots":[],"markerVisibleSpots":[],"revealedSpot":-1,"revealedObjectSpots":[],"quizOrder":[],"quizStep":0,"quizTargetSpot":-1,"askedSpots":[],"answers":[null,null,null,null,null],"ringKinds":["","","","",""],"cardView":"start","promptText":"","nameTagText":""}
+13:13:23.182  [LociLeaf] C10 start card: buttons=["StudyPackButton","ErrandsButton","MixedListButton"] y=[-6.2,-10.9,-15.7] voiceShown=false sayMyList=false
+13:13:23.183  [LociLeaf] C10 synonyms: ["speech bubble→speech","question→speech","questions→speech","ask a question→speech","magnifying glass→magnifier","magnifier→magnifier","research→magnifier","light bulb→bulb","lightbulb→bulb","idea→bulb","hypothesis→bulb","flask→flask","beaker→flask","experiments→flask","checkered flag→flag","chequered flag→flag","finish line→flag","conclusion→flag","glass→null","volcano→null"]
+13:13:23.184  [LociLeaf] pinch → StudyPackButton
+13:13:24.322  [Loci] phase → building
+13:13:24.700  [Loci] placed spot 1 (Chair): speech "ask a question"
+13:13:25.274  [Loci] placed spot 2 (Table left): magnifier "research"
+13:13:25.821  [Loci] placed spot 3 (Table centre): bulb "hypothesis"
+13:13:26.375  [Loci] placed spot 4 (Table right): flask "experiment"
+13:13:26.907  [Loci] placed spot 5 (Shelf): flag "conclusion"
+13:13:28.075  [Loci] phase → study
+13:13:28.078  [Loci] study → spot 1 (Chair) pulses
+13:13:28.385  [LociLeaf] C10 placed: source=study words=["ask a question","research","hypothesis","experiment","conclusion"] models=["speech","magnifier","bulb","flask","flag"] order=[0,1,2,3,4] totems=["","","","",""]
+13:13:28.639  [LociLeaf] pinch → Spot1_Item
+13:13:31.791  [Loci] study → spot 2 (Table left) pulses
+13:13:32.026  [LociLeaf] C10 spot 1 Model_speech "": rootMove=3.00cm rootTurn=0.110rad groups={"mark":0.27730461955070496} "?" pops out (moved 0.277); at rest after: {"rootCm":0,"rootRad":0,"group":0,"hiddenOk":true}
+13:13:32.320  [LociLeaf] pinch → Spot2_Item
+13:13:35.438  [Loci] study → spot 3 (Table centre) pulses
+13:13:35.706  [LociLeaf] C10 spot 2 Model_magnifier "": rootMove=2.82cm rootTurn=0.369rad groups={"glass":0.12824437022209167} lens zooms (scale +51%); at rest after: {"rootCm":0,"rootRad":0,"group":0,"hiddenOk":true}
+13:13:35.975  [LociLeaf] pinch → Spot3_Item
+13:13:39.086  [Loci] study → spot 4 (Table right) pulses
+13:13:39.353  [LociLeaf] C10 spot 3 Model_bulb "": rootMove=6.00cm rootTurn=0.089rad groups={"rays":0} rays light up (shown ["rays"]); at rest after: {"rootCm":0,"rootRad":0,"group":0,"hiddenOk":true}
+13:13:39.624  [LociLeaf] pinch → Spot4_Item
+13:13:42.756  [Loci] study → spot 5 (Shelf) pulses
+13:13:43.002  [LociLeaf] C10 spot 4 Model_flask "": rootMove=3.75cm rootTurn=0.104rad groups={"bubbles":0.5004605054855347} bubbles rise (shown ["bubbles"]); at rest after: {"rootCm":0,"rootRad":0,"group":0,"hiddenOk":true}
+13:13:43.277  [LociLeaf] pinch → Spot5_Item
+13:13:46.393  [Loci] phase → groupGlow
+13:13:46.666  [LociLeaf] C10 spot 5 Model_flag "": rootMove=1.84cm rootTurn=0.230rad groups={"c0":0.04891752079129219,"c1":0.0982019230723381,"c2":0.14928537607192993,"c3":0.19957329332828522} all 4 cloth columns wave ([0.049,0.098,0.149,0.2]); at rest after: {"rootCm":0,"rootRad":0,"group":0,"hiddenOk":true}
+13:13:48.403  [Loci] phase → switch
+13:13:48.818  [LociLeaf] pinch → QuizMeButton
+13:13:49.952  [Loci] phase → quizIntro
+13:13:49.952  [Loci] find-it order (seed 7, round 1): [3,5,4,2,1]
+13:13:51.934  [Loci] phase → quiz
+13:13:51.936  [Loci] find-it prompt 1/5: Hypothesis (answer: spot 3)
+13:13:52.746  [LociLeaf] pinch → Spot3_MarkerButton
+13:13:53.895  [Loci] find-it: asked spot 3 (hypothesis), pinched spot 3 → correct
+13:13:54.431  [LociLeaf] find-it 1/5: "Where's the hypothesis?" icon=bulb answer=spot3 pinched=spot3 → correct
+13:13:55.481  [Loci] find-it prompt 2/5: Conclusion (answer: spot 5)
+13:13:55.861  [LociLeaf] pinch → Spot5_MarkerButton
+13:13:56.996  [Loci] find-it: asked spot 5 (conclusion), pinched spot 5 → correct
+13:13:57.541  [LociLeaf] find-it 2/5: "Where's the conclusion?" icon=flag answer=spot5 pinched=spot5 → correct
+13:13:58.578  [Loci] find-it prompt 3/5: Experiment (answer: spot 4)
+13:13:58.935  [LociLeaf] pinch → Spot4_MarkerButton
+13:14:00.068  [Loci] find-it: asked spot 4 (experiment), pinched spot 4 → correct
+13:14:00.616  [LociLeaf] find-it 3/5: "Where's the experiment?" icon=flask answer=spot4 pinched=spot4 → correct
+13:14:01.649  [Loci] find-it prompt 4/5: Research (answer: spot 2)
+13:14:02.057  [LociLeaf] pinch → Spot2_MarkerButton
+13:14:03.192  [Loci] find-it: asked spot 2 (research), pinched spot 2 → correct
+13:14:03.739  [LociLeaf] find-it 4/5: "Where's the research?" icon=magnifier answer=spot2 pinched=spot2 → correct
+13:14:04.792  [Loci] find-it prompt 5/5: Ask a question (answer: spot 1)
+13:14:05.177  [LociLeaf] pinch → Spot1_MarkerButton
+13:14:06.321  [Loci] find-it: asked spot 1 (ask a question), pinched spot 1 → correct
+13:14:06.869  [LociLeaf] find-it 5/5: "Where's the question?" icon=speech answer=spot1 pinched=spot1 → correct
+13:14:08.214  [Loci] phase → results
+13:14:08.217  [Loci] results 5 / 5, missed []
+13:14:08.624  [LociLeaf] C10 find-it: ["spot3 \"Where's the hypothesis?\" icon=bulb","spot5 \"Where's the conclusion?\" icon=flag","spot4 \"Where's the experiment?\" icon=flask","spot2 \"Where's the research?\" icon=magnifier","spot1 \"Where's the question?\" icon=speech"] score="5 / 5"
+13:14:08.625  [LociLeaf] C10 PASS (state JSON in leaf-results.json)
+13:14:08.626  LEAF [ 47.255s]PASSED: loci-c10-study-pack
+13:14:08.626  LEAF [ 47.256s][loci-c10-study-pack] PASSED
+13:14:17.490  [Loci] preview camera pitch 0.0° → room tilted 16.0° so the route reads as from a -16° look-down
+13:14:17.491  [Loci] camera start {x: 0, y: 0, z: 0}, room floor at {x: -5, y: -65.5979, z: -351.706}, preview camera 320 cm behind the user's spot (gaze dwell off)
+13:14:17.493  [Loci] preview card 90 cm in front of the camera, -6.3° elevation (camera pitch 0.0°, vfov 36.6°, route 14.7°…4.4°, room below 1.4° spare)
+13:14:17.493  [Loci] palace build: 6 surfaces (TableTop, ChairSeat, ShelfTop, ShelfBoard_1, ShelfBoard_2, PalaceFloor)
+13:14:17.494  [Loci] phase → start
+13:14:17.987  LEAF [  0.001s]Running with runner config: {"__leaf__log_level":"INFO","__leaf__timeout_secs":"600","__leaf__diagnostic_policy":"fallback","__leaf__diagnostic_report_duration_ms":"-1"}
+13:14:19.491  [LociLeaf] setup: gazeDwellSec=0 for this run; runSelfTest=false; state={"phase":"start","currentSpotIndex":-1,"pulsingSpots":[],"placedModelIds":["","","","",""],"totemTexts":["","","","",""],"placementOrder":[],"scoreText":"","missedSpots":[],"glowingSpots":[],"walkQueue":[],"visitedSpots":[],"markerVisibleSpots":[],"revealedSpot":-1,"revealedObjectSpots":[],"quizOrder":[],"quizStep":0,"quizTargetSpot":-1,"askedSpots":[],"answers":[null,null,null,null,null],"ringKinds":["","","","",""],"cardView":"start","promptText":"","nameTagText":""}
+13:14:19.799  [LociLeaf] pinch → BuildPalaceButton
+13:14:20.925  [Loci] phase → palace
+13:14:20.925  [Loci] palace build: listening (stand-in colliders)
+13:14:21.876  [LociLeaf] pinch (far) → PalaceAimCancel at (-75.0, 45.0, -72.0)
+13:14:21.967  [Loci] palace build: place 1 on ChairSeat at room {x: -75, y: 45, z: -72}
+13:14:22.262  [LociLeaf] pinch → BuildCancelButton
+13:14:23.392  [Loci] phase → start
+13:14:24.231  [LociLeaf] C12 cancelled: route=quick count=0 visible=false button="Build my palace" spots=["(-80.0, 45.0, -80.0)","(-35.0, 75.0, -90.0)","(0.0, 75.0, -110.0)","(35.0, 75.0, -90.0)","(90.0, 120.0, -100.0)"]
+13:14:24.234  [LociLeaf] pinch → BuildPalaceButton
+13:14:25.371  [Loci] phase → palace
+13:14:25.371  [Loci] palace build: listening (stand-in colliders)
+13:14:26.319  [LociLeaf] pinch (far) → PalaceAim1 at (-75.0, 45.0, -72.0)
+13:14:26.407  [Loci] palace build: place 1 on ChairSeat at room {x: -75, y: 45, z: -72}
+13:14:26.795  [LociLeaf] pinch (far) → PalaceAim2 at (-45.0, 75.0, -100.0)
+13:14:26.883  [Loci] palace build: place 2 on TableTop at room {x: -45, y: 75, z: -100}
+13:14:27.276  [LociLeaf] pinch (far) → PalaceAimTooClose at (-35.0, 75.0, -94.0)
+13:14:27.366  [Loci] palace build: 11.7 cm from place 2 — too close, rejected
+13:14:27.435  [LociLeaf] C12 too-close pinch at (-35.0, 75.0, -94.0) (11.7 cm from place 2) → rejected; count=2 rejects=1 shaking=[1] status="Too close to place 2 — try 25 cm away" progress="2 of 5"
+13:14:27.988  [LociLeaf] pinch (far) → PalaceAim3 at (45.0, 75.0, -100.0)
+13:14:28.078  [Loci] palace build: place 3 on TableTop at room {x: 45, y: 75, z: -100}
+13:14:28.668  [LociLeaf] C12 after place 3: count=3 lines=2 status="" progress="3 of 5" phase=palace card=build
+13:14:28.669  [LociLeaf] C12 PASS (state JSON in leaf-results.json)
+13:14:28.669  LEAF [ 10.683s]PASSED: loci-c12-palace-too-close
+13:14:28.669  LEAF [ 10.683s][loci-c12-palace-too-close] PASSED
+13:14:35.715  [Loci] preview camera pitch 0.0° → room tilted 16.0° so the route reads as from a -16° look-down
+13:14:35.715  [Loci] camera start {x: 0, y: 0, z: 0}, room floor at {x: -5, y: -65.5979, z: -351.706}, preview camera 320 cm behind the user's spot (gaze dwell off)
+13:14:35.718  [Loci] preview card 90 cm in front of the camera, -6.3° elevation (camera pitch 0.0°, vfov 36.6°, route 14.7°…4.4°, room below 1.4° spare)
+13:14:35.718  [Loci] palace build: 6 surfaces (TableTop, ChairSeat, ShelfTop, ShelfBoard_1, ShelfBoard_2, PalaceFloor)
+13:14:35.718  [Loci] phase → start
+13:14:36.169  LEAF [  0.001s]Running with runner config: {"__leaf__log_level":"INFO","__leaf__timeout_secs":"600","__leaf__diagnostic_policy":"fallback","__leaf__diagnostic_report_duration_ms":"-1"}
+13:14:37.681  [LociLeaf] setup: gazeDwellSec=0 for this run; runSelfTest=false; state={"phase":"start","currentSpotIndex":-1,"pulsingSpots":[],"placedModelIds":["","","","",""],"totemTexts":["","","","",""],"placementOrder":[],"scoreText":"","missedSpots":[],"glowingSpots":[],"walkQueue":[],"visitedSpots":[],"markerVisibleSpots":[],"revealedSpot":-1,"revealedObjectSpots":[],"quizOrder":[],"quizStep":0,"quizTargetSpot":-1,"askedSpots":[],"answers":[null,null,null,null,null],"ringKinds":["","","","",""],"cardView":"start","promptText":"","nameTagText":""}
+13:14:37.987  [LociLeaf] C11 start: route=quick button="Build my palace" title="Loci" spots=["(-80.0, 45.0, -80.0)","(-35.0, 75.0, -90.0)","(0.0, 75.0, -110.0)","(35.0, 75.0, -90.0)","(90.0, 120.0, -100.0)"]
+13:14:37.990  [LociLeaf] pinch → BuildPalaceButton
+13:14:39.127  [Loci] phase → palace
+13:14:39.128  [Loci] palace build: listening (stand-in colliders)
+13:14:39.987  [LociLeaf] C11 build card: hint="Pinch 5 places for your palace" progress="0 of 5"
+13:14:40.097  [LociLeaf] pinch (far) → PalaceAim1 at (-75.0, 45.0, -72.0)
+13:14:40.188  [Loci] palace build: place 1 on ChairSeat at room {x: -75, y: 45, z: -72}
+13:14:40.279  [LociLeaf] C11 pinch 1 on chair seat (-75.0, 45.0, -72.0) → added at (-75.0, 45.0, -72.0) (0.00 cm off) labels=["1"] lines=0 progress="1 of 5"
+13:14:40.602  [LociLeaf] pinch (far) → PalaceAim2 at (-45.0, 75.0, -100.0)
+13:14:40.691  [Loci] palace build: place 2 on TableTop at room {x: -45, y: 75, z: -100}
+13:14:40.760  [LociLeaf] C11 pinch 2 on table left (-45.0, 75.0, -100.0) → added at (-45.0, 75.0, -100.0) (0.00 cm off) labels=["1","2"] lines=1 progress="2 of 5"
+13:14:41.071  [LociLeaf] pinch (far) → PalaceAim3 at (45.0, 75.0, -100.0)
+13:14:41.159  [Loci] palace build: place 3 on TableTop at room {x: 45, y: 75, z: -100}
+13:14:41.228  [LociLeaf] C11 pinch 3 on table right (45.0, 75.0, -100.0) → added at (45.0, 75.0, -100.0) (0.00 cm off) labels=["1","2","3"] lines=2 progress="3 of 5"
+13:14:41.548  [LociLeaf] pinch (far) → PalaceAim4 at (90.0, 120.0, -96.0)
+13:14:41.634  [Loci] palace build: place 4 on ShelfTop at room {x: 90, y: 120, z: -96}
+13:14:41.708  [LociLeaf] C11 pinch 4 on shelf top (90.0, 120.0, -96.0) → added at (90.0, 120.0, -96.0) (0.00 cm off) labels=["1","2","3","4"] lines=3 progress="4 of 5"
+13:14:42.048  [LociLeaf] pinch (far) → PalaceAim5 at (60.0, 0.0, -25.0)
+13:14:42.139  [Loci] palace build: place 5 on PalaceFloor at room {x: 60, y: 0, z: -25}
+13:14:42.140  [Loci] palace built: ["Chair","Table left","Table centre","Table right","Shelf"] now at custom places
+13:14:42.211  [LociLeaf] C11 pinch 5 on floor (60.0, 0.0, -25.0) → added at (60.0, 0.0, -25.0) (0.00 cm off) labels=["1","2","3","4","5"] lines=4 progress="5 of 5"
+13:14:43.359  [Loci] phase → start
+13:14:43.668  [LociLeaf] C11 built: title="Your palace" button="Quick route" places=["(-75.0, 45.0, -72.0)","(-45.0, 75.0, -100.0)","(45.0, 75.0, -100.0)","(90.0, 120.0, -96.0)","(60.0, 0.0, -25.0)"] spots=["(-75.0, 45.0, -72.0)","(-45.0, 75.0, -100.0)","(45.0, 75.0, -100.0)","(90.0, 120.0, -96.0)","(60.0, -0.0, -25.0)"] visible=true
+13:14:43.668  [LociLeaf] C11 PASS (state JSON in leaf-results.json)
+13:14:43.668  LEAF [  7.500s]PASSED: loci-c11-palace-five-spots
+13:14:43.668  LEAF [  7.500s][loci-c11-palace-five-spots] PASSED
+13:14:52.364  [Loci] preview camera pitch 0.0° → room tilted 16.0° so the route reads as from a -16° look-down
+13:14:52.365  [Loci] camera start {x: 0, y: 0, z: 0}, room floor at {x: -5, y: -65.5979, z: -351.706}, preview camera 320 cm behind the user's spot (gaze dwell off)
+13:14:52.367  [Loci] preview card 90 cm in front of the camera, -6.3° elevation (camera pitch 0.0°, vfov 36.6°, route 14.7°…4.4°, room below 1.4° spare)
+13:14:52.368  [Loci] palace build: 6 surfaces (TableTop, ChairSeat, ShelfTop, ShelfBoard_1, ShelfBoard_2, PalaceFloor)
+13:14:52.368  [Loci] phase → start
+13:14:52.878  LEAF [  0.001s]Running with runner config: {"__leaf__log_level":"INFO","__leaf__timeout_secs":"600","__leaf__diagnostic_policy":"fallback","__leaf__diagnostic_report_duration_ms":"-1"}
+13:14:54.395  [LociLeaf] setup: gazeDwellSec=0 for this run; runSelfTest=false; state={"phase":"start","currentSpotIndex":-1,"pulsingSpots":[],"placedModelIds":["","","","",""],"totemTexts":["","","","",""],"placementOrder":[],"scoreText":"","missedSpots":[],"glowingSpots":[],"walkQueue":[],"visitedSpots":[],"markerVisibleSpots":[],"revealedSpot":-1,"revealedObjectSpots":[],"quizOrder":[],"quizStep":0,"quizTargetSpot":-1,"askedSpots":[],"answers":[null,null,null,null,null],"ringKinds":["","","","",""],"cardView":"start","promptText":"","nameTagText":""}
+13:14:54.703  [LociLeaf] pinch → BuildPalaceButton
+13:14:55.840  [Loci] phase → palace
+13:14:55.840  [Loci] palace build: listening (stand-in colliders)
+13:14:56.789  [LociLeaf] pinch (far) → PalaceAim1 at (-75.0, 45.0, -72.0)
+13:14:56.881  [Loci] palace build: place 1 on ChairSeat at room {x: -75, y: 45, z: -72}
+13:14:57.286  [LociLeaf] pinch (far) → PalaceAim2 at (-45.0, 75.0, -100.0)
+13:14:57.374  [Loci] palace build: place 2 on TableTop at room {x: -45, y: 75, z: -100}
+13:14:57.766  [LociLeaf] pinch (far) → PalaceAim3 at (45.0, 75.0, -100.0)
+13:14:57.859  [Loci] palace build: place 3 on TableTop at room {x: 45, y: 75, z: -100}
+13:14:58.270  [LociLeaf] pinch (far) → PalaceAim4 at (90.0, 120.0, -96.0)
+13:14:58.355  [Loci] palace build: place 4 on ShelfTop at room {x: 90, y: 120, z: -96}
+13:14:58.756  [LociLeaf] pinch (far) → PalaceAim5 at (60.0, 0.0, -25.0)
+13:14:58.848  [Loci] palace build: place 5 on PalaceFloor at room {x: 60, y: 0, z: -25}
+13:14:58.849  [Loci] palace built: ["Chair","Table left","Table centre","Table right","Shelf"] now at custom places
+13:15:00.067  [Loci] phase → start
+13:15:00.404  [LociLeaf] C13 palace: ["(-75.0, 45.0, -72.0)","(-45.0, 75.0, -100.0)","(45.0, 75.0, -100.0)","(90.0, 120.0, -96.0)","(60.0, 0.0, -25.0)"]
+13:15:00.407  [LociLeaf] pinch → ErrandsButton
+13:15:01.531  [Loci] phase → building
+13:15:01.913  [Loci] placed spot 1 (Chair): umbrella "umbrella"
+13:15:02.461  [Loci] placed spot 2 (Table left): key "keys"
+13:15:03.023  [Loci] placed spot 3 (Table centre): milk "milk"
+13:15:03.563  [Loci] placed spot 4 (Table right): phone "call mom"
+13:15:04.125  [Loci] placed spot 5 (Shelf): gift "gift"
+13:15:05.274  [Loci] phase → study
+13:15:05.279  [Loci] study → spot 1 (Chair) pulses
+13:15:05.583  [LociLeaf] C13 dropped: models=["umbrella","key","milk","phone","gift"] order=[0,1,2,3,4] items=["(-75.0, 60.0, -72.0)","(-45.0, 82.5, -100.0)","(45.0, 85.0, -100.0)","(90.0, 127.5, -96.0)","(60.0, 10.0, -25.0)"] placesVisible=false
+13:15:05.846  [LociLeaf] pinch → Spot1_Item
+13:15:08.981  [Loci] study → spot 2 (Table left) pulses
+13:15:09.248  [LociLeaf] pinch → Spot2_Item
+13:15:12.410  [Loci] study → spot 3 (Table centre) pulses
+13:15:12.680  [LociLeaf] pinch → Spot3_Item
+13:15:15.807  [Loci] study → spot 4 (Table right) pulses
+13:15:16.079  [LociLeaf] pinch → Spot4_Item
+13:15:19.205  [Loci] study → spot 5 (Shelf) pulses
+13:15:19.498  [LociLeaf] pinch → Spot5_Item
+13:15:22.625  [Loci] phase → groupGlow
+13:15:24.629  [Loci] phase → switch
+13:15:25.088  [LociLeaf] pinch → QuizMeButton
+13:15:26.215  [Loci] phase → quizIntro
+13:15:26.215  [Loci] find-it order (seed 7, round 1): [3,5,4,2,1]
+13:15:28.200  [Loci] phase → quiz
+13:15:28.202  [Loci] find-it prompt 1/5: Milk (answer: spot 3)
+13:15:28.642  [LociLeaf] C13 find-it markers=[0,1,2,3,4] at ["(-75.0, 55.0, -72.0)","(-45.0, 85.0, -100.0)","(45.0, 85.0, -100.0)","(90.0, 130.0, -96.0)","(60.0, 10.0, -25.0)"] revealed=[]
+13:15:28.994  [LociLeaf] pinch → Spot1_MarkerButton
+13:15:30.131  [Loci] find-it: asked spot 3 (milk), pinched spot 1 → wrong
+13:15:30.658  [LociLeaf] find-it 1/5: "Where's the milk?" icon=milk answer=spot3 pinched=spot1 → wrong
+13:15:32.828  [Loci] find-it prompt 2/5: Gift (answer: spot 5)
+13:15:33.216  [LociLeaf] pinch → Spot5_MarkerButton
+13:15:34.375  [Loci] find-it: asked spot 5 (gift), pinched spot 5 → correct
+13:15:34.918  [LociLeaf] find-it 2/5: "Where's the gift?" icon=gift answer=spot5 pinched=spot5 → correct
+13:15:35.963  [Loci] find-it prompt 3/5: Call mom (answer: spot 4)
+13:15:36.387  [LociLeaf] pinch → Spot4_MarkerButton
+13:15:37.535  [Loci] find-it: asked spot 4 (call mom), pinched spot 4 → correct
+13:15:38.073  [LociLeaf] find-it 3/5: "Where's the phone?" icon=phone answer=spot4 pinched=spot4 → correct
+13:15:39.118  [Loci] find-it prompt 4/5: Keys (answer: spot 2)
+13:15:39.540  [LociLeaf] pinch → Spot2_MarkerButton
+13:15:40.680  [Loci] find-it: asked spot 2 (keys), pinched spot 2 → correct
+13:15:41.218  [LociLeaf] find-it 4/5: "Where are the keys?" icon=key answer=spot2 pinched=spot2 → correct
+13:15:42.271  [Loci] find-it prompt 5/5: Umbrella (answer: spot 1)
+13:15:42.672  [LociLeaf] pinch → Spot1_MarkerButton
+13:15:43.806  [Loci] find-it: asked spot 1 (umbrella), pinched spot 1 → correct
+13:15:44.334  [LociLeaf] find-it 5/5: "Where's the umbrella?" icon=umbrella answer=spot1 pinched=spot1 → correct
+13:15:45.706  [Loci] phase → results
+13:15:45.711  [Loci] results 4 / 5, missed [3]
+13:15:46.146  [LociLeaf] C13 results: score="4 / 5" missed=[2] glowing=[2] prompts=["Where's the milk?→false","Where's the gift?→true","Where's the phone?→true","Where are the keys?→true","Where's the umbrella?→true"]
+13:15:46.149  [LociLeaf] pinch → NewListButton
+13:15:47.339  [Loci] phase → start
+13:15:48.278  [LociLeaf] C13 after New list: route=custom title="Your palace" button="Quick route" visible=true models=["","","","",""]
+13:15:48.280  [LociLeaf] pinch → BuildPalaceButton
+13:15:49.461  [Loci] route → quick route (fixed spots)
+13:15:50.317  [LociLeaf] C13 quick route: button="Build my palace" title="Loci" visible=false spots=["(-80.0, 45.0, -80.0)","(-35.0, 75.0, -90.0)","(0.0, 75.0, -110.0)","(35.0, 75.0, -90.0)","(90.0, 120.0, -100.0)"]
+13:15:50.318  [LociLeaf] C13 PASS (state JSON in leaf-results.json)
+13:15:50.318  LEAF [ 57.441s]PASSED: loci-c13-palace-quiz
+13:15:50.318  LEAF [ 57.441s][loci-c13-palace-quiz] PASSED
+13:16:06.320  [Loci] preview camera pitch 0.0° → room tilted 16.0° so the route reads as from a -16° look-down
+13:16:06.320  [Loci] camera start {x: 0, y: 0, z: 0}, room floor at {x: -5, y: -65.5979, z: -351.706}, preview camera 320 cm behind the user's spot (gaze dwell off)
+13:16:06.322  [Loci] preview card 90 cm in front of the camera, -6.3° elevation (camera pitch 0.0°, vfov 36.6°, route 14.7°…4.4°, room below 1.4° spare)
+13:16:06.323  [Loci] palace build: 6 surfaces (TableTop, ChairSeat, ShelfTop, ShelfBoard_1, ShelfBoard_2, PalaceFloor)
+13:16:06.323  [Loci] phase → start
+13:16:06.803  LEAF [  0.000s]Running with runner config: {"__leaf__log_level":"INFO","__leaf__timeout_secs":"600","__leaf__diagnostic_policy":"fallback","__leaf__diagnostic_report_duration_ms":"-1"}
+13:16:08.315  [LociLeaf] setup: gazeDwellSec=0 for this run; runSelfTest=false; state={"phase":"start","currentSpotIndex":-1,"pulsingSpots":[],"placedModelIds":["","","","",""],"totemTexts":["","","","",""],"placementOrder":[],"scoreText":"","missedSpots":[],"glowingSpots":[],"walkQueue":[],"visitedSpots":[],"markerVisibleSpots":[],"revealedSpot":-1,"revealedObjectSpots":[],"quizOrder":[],"quizStep":0,"quizTargetSpot":-1,"askedSpots":[],"answers":[null,null,null,null,null],"ringKinds":["","","","",""],"cardView":"start","promptText":"","nameTagText":""}
+13:16:08.626  [LociLeaf] pinch → ErrandsButton
+13:16:09.756  [Loci] phase → building
+13:16:10.156  [Loci] placed spot 1 (Chair): umbrella "umbrella"
+13:16:10.694  [Loci] placed spot 2 (Table left): key "keys"
+13:16:11.256  [Loci] placed spot 3 (Table centre): milk "milk"
+13:16:11.786  [Loci] placed spot 4 (Table right): phone "call mom"
+13:16:12.343  [Loci] placed spot 5 (Shelf): gift "gift"
+13:16:13.505  [Loci] phase → study
+13:16:13.507  [Loci] study → spot 1 (Chair) pulses
+13:16:13.764  [LociLeaf] pinch → Spot1_Item
+13:16:16.894  [Loci] study → spot 2 (Table left) pulses
+13:16:17.206  [LociLeaf] pinch → Spot2_Item
+13:16:20.344  [Loci] study → spot 3 (Table centre) pulses
+13:16:20.592  [LociLeaf] pinch → Spot3_Item
+13:16:23.710  [Loci] study → spot 4 (Table right) pulses
+13:16:23.980  [LociLeaf] pinch → Spot4_Item
+13:16:27.150  [Loci] study → spot 5 (Shelf) pulses
+13:16:27.441  [LociLeaf] pinch → Spot5_Item
+13:16:30.568  [Loci] phase → groupGlow
+13:16:32.577  [Loci] phase → switch
+13:16:33.019  [LociLeaf] pinch → QuizMeButton
+13:16:34.183  [Loci] phase → quizIntro
+13:16:34.184  [Loci] find-it order (seed 7, round 1): [3,5,4,2,1]
+13:16:36.181  [Loci] phase → quiz
+13:16:36.183  [Loci] find-it prompt 1/5: Milk (answer: spot 3)
+13:16:36.950  [LociLeaf] pinch → Spot1_MarkerButton
+13:16:38.093  [Loci] find-it: asked spot 3 (milk), pinched spot 1 → wrong
+13:16:38.635  [LociLeaf] find-it 1/5: "Where's the milk?" icon=milk answer=spot3 pinched=spot1 → wrong
+13:16:40.781  [Loci] find-it prompt 2/5: Gift (answer: spot 5)
+13:16:41.190  [LociLeaf] pinch → Spot5_MarkerButton
+13:16:42.308  [Loci] find-it: asked spot 5 (gift), pinched spot 5 → correct
+13:16:42.836  [LociLeaf] find-it 2/5: "Where's the gift?" icon=gift answer=spot5 pinched=spot5 → correct
+13:16:43.898  [Loci] find-it prompt 3/5: Call mom (answer: spot 4)
+13:16:44.256  [LociLeaf] pinch → Spot4_MarkerButton
+13:16:45.519  [Loci] find-it: asked spot 4 (call mom), pinched spot 4 → correct
+13:16:46.075  [LociLeaf] find-it 3/5: "Where's the phone?" icon=phone answer=spot4 pinched=spot4 → correct
+13:16:47.090  [Loci] find-it prompt 4/5: Keys (answer: spot 2)
+13:16:47.498  [LociLeaf] pinch → Spot2_MarkerButton
+13:16:48.634  [Loci] find-it: asked spot 2 (keys), pinched spot 2 → correct
+13:16:49.173  [LociLeaf] find-it 4/5: "Where are the keys?" icon=key answer=spot2 pinched=spot2 → correct
+13:16:50.214  [Loci] find-it prompt 5/5: Umbrella (answer: spot 1)
+13:16:50.592  [LociLeaf] pinch → Spot1_MarkerButton
+13:16:51.753  [Loci] find-it: asked spot 1 (umbrella), pinched spot 1 → correct
+13:16:52.289  [LociLeaf] find-it 5/5: "Where's the umbrella?" icon=umbrella answer=spot1 pinched=spot1 → correct
+13:16:53.662  [Loci] phase → results
+13:16:53.667  [Loci] results 4 / 5, missed [3]
+13:16:54.071  [LociLeaf] C8 round 1: score="4 / 5" missed=[2] glowing=[2] round=1
+13:16:54.074  [LociLeaf] pinch → QuizAgainButton
+13:16:55.226  [Loci] phase → quizIntro
+13:16:55.226  [Loci] find-it order (seed 7, round 2): [2,1,3,5,4]
+13:16:57.207  [Loci] phase → quiz
+13:16:57.208  [Loci] find-it prompt 1/5: Keys (answer: spot 2)
+13:16:57.608  [LociLeaf] C8 after Quiz again: score=0 answers=[null,null,null,null,null] asked=[1] step=0 round=2 order=[2,1,3,5,4] markers=[0,1,2,3,4] revealed=[] glow=["neutral","neutral","neutral","neutral","neutral"] progress="1 of 5" scoreText="" card=prompt
+13:16:57.981  [LociLeaf] pinch → Spot2_MarkerButton
+13:16:59.119  [Loci] find-it: asked spot 2 (keys), pinched spot 2 → correct
+13:16:59.662  [LociLeaf] find-it 1/5: "Where are the keys?" icon=key answer=spot2 pinched=spot2 → correct
+13:17:00.719  [Loci] find-it prompt 2/5: Umbrella (answer: spot 1)
+13:17:01.097  [LociLeaf] pinch → Spot1_MarkerButton
+13:17:02.236  [Loci] find-it: asked spot 1 (umbrella), pinched spot 1 → correct
+13:17:02.760  [LociLeaf] find-it 2/5: "Where's the umbrella?" icon=umbrella answer=spot1 pinched=spot1 → correct
+13:17:03.828  [Loci] find-it prompt 3/5: Milk (answer: spot 3)
+13:17:04.202  [LociLeaf] pinch → Spot3_MarkerButton
+13:17:05.343  [Loci] find-it: asked spot 3 (milk), pinched spot 3 → correct
+13:17:05.892  [LociLeaf] find-it 3/5: "Where's the milk?" icon=milk answer=spot3 pinched=spot3 → correct
+13:17:06.935  [Loci] find-it prompt 4/5: Gift (answer: spot 5)
+13:17:07.296  [LociLeaf] pinch → Spot5_MarkerButton
+13:17:08.438  [Loci] find-it: asked spot 5 (gift), pinched spot 5 → correct
+13:17:08.967  [LociLeaf] find-it 4/5: "Where's the gift?" icon=gift answer=spot5 pinched=spot5 → correct
+13:17:10.031  [Loci] find-it prompt 5/5: Call mom (answer: spot 4)
+13:17:10.400  [LociLeaf] pinch → Spot4_MarkerButton
+13:17:11.529  [Loci] find-it: asked spot 4 (call mom), pinched spot 4 → correct
+13:17:12.062  [LociLeaf] find-it 5/5: "Where's the phone?" icon=phone answer=spot4 pinched=spot4 → correct
+13:17:13.429  [Loci] phase → results
+13:17:13.433  [Loci] results 5 / 5, missed []
+13:17:13.882  [LociLeaf] C8 round 2: score="5 / 5" missed=[] glowing=[] asked=[2,1,3,5,4]
+13:17:13.882  [LociLeaf] C8 PASS (state JSON in leaf-results.json)
+13:17:13.883  LEAF [ 67.080s]PASSED: loci-c8-quiz-again-resets
+13:17:13.883  LEAF [ 67.080s][loci-c8-quiz-again-resets] PASSED

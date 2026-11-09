@@ -1,0 +1,1290 @@
+{
+  "project": "Loci",
+  "lens_studio": "5.23.2.26081320",
+  "leaf_package": "Leaf 2.0.2",
+  "spectacles_interaction_kit": "SIK 0.18.0 (package 2.0.0)",
+  "target": "Lens Studio Preview, Specs device profile (run_leaf_scenario, onDevice=false)",
+  "code_commit": "f503db8",
+  "run_started_utc": "2026-11-09T13:06:52Z",
+  "how_pinches_were_made": "Every step is a real SIK pinch: LEAF's simulated right hand for buttons and objects, and a LEAF far-field pointer (camera ray) for Build-my-palace places. No scenario calls the Lens's action methods.",
+  "summary": {
+    "scenarios": 13,
+    "passed": 13,
+    "failed": 0,
+    "total_duration_s": 455.1
+  },
+  "scenarios": [
+    {
+      "id": "loci-c1-sample-list",
+      "covers": "Done criterion 1",
+      "checks": "Errands (warm-up) places the 5 models one at a time, in route order",
+      "status": "PASSED",
+      "duration_s": 7.054,
+      "real_sik_pinches": 1,
+      "pinch_targets": [
+        "ErrandsButton"
+      ],
+      "measured": [
+        "C1 placed after 1.3 s: 2",
+        "C1 placementOrder=[0,1,2,3,4] placementTimes(rel. to pinch)=[0.386,0.921,1.487,2.033,2.581] placedModelIds=[\"umbrella\",\"key\",\"milk\",\"phone\",\"gift\"] studyStartsAfter=3.73s countTimeline=[0,1,2,3,4,5]"
+      ],
+      "final_state": {
+        "phase": "study",
+        "currentSpotIndex": 0,
+        "pulsingSpots": [
+          0
+        ],
+        "placedModelIds": [
+          "umbrella",
+          "key",
+          "milk",
+          "phone",
+          "gift"
+        ],
+        "totemTexts": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "placementOrder": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "scoreText": "",
+        "missedSpots": [],
+        "glowingSpots": [],
+        "walkQueue": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "visitedSpots": [],
+        "markerVisibleSpots": [],
+        "revealedSpot": -1,
+        "revealedObjectSpots": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "quizOrder": [],
+        "quizStep": 0,
+        "quizTargetSpot": -1,
+        "askedSpots": [],
+        "answers": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "ringKinds": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "cardView": "none",
+        "promptText": "",
+        "nameTagText": ""
+      }
+    },
+    {
+      "id": "loci-c2-study-walk",
+      "covers": "Done criterion 2",
+      "checks": "Pinching the current object moves the pulse and arrow on; one pulse at a time; Quiz me after spot 5",
+      "status": "PASSED",
+      "duration_s": 28.797,
+      "real_sik_pinches": 7,
+      "pinch_targets": [
+        "ErrandsButton",
+        "Spot2_Item",
+        "Spot1_Item",
+        "Spot2_Item",
+        "Spot3_Item",
+        "Spot4_Item",
+        "Spot5_Item"
+      ],
+      "measured": [
+        "C2 non-current pinch on Spot2_Item completed (SIK events fired)",
+        "C2 visited=[0,1,2,3,4] advanceSec=[\"1.99\",\"1.99\",\"2.00\",\"1.99\",\"2.00\"] arrows=[\"spot1: flat=0.33cm above=42.2cm\",\"spot2: flat=0.35cm above=24.8cm\",\"spot3: flat=0.07cm above=30.8cm\",\"spot4: flat=0.38cm above=27.3cm\",\"spot5: flat=0.28cm above=30.0cm\"] maxPulsing=1 pulsedOrder=[0,1,2,3,4] multiPulse=[] groupGlowSec=2.01 glowing@switch=[] switchCardScale=1.00"
+      ],
+      "final_state": {
+        "phase": "switch",
+        "currentSpotIndex": -1,
+        "pulsingSpots": [],
+        "placedModelIds": [
+          "umbrella",
+          "key",
+          "milk",
+          "phone",
+          "gift"
+        ],
+        "totemTexts": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "placementOrder": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "scoreText": "",
+        "missedSpots": [],
+        "glowingSpots": [],
+        "walkQueue": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "visitedSpots": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "markerVisibleSpots": [],
+        "revealedSpot": -1,
+        "revealedObjectSpots": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "quizOrder": [],
+        "quizStep": 0,
+        "quizTargetSpot": -1,
+        "askedSpots": [],
+        "answers": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "ringKinds": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "cardView": "switch",
+        "promptText": "",
+        "nameTagText": ""
+      }
+    },
+    {
+      "id": "loci-c3-quiz-reveal",
+      "covers": "Done criterion 3 (v2)",
+      "checks": "Quiz me hides all 5 behind identical markers; seeded 'Where's the …?' prompts with icons; right pinch brings the object back with a green ring",
+      "status": "PASSED",
+      "duration_s": 32.936,
+      "real_sik_pinches": 8,
+      "pinch_targets": [
+        "ErrandsButton",
+        "Spot1_Item",
+        "Spot2_Item",
+        "Spot3_Item",
+        "Spot4_Item",
+        "Spot5_Item",
+        "QuizMeButton",
+        "Spot3_MarkerButton"
+      ],
+      "measured": [
+        "C3 after Quiz me: order=[3,5,4,2,1] markers=[0,1,2,3,4] revealed=[] glow=[\"neutral\",\"neutral\",\"neutral\",\"neutral\",\"neutral\"] pulsing=[] arrow=false card=prompt prompt=\"Where's the milk?\" icon=milk progress=\"1 of 5\"",
+        "C3 after right pinch: guess={\"target\":2,\"pinched\":2,\"correct\":true} revealed=[2] rings=[\"\",\"\",\"green\",\"\",\"\"] nameTag=\"Milk\" score=1 markers=[0,1,3,4] glow=off",
+        "C3 prompt 2: target=spot5 prompt=\"Where's the gift?\" icon=gift pinchable=[0,1,3,4] revealed=[2]"
+      ],
+      "final_state": {
+        "phase": "quiz",
+        "currentSpotIndex": -1,
+        "pulsingSpots": [],
+        "placedModelIds": [
+          "umbrella",
+          "key",
+          "milk",
+          "phone",
+          "gift"
+        ],
+        "totemTexts": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "placementOrder": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "scoreText": "",
+        "missedSpots": [],
+        "glowingSpots": [
+          0,
+          1,
+          3,
+          4
+        ],
+        "walkQueue": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "visitedSpots": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "markerVisibleSpots": [
+          0,
+          1,
+          3,
+          4
+        ],
+        "revealedSpot": -1,
+        "revealedObjectSpots": [
+          2
+        ],
+        "quizOrder": [
+          2,
+          4,
+          3,
+          1,
+          0
+        ],
+        "quizStep": 1,
+        "quizTargetSpot": 4,
+        "askedSpots": [
+          2,
+          4
+        ],
+        "answers": [
+          null,
+          null,
+          true,
+          null,
+          null
+        ],
+        "ringKinds": [
+          "",
+          "",
+          "green",
+          "",
+          ""
+        ],
+        "cardView": "prompt",
+        "promptText": "Where's the gift?",
+        "nameTagText": ""
+      }
+    },
+    {
+      "id": "loci-c4-results-review",
+      "covers": "Done criterion 4 (v2)",
+      "checks": "Right spot for 4 items, wrong for the milk: '4 / 5', only the milk's spot glows, Review missed walks only it",
+      "status": "PASSED",
+      "duration_s": 54.269,
+      "real_sik_pinches": 14,
+      "pinch_targets": [
+        "ErrandsButton",
+        "Spot1_Item",
+        "Spot2_Item",
+        "Spot3_Item",
+        "Spot4_Item",
+        "Spot5_Item",
+        "QuizMeButton",
+        "Spot1_MarkerButton",
+        "Spot5_MarkerButton",
+        "Spot4_MarkerButton",
+        "Spot2_MarkerButton",
+        "Spot1_MarkerButton",
+        "ReviewMissedButton",
+        "Spot3_Item"
+      ],
+      "measured": [
+        "C4 results: scoreText=\"4 / 5\" label=\"4 / 5\" answers=[true,true,false,true,true] missed=[2] glowing=[2] revealed=[0,1,2,3,4] card=results",
+        "C4 review start: walkQueue=[2] review=true current=2 pulsing=[2] glowing=[]",
+        "C4 review end: visited=[2] glowing=[2]",
+        "C4 after review: visited=[2] pulsedDuringReview=[2] maxPulsing=1 card=switch"
+      ],
+      "final_state": {
+        "phase": "switch",
+        "currentSpotIndex": -1,
+        "pulsingSpots": [],
+        "placedModelIds": [
+          "umbrella",
+          "key",
+          "milk",
+          "phone",
+          "gift"
+        ],
+        "totemTexts": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "placementOrder": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "scoreText": "",
+        "missedSpots": [
+          2
+        ],
+        "glowingSpots": [],
+        "walkQueue": [
+          2
+        ],
+        "visitedSpots": [
+          2
+        ],
+        "markerVisibleSpots": [],
+        "revealedSpot": -1,
+        "revealedObjectSpots": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "quizOrder": [
+          2,
+          4,
+          3,
+          1,
+          0
+        ],
+        "quizStep": 5,
+        "quizTargetSpot": -1,
+        "askedSpots": [
+          2,
+          4,
+          3,
+          1,
+          0
+        ],
+        "answers": [
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "ringKinds": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "cardView": "switch",
+        "promptText": "",
+        "nameTagText": ""
+      }
+    },
+    {
+      "id": "loci-c5-mixed-list",
+      "covers": "Done criterion 5",
+      "checks": "Mixed list: key for 'keys', phone for 'mobile', a word totem reading exactly 'volcano'",
+      "status": "PASSED",
+      "duration_s": 7.108,
+      "real_sik_pinches": 1,
+      "pinch_targets": [
+        "MixedListButton"
+      ],
+      "measured": [
+        "C5 listWords=[\"umbrella\",\"keys\",\"volcano\",\"mobile\",\"gift\"] placedModelIds=[\"umbrella\",\"key\",\"totem\",\"phone\",\"gift\"] totemTexts=[\"\",\"\",\"volcano\",\"\",\"\"] source=mixed",
+        "C5 Text3D under Spot3_TableCentre: total=1 enabled=1 -> [\"TotemWord:\\\"volcano\\\":on\"]"
+      ],
+      "final_state": {
+        "phase": "study",
+        "currentSpotIndex": 0,
+        "pulsingSpots": [
+          0
+        ],
+        "placedModelIds": [
+          "umbrella",
+          "key",
+          "totem",
+          "phone",
+          "gift"
+        ],
+        "totemTexts": [
+          "",
+          "",
+          "volcano",
+          "",
+          ""
+        ],
+        "placementOrder": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "scoreText": "",
+        "missedSpots": [],
+        "glowingSpots": [],
+        "walkQueue": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "visitedSpots": [],
+        "markerVisibleSpots": [],
+        "revealedSpot": -1,
+        "revealedObjectSpots": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "quizOrder": [],
+        "quizStep": 0,
+        "quizTargetSpot": -1,
+        "askedSpots": [],
+        "answers": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "ringKinds": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "cardView": "none",
+        "promptText": "",
+        "nameTagText": ""
+      }
+    },
+    {
+      "id": "loci-c6-wrong-reveals-correct",
+      "covers": "Extra (v2 Find-it)",
+      "checks": "A wrong pinch shakes red, then the right spot reveals its object with an orange ring",
+      "status": "PASSED",
+      "duration_s": 34.201,
+      "real_sik_pinches": 8,
+      "pinch_targets": [
+        "ErrandsButton",
+        "Spot1_Item",
+        "Spot2_Item",
+        "Spot3_Item",
+        "Spot4_Item",
+        "Spot5_Item",
+        "QuizMeButton",
+        "Spot1_MarkerButton"
+      ],
+      "measured": [
+        "C6 asked spot3 (milk), pinched spot1: guess={\"target\":2,\"pinched\":0,\"correct\":false}",
+        "C6 timeline (s after pinch): {\"wrongShakes\":1.1478425419190899,\"targetRevealed\":1.7333705419441685,\"orangeRing\":1.7333705419441685,\"nameShown\":1.7333705419441685,\"targetHiddenAgain\":3.6779261250048876,\"nextPrompt\":3.832314957980998} wrongObjectEverShown=false score=0 answers=[null,null,false,null,null] markers=[0,1,2,3,4] revealed=[]"
+      ],
+      "final_state": {
+        "phase": "quiz",
+        "currentSpotIndex": -1,
+        "pulsingSpots": [],
+        "placedModelIds": [
+          "umbrella",
+          "key",
+          "milk",
+          "phone",
+          "gift"
+        ],
+        "totemTexts": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "placementOrder": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "scoreText": "",
+        "missedSpots": [
+          2
+        ],
+        "glowingSpots": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "walkQueue": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "visitedSpots": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "markerVisibleSpots": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "revealedSpot": -1,
+        "revealedObjectSpots": [],
+        "quizOrder": [
+          2,
+          4,
+          3,
+          1,
+          0
+        ],
+        "quizStep": 1,
+        "quizTargetSpot": 4,
+        "askedSpots": [
+          2,
+          4
+        ],
+        "answers": [
+          null,
+          null,
+          false,
+          null,
+          null
+        ],
+        "ringKinds": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "cardView": "prompt",
+        "promptText": "Where's the gift?",
+        "nameTagText": ""
+      }
+    },
+    {
+      "id": "loci-c7-each-item-once",
+      "covers": "Extra (v2 Find-it)",
+      "checks": "Each item is asked exactly once, in the seeded shuffled order",
+      "status": "PASSED",
+      "duration_s": 46.009,
+      "real_sik_pinches": 12,
+      "pinch_targets": [
+        "ErrandsButton",
+        "Spot1_Item",
+        "Spot2_Item",
+        "Spot3_Item",
+        "Spot4_Item",
+        "Spot5_Item",
+        "QuizMeButton",
+        "Spot3_MarkerButton",
+        "Spot5_MarkerButton",
+        "Spot4_MarkerButton",
+        "Spot2_MarkerButton",
+        "Spot1_MarkerButton"
+      ],
+      "measured": [
+        "C7 asked=[3,5,4,2,1] expected=[3,5,4,2,1] questions=[\"Where's the milk?\",\"Where's the gift?\",\"Where's the phone?\",\"Where are the keys?\",\"Where's the umbrella?\"] icons=[\"milk\",\"gift\",\"phone\",\"key\",\"umbrella\"] progress=[\"1 of 5\",\"2 of 5\",\"3 of 5\",\"4 of 5\",\"5 of 5\"] askedSpots=[2,4,3,1,0] score=\"5 / 5\""
+      ],
+      "final_state": {
+        "phase": "results",
+        "currentSpotIndex": -1,
+        "pulsingSpots": [],
+        "placedModelIds": [
+          "umbrella",
+          "key",
+          "milk",
+          "phone",
+          "gift"
+        ],
+        "totemTexts": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "placementOrder": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "scoreText": "5 / 5",
+        "missedSpots": [],
+        "glowingSpots": [],
+        "walkQueue": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "visitedSpots": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "markerVisibleSpots": [],
+        "revealedSpot": -1,
+        "revealedObjectSpots": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "quizOrder": [
+          2,
+          4,
+          3,
+          1,
+          0
+        ],
+        "quizStep": 5,
+        "quizTargetSpot": -1,
+        "askedSpots": [
+          2,
+          4,
+          3,
+          1,
+          0
+        ],
+        "answers": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "ringKinds": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "cardView": "results",
+        "promptText": "",
+        "nameTagText": ""
+      }
+    },
+    {
+      "id": "loci-c8-quiz-again-resets",
+      "covers": "Extra (v2 Find-it)",
+      "checks": "Quiz again resets the score and reshuffles",
+      "status": "PASSED",
+      "duration_s": 67.08,
+      "real_sik_pinches": 18,
+      "pinch_targets": [
+        "ErrandsButton",
+        "Spot1_Item",
+        "Spot2_Item",
+        "Spot3_Item",
+        "Spot4_Item",
+        "Spot5_Item",
+        "QuizMeButton",
+        "Spot1_MarkerButton",
+        "Spot5_MarkerButton",
+        "Spot4_MarkerButton",
+        "Spot2_MarkerButton",
+        "Spot1_MarkerButton",
+        "QuizAgainButton",
+        "Spot2_MarkerButton",
+        "Spot1_MarkerButton",
+        "Spot3_MarkerButton",
+        "Spot5_MarkerButton",
+        "Spot4_MarkerButton"
+      ],
+      "measured": [
+        "C8 round 1: score=\"4 / 5\" missed=[2] glowing=[2] round=1",
+        "C8 after Quiz again: score=0 answers=[null,null,null,null,null] asked=[1] step=0 round=2 order=[2,1,3,5,4] markers=[0,1,2,3,4] revealed=[] glow=[\"neutral\",\"neutral\",\"neutral\",\"neutral\",\"neutral\"] progress=\"1 of 5\" scoreText=\"\" card=prompt",
+        "C8 round 2: score=\"5 / 5\" missed=[] glowing=[] asked=[2,1,3,5,4]"
+      ],
+      "final_state": {
+        "phase": "results",
+        "currentSpotIndex": -1,
+        "pulsingSpots": [],
+        "placedModelIds": [
+          "umbrella",
+          "key",
+          "milk",
+          "phone",
+          "gift"
+        ],
+        "totemTexts": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "placementOrder": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "scoreText": "5 / 5",
+        "missedSpots": [],
+        "glowingSpots": [],
+        "walkQueue": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "visitedSpots": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "markerVisibleSpots": [],
+        "revealedSpot": -1,
+        "revealedObjectSpots": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "quizOrder": [
+          1,
+          0,
+          2,
+          4,
+          3
+        ],
+        "quizStep": 5,
+        "quizTargetSpot": -1,
+        "askedSpots": [
+          1,
+          0,
+          2,
+          4,
+          3
+        ],
+        "answers": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "ringKinds": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "cardView": "results",
+        "promptText": "",
+        "nameTagText": ""
+      }
+    },
+    {
+      "id": "loci-c9-new-list-clears",
+      "covers": "Extra (v2 Find-it)",
+      "checks": "New list clears every spot",
+      "status": "PASSED",
+      "duration_s": 54.765,
+      "real_sik_pinches": 14,
+      "pinch_targets": [
+        "ErrandsButton",
+        "Spot1_Item",
+        "Spot2_Item",
+        "Spot3_Item",
+        "Spot4_Item",
+        "Spot5_Item",
+        "QuizMeButton",
+        "Spot1_MarkerButton",
+        "Spot5_MarkerButton",
+        "Spot4_MarkerButton",
+        "Spot2_MarkerButton",
+        "Spot1_MarkerButton",
+        "NewListButton",
+        "ErrandsButton"
+      ],
+      "measured": [
+        "C9 before New list: score=\"4 / 5\" models=[\"umbrella\",\"key\",\"milk\",\"phone\",\"gift\"] glowing=[2] visuals=[1,1,1,1,1]",
+        "C9 after New list: models=[\"\",\"\",\"\",\"\",\"\"] markers=[] revealed=[] glowing=[] rings=[\"\",\"\",\"\",\"\",\"\"] pinchable=[] visuals=[0,0,0,0,0] prompt=\"\" name=\"\" score=\"\" quizRound=0",
+        "C9 after Errands again: models=[\"umbrella\",\"key\",\"milk\",\"phone\",\"gift\"] order=[0,1,2,3,4] phase=study"
+      ],
+      "final_state": {
+        "phase": "study",
+        "currentSpotIndex": 0,
+        "pulsingSpots": [
+          0
+        ],
+        "placedModelIds": [
+          "umbrella",
+          "key",
+          "milk",
+          "phone",
+          "gift"
+        ],
+        "totemTexts": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "placementOrder": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "scoreText": "",
+        "missedSpots": [],
+        "glowingSpots": [],
+        "walkQueue": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "visitedSpots": [],
+        "markerVisibleSpots": [],
+        "revealedSpot": -1,
+        "revealedObjectSpots": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "quizOrder": [],
+        "quizStep": 0,
+        "quizTargetSpot": -1,
+        "askedSpots": [],
+        "answers": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "ringKinds": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "cardView": "none",
+        "promptText": "",
+        "nameTagText": ""
+      }
+    },
+    {
+      "id": "loci-c10-study-pack",
+      "covers": "Extra (v2 study pack)",
+      "checks": "Start card packs, synonyms, study models in order, each animation plays and settles, step-named Find-it questions",
+      "status": "PASSED",
+      "duration_s": 47.256,
+      "real_sik_pinches": 12,
+      "pinch_targets": [
+        "StudyPackButton",
+        "Spot1_Item",
+        "Spot2_Item",
+        "Spot3_Item",
+        "Spot4_Item",
+        "Spot5_Item",
+        "QuizMeButton",
+        "Spot3_MarkerButton",
+        "Spot5_MarkerButton",
+        "Spot4_MarkerButton",
+        "Spot2_MarkerButton",
+        "Spot1_MarkerButton"
+      ],
+      "measured": [
+        "C10 start card: buttons=[\"StudyPackButton\",\"ErrandsButton\",\"MixedListButton\"] y=[-6.2,-10.9,-15.7] voiceShown=false sayMyList=false",
+        "C10 synonyms: [\"speech bubble→speech\",\"question→speech\",\"questions→speech\",\"ask a question→speech\",\"magnifying glass→magnifier\",\"magnifier→magnifier\",\"research→magnifier\",\"light bulb→bulb\",\"lightbulb→bulb\",\"idea→bulb\",\"hypothesis→bulb\",\"flask→flask\",\"beaker→flask\",\"experiments→flask\",\"checkered flag→flag\",\"chequered flag→flag\",\"finish line→flag\",\"conclusion→flag\",\"glass→null\",\"volcano→null\"]",
+        "C10 placed: source=study words=[\"ask a question\",\"research\",\"hypothesis\",\"experiment\",\"conclusion\"] models=[\"speech\",\"magnifier\",\"bulb\",\"flask\",\"flag\"] order=[0,1,2,3,4] totems=[\"\",\"\",\"\",\"\",\"\"]",
+        "C10 spot 1 Model_speech \"\": rootMove=3.00cm rootTurn=0.110rad groups={\"mark\":0.27730461955070496} \"?\" pops out (moved 0.277); at rest after: {\"rootCm\":0,\"rootRad\":0,\"group\":0,\"hiddenOk\":true}",
+        "C10 spot 2 Model_magnifier \"\": rootMove=2.82cm rootTurn=0.369rad groups={\"glass\":0.12824437022209167} lens zooms (scale +51%); at rest after: {\"rootCm\":0,\"rootRad\":0,\"group\":0,\"hiddenOk\":true}",
+        "C10 spot 3 Model_bulb \"\": rootMove=6.00cm rootTurn=0.089rad groups={\"rays\":0} rays light up (shown [\"rays\"]); at rest after: {\"rootCm\":0,\"rootRad\":0,\"group\":0,\"hiddenOk\":true}",
+        "C10 spot 4 Model_flask \"\": rootMove=3.75cm rootTurn=0.104rad groups={\"bubbles\":0.5004605054855347} bubbles rise (shown [\"bubbles\"]); at rest after: {\"rootCm\":0,\"rootRad\":0,\"group\":0,\"hiddenOk\":true}",
+        "C10 spot 5 Model_flag \"\": rootMove=1.84cm rootTurn=0.230rad groups={\"c0\":0.04891752079129219,\"c1\":0.0982019230723381,\"c2\":0.14928537607192993,\"c3\":0.19957329332828522} all 4 cloth columns wave ([0.049,0.098,0.149,0.2]); at rest after: {\"rootCm\":0,\"rootRad\":0,\"group\":0,\"hiddenOk\":true}",
+        "C10 find-it: [\"spot3 \\\"Where's the hypothesis?\\\" icon=bulb\",\"spot5 \\\"Where's the conclusion?\\\" icon=flag\",\"spot4 \\\"Where's the experiment?\\\" icon=flask\",\"spot2 \\\"Where's the research?\\\" icon=magnifier\",\"spot1 \\\"Where's the question?\\\" icon=speech\"] score=\"5 / 5\""
+      ],
+      "final_state": {
+        "phase": "results",
+        "currentSpotIndex": -1,
+        "pulsingSpots": [],
+        "placedModelIds": [
+          "speech",
+          "magnifier",
+          "bulb",
+          "flask",
+          "flag"
+        ],
+        "totemTexts": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "placementOrder": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "scoreText": "5 / 5",
+        "missedSpots": [],
+        "glowingSpots": [],
+        "walkQueue": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "visitedSpots": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "markerVisibleSpots": [],
+        "revealedSpot": -1,
+        "revealedObjectSpots": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "quizOrder": [
+          2,
+          4,
+          3,
+          1,
+          0
+        ],
+        "quizStep": 5,
+        "quizTargetSpot": -1,
+        "askedSpots": [
+          2,
+          4,
+          3,
+          1,
+          0
+        ],
+        "answers": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "ringKinds": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "cardView": "results",
+        "promptText": "",
+        "nameTagText": ""
+      }
+    },
+    {
+      "id": "loci-c11-palace-five-spots",
+      "covers": "Extra (v2 Build my palace)",
+      "checks": "5 pinches create 5 numbered places in order where the rays hit",
+      "status": "PASSED",
+      "duration_s": 7.5,
+      "real_sik_pinches": 6,
+      "pinch_targets": [
+        "BuildPalaceButton",
+        "PalaceAim1 at (-75.0, 45.0, -72.0)",
+        "PalaceAim2 at (-45.0, 75.0, -100.0)",
+        "PalaceAim3 at (45.0, 75.0, -100.0)",
+        "PalaceAim4 at (90.0, 120.0, -96.0)",
+        "PalaceAim5 at (60.0, 0.0, -25.0)"
+      ],
+      "measured": [
+        "C11 start: route=quick button=\"Build my palace\" title=\"Loci\" spots=[\"(-80.0, 45.0, -80.0)\",\"(-35.0, 75.0, -90.0)\",\"(0.0, 75.0, -110.0)\",\"(35.0, 75.0, -90.0)\",\"(90.0, 120.0, -100.0)\"]",
+        "C11 build card: hint=\"Pinch 5 places for your palace\" progress=\"0 of 5\"",
+        "C11 pinch 1 on chair seat (-75.0, 45.0, -72.0) → added at (-75.0, 45.0, -72.0) (0.00 cm off) labels=[\"1\"] lines=0 progress=\"1 of 5\"",
+        "C11 pinch 2 on table left (-45.0, 75.0, -100.0) → added at (-45.0, 75.0, -100.0) (0.00 cm off) labels=[\"1\",\"2\"] lines=1 progress=\"2 of 5\"",
+        "C11 pinch 3 on table right (45.0, 75.0, -100.0) → added at (45.0, 75.0, -100.0) (0.00 cm off) labels=[\"1\",\"2\",\"3\"] lines=2 progress=\"3 of 5\"",
+        "C11 pinch 4 on shelf top (90.0, 120.0, -96.0) → added at (90.0, 120.0, -96.0) (0.00 cm off) labels=[\"1\",\"2\",\"3\",\"4\"] lines=3 progress=\"4 of 5\"",
+        "C11 pinch 5 on floor (60.0, 0.0, -25.0) → added at (60.0, 0.0, -25.0) (0.00 cm off) labels=[\"1\",\"2\",\"3\",\"4\",\"5\"] lines=4 progress=\"5 of 5\"",
+        "C11 built: title=\"Your palace\" button=\"Quick route\" places=[\"(-75.0, 45.0, -72.0)\",\"(-45.0, 75.0, -100.0)\",\"(45.0, 75.0, -100.0)\",\"(90.0, 120.0, -96.0)\",\"(60.0, 0.0, -25.0)\"] spots=[\"(-75.0, 45.0, -72.0)\",\"(-45.0, 75.0, -100.0)\",\"(45.0, 75.0, -100.0)\",\"(90.0, 120.0, -96.0)\",\"(60.0, -0.0, -25.0)\"] visible=true"
+      ],
+      "final_state": {
+        "phase": "start",
+        "currentSpotIndex": -1,
+        "pulsingSpots": [],
+        "placedModelIds": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "totemTexts": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "placementOrder": [],
+        "scoreText": "",
+        "missedSpots": [],
+        "glowingSpots": [],
+        "walkQueue": [],
+        "visitedSpots": [],
+        "markerVisibleSpots": [],
+        "revealedSpot": -1,
+        "revealedObjectSpots": [],
+        "quizOrder": [],
+        "quizStep": 0,
+        "quizTargetSpot": -1,
+        "askedSpots": [],
+        "answers": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "ringKinds": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "cardView": "start",
+        "promptText": "",
+        "nameTagText": ""
+      }
+    },
+    {
+      "id": "loci-c12-palace-too-close",
+      "covers": "Extra (v2 Build my palace)",
+      "checks": "A pinch closer than 25 cm is rejected with a shake; Quick route cancels",
+      "status": "PASSED",
+      "duration_s": 10.683,
+      "real_sik_pinches": 8,
+      "pinch_targets": [
+        "BuildPalaceButton",
+        "PalaceAimCancel at (-75.0, 45.0, -72.0)",
+        "BuildCancelButton",
+        "BuildPalaceButton",
+        "PalaceAim1 at (-75.0, 45.0, -72.0)",
+        "PalaceAim2 at (-45.0, 75.0, -100.0)",
+        "PalaceAimTooClose at (-35.0, 75.0, -94.0)",
+        "PalaceAim3 at (45.0, 75.0, -100.0)"
+      ],
+      "measured": [
+        "C12 cancelled: route=quick count=0 visible=false button=\"Build my palace\" spots=[\"(-80.0, 45.0, -80.0)\",\"(-35.0, 75.0, -90.0)\",\"(0.0, 75.0, -110.0)\",\"(35.0, 75.0, -90.0)\",\"(90.0, 120.0, -100.0)\"]",
+        "C12 too-close pinch at (-35.0, 75.0, -94.0) (11.7 cm from place 2) → rejected; count=2 rejects=1 shaking=[1] status=\"Too close to place 2 — try 25 cm away\" progress=\"2 of 5\"",
+        "C12 after place 3: count=3 lines=2 status=\"\" progress=\"3 of 5\" phase=palace card=build"
+      ],
+      "final_state": {
+        "phase": "palace",
+        "currentSpotIndex": -1,
+        "pulsingSpots": [],
+        "placedModelIds": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "totemTexts": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "placementOrder": [],
+        "scoreText": "",
+        "missedSpots": [],
+        "glowingSpots": [],
+        "walkQueue": [],
+        "visitedSpots": [],
+        "markerVisibleSpots": [],
+        "revealedSpot": -1,
+        "revealedObjectSpots": [],
+        "quizOrder": [],
+        "quizStep": 0,
+        "quizTargetSpot": -1,
+        "askedSpots": [],
+        "answers": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "ringKinds": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "cardView": "build",
+        "promptText": "",
+        "nameTagText": ""
+      }
+    },
+    {
+      "id": "loci-c13-palace-quiz",
+      "covers": "Extra (v2 Build my palace)",
+      "checks": "The whole flow (drop, study, Find-it, results) works on custom spots",
+      "status": "PASSED",
+      "duration_s": 57.441,
+      "real_sik_pinches": 20,
+      "pinch_targets": [
+        "BuildPalaceButton",
+        "PalaceAim1 at (-75.0, 45.0, -72.0)",
+        "PalaceAim2 at (-45.0, 75.0, -100.0)",
+        "PalaceAim3 at (45.0, 75.0, -100.0)",
+        "PalaceAim4 at (90.0, 120.0, -96.0)",
+        "PalaceAim5 at (60.0, 0.0, -25.0)",
+        "ErrandsButton",
+        "Spot1_Item",
+        "Spot2_Item",
+        "Spot3_Item",
+        "Spot4_Item",
+        "Spot5_Item",
+        "QuizMeButton",
+        "Spot1_MarkerButton",
+        "Spot5_MarkerButton",
+        "Spot4_MarkerButton",
+        "Spot2_MarkerButton",
+        "Spot1_MarkerButton",
+        "NewListButton",
+        "BuildPalaceButton"
+      ],
+      "measured": [
+        "C13 palace: [\"(-75.0, 45.0, -72.0)\",\"(-45.0, 75.0, -100.0)\",\"(45.0, 75.0, -100.0)\",\"(90.0, 120.0, -96.0)\",\"(60.0, 0.0, -25.0)\"]",
+        "C13 dropped: models=[\"umbrella\",\"key\",\"milk\",\"phone\",\"gift\"] order=[0,1,2,3,4] items=[\"(-75.0, 60.0, -72.0)\",\"(-45.0, 82.5, -100.0)\",\"(45.0, 85.0, -100.0)\",\"(90.0, 127.5, -96.0)\",\"(60.0, 10.0, -25.0)\"] placesVisible=false",
+        "C13 find-it markers=[0,1,2,3,4] at [\"(-75.0, 55.0, -72.0)\",\"(-45.0, 85.0, -100.0)\",\"(45.0, 85.0, -100.0)\",\"(90.0, 130.0, -96.0)\",\"(60.0, 10.0, -25.0)\"] revealed=[]",
+        "C13 results: score=\"4 / 5\" missed=[2] glowing=[2] prompts=[\"Where's the milk?→false\",\"Where's the gift?→true\",\"Where's the phone?→true\",\"Where are the keys?→true\",\"Where's the umbrella?→true\"]",
+        "C13 after New list: route=custom title=\"Your palace\" button=\"Quick route\" visible=true models=[\"\",\"\",\"\",\"\",\"\"]",
+        "C13 quick route: button=\"Build my palace\" title=\"Loci\" visible=false spots=[\"(-80.0, 45.0, -80.0)\",\"(-35.0, 75.0, -90.0)\",\"(0.0, 75.0, -110.0)\",\"(35.0, 75.0, -90.0)\",\"(90.0, 120.0, -100.0)\"]"
+      ],
+      "final_state": {
+        "phase": "start",
+        "currentSpotIndex": -1,
+        "pulsingSpots": [],
+        "placedModelIds": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "totemTexts": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "placementOrder": [],
+        "scoreText": "",
+        "missedSpots": [],
+        "glowingSpots": [],
+        "walkQueue": [],
+        "visitedSpots": [],
+        "markerVisibleSpots": [],
+        "revealedSpot": -1,
+        "revealedObjectSpots": [],
+        "quizOrder": [],
+        "quizStep": 0,
+        "quizTargetSpot": -1,
+        "askedSpots": [],
+        "answers": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "ringKinds": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "cardView": "start",
+        "promptText": "",
+        "nameTagText": ""
+      }
+    }
+  ]
+}

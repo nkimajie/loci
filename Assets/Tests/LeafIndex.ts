@@ -5,6 +5,7 @@
  * once, Quiz again resets the score, New list clears every spot); C10 covers the scientific-
  * method Study pack and the start card; C11–C13 cover Build my palace (5 pinches make 5
  * places in order, a too-close pinch is rejected, the quiz works on custom spots).
+ * shot-* entries are screenshot helpers, not tests (LociShot*Scenario.ts).
  * Attached to the root "LeafIndex" SceneObject.
  */
 
@@ -23,6 +24,10 @@ import {LociC10StudyPackScenario} from "./LociC10StudyPackScenario"
 import {LociC11PalaceFiveSpotsScenario} from "./LociC11PalaceFiveSpotsScenario"
 import {LociC12PalaceTooCloseScenario} from "./LociC12PalaceTooCloseScenario"
 import {LociC13PalaceQuizScenario} from "./LociC13PalaceQuizScenario"
+import {LociShotHeroScenario} from "./LociShotHeroScenario"
+import {LociShotResultsScenario} from "./LociShotResultsScenario"
+import {LociShotStudyNameScenario} from "./LociShotStudyNameScenario"
+import {LociShotWrongRevealScenario} from "./LociShotWrongRevealScenario"
 
 @component
 export class LeafIndex extends BaseScriptComponent {
@@ -41,5 +46,10 @@ export class LeafIndex extends BaseScriptComponent {
     {id: "loci-c11-palace-five-spots", typename: LociC11PalaceFiveSpotsScenario.getTypeName()},
     {id: "loci-c12-palace-too-close", typename: LociC12PalaceTooCloseScenario.getTypeName()},
     {id: "loci-c13-palace-quiz", typename: LociC13PalaceQuizScenario.getTypeName()},
+    // Screenshot helpers (not tests).
+    {id: "shot-hero", typename: LociShotHeroScenario.getTypeName()},
+    {id: "shot-study-name", typename: LociShotStudyNameScenario.getTypeName()},
+    {id: "shot-wrong-reveal", typename: LociShotWrongRevealScenario.getTypeName()},
+    {id: "shot-results", typename: LociShotResultsScenario.getTypeName()},
   ]
 }
