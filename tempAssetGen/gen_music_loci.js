@@ -2,9 +2,9 @@
 // MissedTone, ResultsJingle. All cues share one randomly-picked key so they cohere.
 const path = require('path');
 const fs = require('fs');
-const m = require('/Users/ajietakon/.claude/plugins/cache/ls-extensions/ls-clad/1.0.0/skills/build-music/tools');
+const m = require(path.join(require('os').homedir(), '.claude/plugins/cache/ls-extensions/ls-clad/1.0.0/skills/build-music/tools'));
 
-const PROJECT_ASSETS_SFX = '/Users/ajietakon/Projects/loci/Assets/GeneratedSFX';
+const PROJECT_ASSETS_SFX = path.join(__dirname, '..', 'Assets', 'GeneratedSFX');
 fs.mkdirSync(PROJECT_ASSETS_SFX, { recursive: true });
 
 function peakDb(b) {

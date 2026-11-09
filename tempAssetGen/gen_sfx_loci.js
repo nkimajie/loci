@@ -1,12 +1,12 @@
 // Loci SFX generator — DropBounce, PopReveal, ShrinkWhoosh (non-pitched UI/foley cues).
 const path = require('path');
 const fs = require('fs');
-const ENGINE = '/Users/ajietakon/.claude/plugins/cache/ls-extensions/ls-clad/1.0.0/skills/build-sfx/tools';
+const ENGINE = path.join(require('os').homedir(), '.claude/plugins/cache/ls-extensions/ls-clad/1.0.0/skills/build-sfx/tools');
 const audio = require(ENGINE);
 const p = audio.sfx_presets;
 const SR = audio.SAMPLE_RATE;
 
-const PROJECT_ASSETS_SFX = '/Users/ajietakon/Projects/loci/Assets/GeneratedSFX';
+const PROJECT_ASSETS_SFX = path.join(__dirname, '..', 'Assets', 'GeneratedSFX');
 fs.mkdirSync(PROJECT_ASSETS_SFX, { recursive: true });
 
 function toStereo(b) {
