@@ -40,7 +40,7 @@
 
 ## Re-running
 1. Open `loci.esproj` in Lens Studio 5.23.2.
-2. Open the LEAF panel, keep "Execute on device" off, and run any `loci-c*` scenario. The `shot-*` entries are screenshot helpers, not tests: each one pinches its way to a brief moment and stops there.
+2. Open the LEAF panel, keep "Execute on device" off, and run any `loci-c*` scenario. The `shot-*` entries are screenshot helpers, not tests: each one pinches its way to a brief moment and stops there. `demo-take` (also not a test) plays the whole story once at a watchable pace, about 105 s; it is the take recorded for the demo video.
 3. From a coding agent, call the Lens Studio MCP tools `open_leaf_panel`, then `run_leaf_scenario` with `{"scenarioId": "loci-c4-results-review", "onDevice": false}`.
    - C8 and C13 take longer than about 60 s, which can outlast the MCP call's timeout. The scenario still finishes: look for `[loci-c8-quiz-again-resets] PASSED` in the Lens Studio log.
 

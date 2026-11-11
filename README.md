@@ -2,9 +2,9 @@
 
 **Turn any five-item list into a memory palace on real furniture.** Bright 3D objects drop onto a chair, a table and a shelf in order; you walk the route, then prove you remember by pointing at where each thing was.
 
-[![Loci on Specs: the scientific-method study pack on a chair, table and shelf, with the speech bubble labelled "Ask a question". Click to watch the demo video.](devpost/screenshots/00-hero.jpg)](https://www.youtube.com/watch?v=VIDEO_ID_PLACEHOLDER)
+[![Loci on Specs: the scientific-method study pack on a chair, table and shelf, with the speech bubble labelled "Ask a question". Click to watch the demo video.](devpost/screenshots/00-hero.jpg)](https://youtu.be/gZ-cKs-1MSA)
 
-▶ **[Watch the demo (under 3 minutes)](https://www.youtube.com/watch?v=VIDEO_ID_PLACEHOLDER)**
+▶ **[Watch the demo (2:45)](https://youtu.be/gZ-cKs-1MSA)**
 
 A Lens for Snap Specs, built in Lens Studio 5.23.2 and verified with 13 passing LEAF tests in the preview.
 
@@ -132,7 +132,7 @@ Every done criterion in the [design brief](devpost/design-brief.md) is a LEAF sc
    - After the group glow, click **Quiz me**. For each "Where's the …?" prompt, click the "?" marker (or the empty spot) where it was.
    - On the results card, try **Review missed**, **Quiz again** or **New list**.
    - For **Build my palace**, click the tops of five surfaces (chair seat, table, shelf top, floor), at least 25 cm apart, then pick a pack.
-4. **Tests.** Open the LEAF panel, keep "Execute on device" off, and run any `loci-c*` scenario. The `shot-*` entries are screenshot helpers, not tests. See [`devpost/validation/LEAF.md`](devpost/validation/LEAF.md).
+4. **Tests.** Open the LEAF panel, keep "Execute on device" off, and run any `loci-c*` scenario. The `shot-*` entries are screenshot helpers and `demo-take` plays the take used in the demo video; neither is a test. See [`devpost/validation/LEAF.md`](devpost/validation/LEAF.md).
 5. **Useful settings.**
    - On the `Loci` object (LociMain):
      - `quizSeed` (Find-it order);
